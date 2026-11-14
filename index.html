@@ -95,6 +95,8 @@
             <div id="ping-3" class="ping-ring ping ping-ring--3"></div>
           </div>
           <div id="pins-layer" class="pins-layer"></div>
+          <span id="corner-site-dot" class="corner-site-dot" aria-hidden="true" hidden></span>
+          <button id="corner-map-btn" type="button" class="corner-map-btn" aria-label="Back to the full Moon" hidden></button>
           <div id="drag-hint" class="drag-hint" aria-hidden="true">DRAG TO SPIN</div>
           <button id="face-earth-btn" type="button" class="face-earth-btn" aria-label="Rotate Moon globe back to face Earth">FACE EARTH</button>
         </div>
@@ -126,6 +128,15 @@
           <div id="plot-selected-wrap" class="plot-selected-wrap" hidden>
             <p id="plot-ghost-name" class="plot-ghost-name"></p>
             <p id="plot-ghost-meta" class="plot-ghost-meta" hidden></p>
+            <div id="plot-takeover-stats" class="plot-takeover-stats" hidden>
+              <div aria-hidden="true" class="plot-takeover-visual">
+                <span class="plot-takeover-label">ON THE MOON FOR</span>
+                <span id="plot-takeover-ymd" class="plot-takeover-ymd">-- YRS · -- MOS · -- DAYS</span>
+                <span id="plot-takeover-hms" class="plot-takeover-hms">-- HRS · -- MIN · -- SEC</span>
+                <span id="plot-takeover-status" class="plot-takeover-status"></span>
+              </div>
+              <span id="plot-takeover-sr" class="sr-only"></span>
+            </div>
             <figure id="plot-photo-fig" class="plot-photo-fig" hidden>
               <button id="plot-photo-btn" type="button" class="plot-photo-btn" aria-label="View larger photo">
                 <img id="plot-photo-img" class="plot-photo-img" src="" alt="">
@@ -154,6 +165,21 @@
             <canvas id="badge-canvas" class="badge-canvas" width="440" height="200" role="img" aria-label="Junior Flight Controller Ghost Rovers badge"></canvas>
             <div class="mission-complete-actions">
               <button id="save-badge-btn" type="button" class="save-badge-btn">SAVE BADGE</button>
+            </div>
+            <div class="mission-complete-study">
+              <div class="mission-complete-study-row">
+                <span class="mission-complete-study-label">KEEP EXPLORING:</span>
+                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/16590fae-9e4f-4a0a-ba03-4c358ff32eb4" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                  <span>QUIZ</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+                </a>
+                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/4f152dbc-f384-42c2-9dde-87a6737de1c1" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                  <span>FLASHCARDS</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+                </a>
+                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/84801d62-dea7-4568-b396-a85e777e915d" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                  <span>MIND MAP</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </div>
+              <p class="mission-complete-study-note">Made with AI study tools from NASA sources.</p>
             </div>
           </div>
         </div>
@@ -227,6 +253,9 @@
               </a>
               <a id="notebook-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="nasa-link">
                 <span>GO DEEPER: STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+              </a>
+              <a id="podcast-link" href="https://notebooklm.link.google/6jQu39y3UHio" target="_blank" rel="noopener noreferrer" class="nasa-link">
+                <span>LISTEN: MOON PODCAST (AI VOICES)</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
               </a>
             </div>
           </div>
@@ -306,6 +335,9 @@
             </a>
             <a id="phone-notebook-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="nasa-link">
               <span>GO DEEPER: STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a id="phone-podcast-link" href="https://notebooklm.link.google/6jQu39y3UHio" target="_blank" rel="noopener noreferrer" class="nasa-link">
+              <span>LISTEN: MOON PODCAST (AI VOICES)</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
         </article>

@@ -121,8 +121,8 @@ async function startApp() {
 
   const speechSupported = Boolean(
     typeof window !== 'undefined' &&
-      'speechSynthesis' in window &&
-      'SpeechSynthesisUtterance' in window
+    'speechSynthesis' in window &&
+    'SpeechSynthesisUtterance' in window
   );
 
   const state = {
@@ -219,7 +219,7 @@ async function startApp() {
     if (!state.muted && sfx[name]) {
       try {
         sfx[name]();
-      } catch (e) {}
+      } catch (e) { }
     }
   }
 
@@ -227,7 +227,7 @@ async function startApp() {
     if (speechSupported) {
       try {
         window.speechSynthesis.cancel();
-      } catch (e) {}
+      } catch (e) { }
     }
     state.speaking = false;
   }
@@ -292,10 +292,10 @@ async function startApp() {
     const targetX = vpLeft + pos.x;
     const targetY = vpTop + pos.y;
 
-    const earthX = 24;
-    const earthY = Math.round(sh * 0.52);
-    laserEarthNodeEl.style.left = '8px';
-    laserEarthNodeEl.style.top = earthY + 'px';
+    const nodeLeft = laserEarthNodeEl ? laserEarthNodeEl.offsetLeft || 16 : 16;
+    const nodeTop = laserEarthNodeEl ? laserEarthNodeEl.offsetTop || 24 : 24;
+    const earthX = nodeLeft + 9;
+    const earthY = nodeTop + 9;
 
     let x1 = earthX;
     let y1 = earthY;
@@ -385,6 +385,10 @@ async function startApp() {
 
     muteBtnEl.textContent = state.muted ? 'SOUND OFF' : 'SOUND ON';
     muteBtnEl.setAttribute('aria-pressed', state.muted ? 'true' : 'false');
+
+    if (panels && panels.renderTakeoverClock) {
+      panels.renderTakeoverClock(state);
+    }
   }
 
   function renderBoot() {
@@ -421,7 +425,8 @@ async function startApp() {
     if (markersController) {
       const g = ghosts.find((x) => x.id === state.sel) || null;
       const showPing = Boolean(state.call === 'done' && g && g.answers);
-      markersController.updateSelectionAndLabels(g, showPing);
+      const isCornerMode = Boolean(!isPhoneWidth() && g && g.hasPhoto && state.viewMode === 'photo');
+      markersController.updateSelectionAndLabels(g, showPing, isCornerMode);
       if (globeController) {
         markersController.updatePositions(globeController.projectLatLon, showPing);
       }
@@ -632,7 +637,7 @@ async function startApp() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   const panels = initPanels(data, {
@@ -783,6 +788,8 @@ async function startApp() {
         if (!markersController || state.phase === 'boot') return;
         const g = ghosts.find((x) => x.id === state.sel) || null;
         const showPing = Boolean(state.call === 'done' && g && g.answers);
+        const isCornerMode = Boolean(!isPhoneWidth() && g && g.hasPhoto && state.viewMode === 'photo');
+        markersController.updateSelectionAndLabels(g, showPing, isCornerMode);
         markersController.updatePositions(projectLatLon, showPing);
         if (state.laserStaticDone) {
           updateLaserGeometry(1, true);

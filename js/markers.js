@@ -1,8 +1,9 @@
-// js/markers.js: Build and update the 4 lunar landing site <button> overlays and ping rings
+// js/markers.js: Build and update the 4 lunar landing site <button> overlays, corner-map amber dot, and ping rings
 
 export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
   const pinsLayer = document.getElementById('pins-layer');
   const pingLayer = document.getElementById('ping-layer');
+  const cornerSiteDot = document.getElementById('corner-site-dot');
   const pingRings = [
     document.getElementById('ping-1'),
     document.getElementById('ping-2'),
@@ -10,6 +11,8 @@ export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
   ];
 
   const pinRecords = [];
+  let activeSiteKey = null;
+  let cornerModeActive = false;
 
   Object.keys(sitesMap).forEach((siteKey) => {
     const site = sitesMap[siteKey];
@@ -32,7 +35,10 @@ export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
     });
   });
 
-  function updateSelectionAndLabels(selectedGhost, showPing) {
+  function updateSelectionAndLabels(selectedGhost, showPing, isCornerMode = false) {
+    activeSiteKey = selectedGhost ? selectedGhost.site : null;
+    cornerModeActive = Boolean(isCornerMode && activeSiteKey);
+
     pinRecords.forEach((rec) => {
       const lit = Boolean(selectedGhost && selectedGhost.site === rec.key);
       rec.btn.classList.toggle('site-pin--lit', lit);
@@ -44,12 +50,27 @@ export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
         rec.key + ': ' + countLabel + ', ' + names + (lit ? ', selected' : '')
       );
     });
+
+    if (!cornerModeActive && cornerSiteDot) {
+      cornerSiteDot.hidden = true;
+    }
     pingLayer.hidden = !showPing;
   }
 
   function updatePositions(projectLatLon, showPing) {
     pinRecords.forEach((rec) => {
       const pos = projectLatLon(rec.site.lat, rec.site.lon);
+
+      if (cornerModeActive && rec.key === activeSiteKey && cornerSiteDot) {
+        if (!pos.visible) {
+          cornerSiteDot.hidden = true;
+        } else {
+          cornerSiteDot.hidden = false;
+          cornerSiteDot.style.left = Math.round(pos.x - 5) + 'px';
+          cornerSiteDot.style.top = Math.round(pos.y - 5) + 'px';
+        }
+      }
+
       if (!pos.visible) {
         rec.btn.hidden = true;
         if (rec.key === 'A11') {

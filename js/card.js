@@ -4,6 +4,34 @@ function p2(n) {
   return String(n).padStart(2, '0');
 }
 
+function sinceParts(iso, nowMs) {
+  const s = new Date(iso);
+  const n = new Date(nowMs);
+  let y = n.getUTCFullYear() - s.getUTCFullYear();
+  let m = n.getUTCMonth() - s.getUTCMonth();
+  let d = n.getUTCDate() - s.getUTCDate();
+  if (d < 0) {
+    m -= 1;
+    d += new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), 0)).getUTCDate();
+  }
+  if (m < 0) {
+    y -= 1;
+    m += 12;
+  }
+  const secs = Math.floor(((nowMs - s.getTime()) / 1000) % 86400);
+  const hh = p2(Math.floor(secs / 3600));
+  const mm = p2(Math.floor(secs / 60) % 60);
+  const ss = p2(secs % 60);
+  return {
+    y: p2(y),
+    m: p2(m),
+    d: p2(d),
+    hh,
+    mm,
+    ss
+  };
+}
+
 function fitFont(ctx, text, weight, maxPx, minPx, family, maxWidth) {
   let size = maxPx;
   while (size > minPx) {
@@ -339,6 +367,11 @@ export function initPanels(data, callbacks) {
   const backToMoonBtn = document.getElementById('back-to-moon-btn');
   backToMoonBtn.addEventListener('click', onBackToMoon);
 
+  const cornerMapBtn = document.getElementById('corner-map-btn');
+  if (cornerMapBtn) {
+    cornerMapBtn.addEventListener('click', onBackToMoon);
+  }
+
   const phoneSheetCloseBtn = document.getElementById('phone-sheet-close');
   phoneSheetCloseBtn.addEventListener('click', onClosePhoneSheet);
 
@@ -386,6 +419,12 @@ export function initPanels(data, callbacks) {
   const plotSelectedWrap = document.getElementById('plot-selected-wrap');
   const plotGhostName = document.getElementById('plot-ghost-name');
   const plotGhostMeta = document.getElementById('plot-ghost-meta');
+  const plotTakeoverStats = document.getElementById('plot-takeover-stats');
+  const plotTakeoverYmd = document.getElementById('plot-takeover-ymd');
+  const plotTakeoverHms = document.getElementById('plot-takeover-hms');
+  const plotTakeoverStatus = document.getElementById('plot-takeover-status');
+  const plotTakeoverSr = document.getElementById('plot-takeover-sr');
+  let lastSrGhostId = null;
   const plotPhotoFig = document.getElementById('plot-photo-fig');
   const plotPhotoImg = document.getElementById('plot-photo-img');
   const plotPhotoCap = document.getElementById('plot-photo-cap');
@@ -423,6 +462,47 @@ export function initPanels(data, callbacks) {
   const phoneSheetSignalText = document.getElementById('phone-sheet-signal-text');
   const phoneSignalLamp = document.getElementById('phone-signal-lamp');
   const phoneNoSignalLamp = document.getElementById('phone-nosignal-lamp');
+
+  function renderTakeoverClock(state) {
+    const g = ghosts.find((x) => x.id === state.sel) || null;
+    const isPhone = window.innerWidth <= 599;
+    const isPhotoTakeover = Boolean(!isPhone && g && g.hasPhoto && state.viewMode === 'photo');
+    if (!isPhotoTakeover || !plotTakeoverStats) {
+      if (plotTakeoverStats) plotTakeoverStats.hidden = true;
+      lastSrGhostId = null;
+      return;
+    }
+    plotTakeoverStats.hidden = false;
+    const c = sinceParts(g.landed, state.now);
+    plotTakeoverYmd.textContent = c.y + ' YRS · ' + c.m + ' MOS · ' + c.d + ' DAYS';
+    plotTakeoverHms.textContent = c.hh + ' HRS · ' + c.mm + ' MIN · ' + c.ss + ' SEC';
+
+    if (g.answers) {
+      plotTakeoverStatus.textContent = 'STILL ANSWERS';
+      plotTakeoverStatus.style.color = '#9BEFB0';
+    } else if (g.id === 'alsep') {
+      plotTakeoverStatus.textContent = 'SWITCHED OFF ' + g.quiet;
+      plotTakeoverStatus.style.color = '#FFE9B0';
+    } else {
+      plotTakeoverStatus.textContent = 'QUIET SINCE ' + g.quiet;
+      plotTakeoverStatus.style.color = '#FFE9B0';
+    }
+
+    if (lastSrGhostId !== g.id) {
+      lastSrGhostId = g.id;
+      const ny = Number(c.y);
+      const nm = Number(c.m);
+      const nd = Number(c.d);
+      plotTakeoverSr.textContent =
+        'On the Moon for ' +
+        ny +
+        (ny === 1 ? ' year, ' : ' years, ') +
+        nm +
+        (nm === 1 ? ' month, ' : ' months, ') +
+        nd +
+        (nd === 1 ? ' day.' : ' days.');
+    }
+  }
 
   function render(state) {
     const g = ghosts.find((x) => x.id === state.sel) || null;
@@ -486,6 +566,9 @@ export function initPanels(data, callbacks) {
 
     // 4. Update Photo Takeover & Corner Map vs Full Moon Viewport
     const wasCorner = moonViewportEl.classList.contains('moon-viewport--corner');
+    if (cornerMapBtn) {
+      cornerMapBtn.hidden = !isPhotoTakeover;
+    }
     if (isPhotoTakeover) {
       takeoverPhotoWrap.hidden = false;
       takeoverPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
@@ -499,6 +582,7 @@ export function initPanels(data, callbacks) {
     }
 
     // 5. Update Main Screen Hardware Plot & Status Box
+    renderTakeoverClock(state);
     if (!g) {
       plotLegendWrap.hidden = false;
       plotSelectedWrap.hidden = true;
@@ -697,5 +781,5 @@ export function initPanels(data, callbacks) {
     return { viewportChanged: wasCorner !== isPhotoTakeover };
   }
 
-  return { render };
+  return { render, renderTakeoverClock };
 }
