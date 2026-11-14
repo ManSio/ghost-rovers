@@ -274,10 +274,10 @@
           "It's electric! Each of its 4 wheels had its own motor, its tires were woven from steel wire, and its batteries couldn't be recharged."
         ]
       ],
-      "photo": "",
-      "photoAlt": "",
-      "photoId": "NASA AS17-137-20979",
-      "hasPhoto": false,
+      "photo": "assets/nasa/as17-146-22367_800.jpg",
+      "photoAlt": "The Apollo 17 Lunar Roving Vehicle parked on the Moon at Taurus-Littrow with lunar hills behind it",
+      "photoId": "NASA AS17-146-22367",
+      "hasPhoto": true,
       "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-096C"
     }
   ]
