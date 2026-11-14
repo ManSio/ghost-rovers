@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/meta/og-image.png" alt="Ghost Rovers Mission Control console with the Moon, 4 landing sites, and the words: 6 machines on the Moon, 1 still answers" width="100%">
+<img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and a laser beam makes the round trip from Earth, then the Apollo 15 Rover photo fills the screen with a live on-the-Moon counter and stays silent" width="100%">
 
 # Ghost Rovers
 
@@ -25,10 +25,6 @@ Kids hear about rockets launching. They almost never hear about what stayed behi
 You sit at a Mission Control console. Six machines are out there. You pick one and press **CALL GHOST**.
 
 Five stay quiet. One answers: the Apollo 11 Laser Mirror. Scientists on Earth still bounce lasers off it, and you watch the beam make the 2.5-second round trip.
-
-<div align="center">
-<img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and answers, then the Apollo 15 Rover photo fills the screen and stays silent" width="90%">
-</div>
 
 | The 6 ghosts | Landed | Today |
 |---|---|---|
