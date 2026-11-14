@@ -1,7 +1,143 @@
-// js/card.js: Render side screens, hardware plot, console monitor, phone sheet, and photo viewer using textContent only
+// js/card.js: Render side screens, hardware plot, photo takeover, console monitor, phone sheet, photo viewer, and mission complete badge using textContent only
 
 function p2(n) {
   return String(n).padStart(2, '0');
+}
+
+// Draw the 1969 Console Junior Flight Controller Badge on <canvas>
+// Contest rule: NO NASA logo, insignia, mission patch, or flag
+export function drawMissionBadge(canvas) {
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Outer console slate plate
+  ctx.fillStyle = '#0B0E0D';
+  ctx.fillRect(0, 0, w, h);
+
+  // Subtle grid background
+  ctx.strokeStyle = 'rgba(201, 221, 224, 0.07)';
+  ctx.lineWidth = 1;
+  for (let x = 20; x < w; x += 20) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y = 20; y < h; y += 20) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+
+  // Outer and inner brass/amber borders
+  ctx.strokeStyle = '#C9B871';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(6, 6, w - 12, h - 12);
+
+  ctx.strokeStyle = 'rgba(255, 233, 176, 0.45)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(12, 12, w - 24, h - 24);
+
+  // Corner console rivets
+  const rivets = [
+    [18, 18],
+    [w - 18, 18],
+    [18, h - 18],
+    [w - 18, h - 18]
+  ];
+  rivets.forEach(([rx, ry]) => {
+    ctx.fillStyle = '#8C978F';
+    ctx.beginPath();
+    ctx.arc(rx, ry, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Left Emblem: Geometric Moon Globe with 4 Landing Site Squares
+  const cx = 74;
+  const cy = h / 2;
+  const r = 46;
+
+  ctx.fillStyle = '#162224';
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = '#C9DDE0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Latitude/Longitude crosshairs
+  ctx.strokeStyle = 'rgba(201, 221, 224, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx - r, cy);
+  ctx.lineTo(cx + r, cy);
+  ctx.moveTo(cx, cy - r);
+  ctx.lineTo(cx, cy + r);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, r * 0.55, r, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // 4 Site hollow squares on the Moon emblem (A11 lit green)
+  const emblemSites = [
+    { x: cx + 16, y: cy - 2, lit: true },
+    { x: cx - 18, y: cy + 5, lit: false },
+    { x: cx + 3, y: cy - 22, lit: false },
+    { x: cx + 21, y: cy - 16, lit: false }
+  ];
+  emblemSites.forEach((pt) => {
+    ctx.strokeStyle = pt.lit ? '#7BE495' : '#FFFFFF';
+    ctx.lineWidth = pt.lit ? 2 : 1.5;
+    ctx.strokeRect(pt.x - 4, pt.y - 4, 8, 8);
+  });
+
+  // Right Typography Block
+  const tx = 138;
+
+  // Top red Dymo-style strip
+  ctx.fillStyle = '#9E2B25';
+  ctx.fillRect(tx, 26, 204, 20);
+  ctx.fillStyle = '#F4F4F0';
+  ctx.font = '700 11px "IBM Plex Mono", monospace';
+  ctx.fillText('CONSOLE 7 · MISSION COMPLETE', tx + 8, 40);
+
+  // Main Badge Title
+  ctx.fillStyle = '#FFE9B0';
+  ctx.font = '700 21px "Archivo Narrow", Arial, sans-serif';
+  ctx.fillText('JUNIOR FLIGHT CONTROLLER', tx, 74);
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '700 16px "Archivo Narrow", Arial, sans-serif';
+  ctx.fillText('GHOST ROVERS · LUNAR HARDWARE CHECK', tx, 97);
+
+  // Divider
+  ctx.strokeStyle = 'rgba(201, 184, 113, 0.4)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(tx, 110);
+  ctx.lineTo(w - 24, 110);
+  ctx.stroke();
+
+  // Telemetry verification lines
+  ctx.fillStyle = '#C9DDE0';
+  ctx.font = '600 11px "IBM Plex Mono", monospace';
+  ctx.fillText('LOG STATUS : 06 OF 06 MACHINES CHECKED', tx, 132);
+
+  ctx.fillStyle = '#9BEFB0';
+  ctx.fillText('ACTIVE LINK: A11 LASER MIRROR (2.5 SEC)', tx, 152);
+
+  ctx.fillStyle = '#8FA5A9';
+  ctx.font = '400 10px "IBM Plex Mono", monospace';
+  ctx.fillText('4 APOLLO & SURVEYOR SITES · NEAR SIDE', tx, 172);
 }
 
 export function initPanels(data, callbacks) {
@@ -9,11 +145,17 @@ export function initPanels(data, callbacks) {
   const {
     onPickGhostId,
     onToggleQuestion,
+    onClearQuestion,
     onCallGhost,
+    onResetConsole,
+    onBackToMoon,
+    onToggleSpeech,
     onClosePhoneSheet,
     onOpenPhoneSheet,
     onOpenPhotoModal,
-    onClosePhotoModal
+    onClosePhotoModal,
+    onCloseMissionComplete,
+    onSaveBadge
   } = callbacks;
 
   // 1. Build Static Legend on Main Screen (4 SITES · 6 MACHINES)
@@ -37,7 +179,7 @@ export function initPanels(data, callbacks) {
     legendListEl.appendChild(row);
   });
 
-  // 2. Build Left Side Screen Timeline (LANDED · BY YEAR)
+  // 2. Build Left Side Screen Clickable Timeline (LANDED · BY YEAR) + TODAY row
   const timelineListEl = document.getElementById('timeline-list');
   const sortedByLanded = ghosts.slice().sort((a, b) => (a.landed < b.landed ? -1 : 1));
   const timelineItems = sortedByLanded.map((g) => {
@@ -48,6 +190,11 @@ export function initPanels(data, callbacks) {
     dot.className = 'timeline-dot';
     dot.setAttribute('aria-hidden', 'true');
 
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'timeline-btn';
+    btn.setAttribute('aria-pressed', 'false');
+
     const year = document.createElement('span');
     year.className = 'timeline-year';
     year.textContent = g.landed.slice(0, 4);
@@ -56,13 +203,22 @@ export function initPanels(data, callbacks) {
     label.className = 'timeline-label';
     label.textContent = g.name.toUpperCase();
 
+    btn.appendChild(year);
+    btn.appendChild(label);
+    btn.addEventListener('click', () => onPickGhostId(g.id));
+
     li.appendChild(dot);
-    li.appendChild(year);
-    li.appendChild(label);
+    li.appendChild(btn);
     timelineListEl.appendChild(li);
 
-    return { id: g.id, dot, year, label };
+    return { id: g.id, dot, btn, year, label };
   });
+
+  // Append non-button TODAY row at the bottom of the timeline
+  const todayLi = document.createElement('li');
+  todayLi.className = 'timeline-today';
+  todayLi.textContent = 'TODAY · All 6 are still there. 1 still answers.';
+  timelineListEl.appendChild(todayLi);
 
   // 3. Build Right Side Screen Ghost Log (GHOST LOG)
   const logListEl = document.getElementById('log-list');
@@ -118,7 +274,7 @@ export function initPanels(data, callbacks) {
     return { ghost: g, btn };
   });
 
-  // 5. Wire Question Buttons (3 per ghost) & Call/Close/Photo Buttons
+  // 5. Wire Question Buttons (3 per ghost), Clear Answer, Read To Me, Call, Reset, Close, Photo Buttons
   const qBtns = [
     document.getElementById('q-btn-0'),
     document.getElementById('q-btn-1'),
@@ -137,10 +293,28 @@ export function initPanels(data, callbacks) {
     btn.addEventListener('click', () => onToggleQuestion(idx));
   });
 
+  const fileAnswerClearBtn = document.getElementById('file-answer-clear');
+  const phoneFileAnswerClearBtn = document.getElementById('phone-file-answer-clear');
+  fileAnswerClearBtn.addEventListener('click', onClearQuestion);
+  phoneFileAnswerClearBtn.addEventListener('click', onClearQuestion);
+
+  const readBtn = document.getElementById('read-btn');
+  const phoneReadBtn = document.getElementById('phone-read-btn');
+  readBtn.addEventListener('click', onToggleSpeech);
+  phoneReadBtn.addEventListener('click', onToggleSpeech);
+
   const callBtn = document.getElementById('call-btn');
   const phoneCallBtn = document.getElementById('phone-call-btn');
   callBtn.addEventListener('click', onCallGhost);
   phoneCallBtn.addEventListener('click', onCallGhost);
+
+  const resetBtn = document.getElementById('reset-btn');
+  const phoneResetBtn = document.getElementById('phone-reset-btn');
+  resetBtn.addEventListener('click', onResetConsole);
+  phoneResetBtn.addEventListener('click', onResetConsole);
+
+  const backToMoonBtn = document.getElementById('back-to-moon-btn');
+  backToMoonBtn.addEventListener('click', onBackToMoon);
 
   const phoneSheetCloseBtn = document.getElementById('phone-sheet-close');
   phoneSheetCloseBtn.addEventListener('click', onClosePhoneSheet);
@@ -149,9 +323,11 @@ export function initPanels(data, callbacks) {
   compactOpenFileBtn.addEventListener('click', onOpenPhoneSheet);
 
   const plotPhotoBtn = document.getElementById('plot-photo-btn');
+  const takeoverPhotoBtn = document.getElementById('takeover-photo-btn');
   const phoneSheetPhotoBtn = document.getElementById('phone-sheet-photo-btn');
 
   plotPhotoBtn.addEventListener('click', () => onOpenPhotoModal(plotPhotoBtn));
+  takeoverPhotoBtn.addEventListener('click', () => onOpenPhotoModal(takeoverPhotoBtn));
   phoneSheetPhotoBtn.addEventListener('click', () => onOpenPhotoModal(phoneSheetPhotoBtn));
 
   // Photo Viewer Modal DOM
@@ -164,10 +340,26 @@ export function initPanels(data, callbacks) {
   photoModalCloseEl.addEventListener('click', onClosePhotoModal);
   photoModalBackdropEl.addEventListener('click', onClosePhotoModal);
 
+  // Mission Complete Panel DOM
+  const missionCompletePanelEl = document.getElementById('mission-complete-panel');
+  const closeCompleteBtn = document.getElementById('close-complete-btn');
+  const saveBadgeBtn = document.getElementById('save-badge-btn');
+  const badgeCanvasEl = document.getElementById('badge-canvas');
+  let badgeDrawn = false;
+
+  closeCompleteBtn.addEventListener('click', onCloseMissionComplete);
+  saveBadgeBtn.addEventListener('click', () => onSaveBadge(badgeCanvasEl));
+
   // DOM References for Dynamic Updates
+  const takeoverPhotoWrap = document.getElementById('takeover-photo-wrap');
+  const takeoverPhotoImg = document.getElementById('takeover-photo-img');
+  const takeoverPhotoBadge = document.getElementById('takeover-photo-badge');
+  const moonViewportEl = document.getElementById('moon-viewport');
+
   const plotLegendWrap = document.getElementById('plot-legend-wrap');
   const plotSelectedWrap = document.getElementById('plot-selected-wrap');
   const plotGhostName = document.getElementById('plot-ghost-name');
+  const plotGhostMeta = document.getElementById('plot-ghost-meta');
   const plotPhotoFig = document.getElementById('plot-photo-fig');
   const plotPhotoImg = document.getElementById('plot-photo-img');
   const plotPhotoCap = document.getElementById('plot-photo-cap');
@@ -184,6 +376,8 @@ export function initPanels(data, callbacks) {
   const fileHeaderEl = document.getElementById('file-header');
   const fileJobEl = document.getElementById('file-job');
   const fileBodyEl = document.getElementById('file-body');
+  const fileAnswerBoxEl = document.getElementById('file-answer-box');
+  const fileAnswerTextEl = document.getElementById('file-answer-text');
   const nasaLinkEl = document.getElementById('nasa-link');
 
   const signalLampEl = document.getElementById('signal-lamp');
@@ -198,6 +392,8 @@ export function initPanels(data, callbacks) {
   const phoneFileHeader = document.getElementById('phone-file-header');
   const phoneFileJob = document.getElementById('phone-file-job');
   const phoneFileBody = document.getElementById('phone-file-body');
+  const phoneFileAnswerBox = document.getElementById('phone-file-answer-box');
+  const phoneFileAnswerText = document.getElementById('phone-file-answer-text');
   const phoneNasaLink = document.getElementById('phone-nasa-link');
   const phoneSheetSignalText = document.getElementById('phone-sheet-signal-text');
   const phoneSignalLamp = document.getElementById('phone-signal-lamp');
@@ -210,12 +406,16 @@ export function initPanels(data, callbacks) {
     const answered = state.call === 'done';
     const calling = state.call === 'calling';
     const ping = Boolean(answered && g && g.answers);
+    const isPhone = window.innerWidth <= 599;
+    const isPhotoTakeover = Boolean(!isPhone && g && g.hasPhoto && state.viewMode === 'photo');
 
     // 1. Update Left Timeline
     timelineItems.forEach((item) => {
       const on = Boolean(g && g.id === item.id);
       item.dot.style.background = on ? '#FFFFFF' : '#6F8A8F';
       item.dot.style.boxShadow = on ? '0 0 8px #FFFFFF' : 'none';
+      item.btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      item.btn.classList.toggle('timeline-btn--selected', on);
       item.year.style.color = on ? '#FFFFFF' : '#B7CDD1';
       item.label.style.color = on ? '#FFFFFF' : '#B7CDD1';
     });
@@ -260,16 +460,30 @@ export function initPanels(data, callbacks) {
       item.btn.classList.toggle('ghost-btn--answers', !on && x.answers);
     });
 
-    // 4. Update Main Screen Hardware Plot
+    // 4. Update Photo Takeover & Corner Map vs Full Moon Viewport
+    const wasCorner = moonViewportEl.classList.contains('moon-viewport--corner');
+    if (isPhotoTakeover) {
+      takeoverPhotoWrap.hidden = false;
+      takeoverPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
+      takeoverPhotoImg.src = g.photo;
+      takeoverPhotoImg.alt = g.photoAlt;
+      takeoverPhotoBadge.textContent = 'PHOTO: ' + g.photoId;
+      moonViewportEl.classList.add('moon-viewport--corner');
+    } else {
+      takeoverPhotoWrap.hidden = true;
+      moonViewportEl.classList.remove('moon-viewport--corner');
+    }
+
+    // 5. Update Main Screen Hardware Plot & Status Box
     if (!g) {
       plotLegendWrap.hidden = false;
-      plotSelectedWrap.hidden = window.innerWidth > 599;
+      plotSelectedWrap.hidden = true;
       plotSignalText.className = '';
       if (state.call === 'nosel') {
         plotSignalText.textContent = 'PICK A GHOST FIRST, THEN CALL.';
         plotSignalText.style.color = '#F2A08F';
       } else {
-        plotSignalText.textContent = 'CONSOLE READY: PICK A GHOST BELOW';
+        plotSignalText.textContent = 'Pick a machine, then press CALL GHOST to radio it. See who answers.';
         plotSignalText.style.color = '#B7CDD1';
       }
     } else {
@@ -277,23 +491,40 @@ export function initPanels(data, callbacks) {
       plotSelectedWrap.hidden = false;
       plotGhostName.textContent = g.name;
 
-      if (g.hasPhoto) {
-        plotPhotoFig.hidden = false;
-        plotPhotoPlaceholder.hidden = true;
-        plotPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
-        plotPhotoImg.src = g.photo;
-        plotPhotoImg.alt = g.photoAlt;
-        plotPhotoCap.textContent = 'PHOTO: ' + g.photoId;
-      } else {
+      if (isPhotoTakeover) {
         plotPhotoFig.hidden = true;
-        plotPhotoPlaceholder.hidden = false;
-        plotPhotoPlaceholder.textContent = 'PHOTO ' + g.photoId + '\nLOADING IN BUILD';
+        plotPhotoPlaceholder.hidden = true;
+        plotGhostMeta.hidden = false;
+        plotGhostMeta.textContent =
+          g.mission.toUpperCase() + ' · ' + g.siteName.toUpperCase() + '\nLANDED ' + g.landedTxt;
+        plotGhostMeta.style.whiteSpace = 'pre-line';
+      } else {
+        plotGhostMeta.hidden = true;
+        if (g.hasPhoto) {
+          plotPhotoFig.hidden = false;
+          plotPhotoPlaceholder.hidden = true;
+          plotPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
+          plotPhotoImg.src = g.photo;
+          plotPhotoImg.alt = g.photoAlt;
+          plotPhotoCap.textContent = 'PHOTO: ' + g.photoId;
+        } else {
+          plotPhotoFig.hidden = true;
+          plotPhotoPlaceholder.hidden = false;
+          plotPhotoPlaceholder.textContent = 'PHOTO ' + g.photoId + '\nLOADING IN BUILD';
+        }
       }
 
       if (calling) {
-        plotSignalText.textContent = 'CALLING...';
-        plotSignalText.style.color = '#FFFFFF';
-        plotSignalText.className = 'blink';
+        if (state.laserActive) {
+          plotSignalText.textContent =
+            'LASER BEAM IN FLIGHT... ' + state.laserElapsed.toFixed(1) + ' SEC';
+          plotSignalText.style.color = '#9BEFB0';
+          plotSignalText.className = '';
+        } else {
+          plotSignalText.textContent = 'Radioing the Moon… 1.3 seconds each way.';
+          plotSignalText.style.color = '#FFFFFF';
+          plotSignalText.className = 'blink';
+        }
       } else if (answered) {
         plotSignalText.textContent = g.reply;
         plotSignalText.style.color = g.answers ? '#9BEFB0' : '#F2A08F';
@@ -305,7 +536,7 @@ export function initPanels(data, callbacks) {
       }
     }
 
-    // 5. Update Console Monitor & Phone Sheet
+    // 6. Update Console Monitor & Phone Sheet
     if (!g) {
       monitorIdleEl.hidden = false;
       monitorFileEl.hidden = true;
@@ -318,12 +549,20 @@ export function initPanels(data, callbacks) {
 
       const headerLine =
         'FILE ' + g.num + ' · ' + g.mission + ' · LANDED ' + g.landedTxt + ' · ' + g.siteName;
-      const bodyText = state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : g.story;
+      const openAnswer = state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : null;
 
       fileHeaderEl.textContent = headerLine;
       fileJobEl.textContent = g.job;
-      fileBodyEl.textContent = bodyText;
+      fileBodyEl.textContent = g.story;
       nasaLinkEl.href = g.nasaUrl;
+
+      if (openAnswer) {
+        fileAnswerBoxEl.hidden = false;
+        fileAnswerTextEl.textContent = openAnswer;
+      } else {
+        fileAnswerBoxEl.hidden = true;
+        fileAnswerTextEl.textContent = '';
+      }
 
       qBtns.forEach((btn, idx) => {
         if (g.qs[idx]) {
@@ -335,6 +574,17 @@ export function initPanels(data, callbacks) {
           btn.hidden = true;
         }
       });
+
+      // Speech synthesis button state
+      readBtn.hidden = !state.speechSupported;
+      phoneReadBtn.hidden = !state.speechSupported;
+      if (state.speechSupported) {
+        const readLabel = state.speaking ? 'STOP' : 'READ TO ME';
+        readBtn.textContent = readLabel;
+        readBtn.setAttribute('aria-pressed', state.speaking ? 'true' : 'false');
+        phoneReadBtn.textContent = readLabel;
+        phoneReadBtn.setAttribute('aria-pressed', state.speaking ? 'true' : 'false');
+      }
 
       // Phone Sheet updates
       phoneSheetName.textContent = g.name;
@@ -353,8 +603,16 @@ export function initPanels(data, callbacks) {
 
       phoneFileHeader.textContent = headerLine.toUpperCase();
       phoneFileJob.textContent = g.job;
-      phoneFileBody.textContent = bodyText;
+      phoneFileBody.textContent = g.story;
       phoneNasaLink.href = g.nasaUrl;
+
+      if (openAnswer) {
+        phoneFileAnswerBox.hidden = false;
+        phoneFileAnswerText.textContent = openAnswer;
+      } else {
+        phoneFileAnswerBox.hidden = true;
+        phoneFileAnswerText.textContent = '';
+      }
 
       phoneQBtns.forEach((btn, idx) => {
         if (g.qs[idx]) {
@@ -375,7 +633,7 @@ export function initPanels(data, callbacks) {
       compactOpenFileBtn.hidden = state.phoneSheetOpen;
     }
 
-    // 6. Update Photo Viewer Modal
+    // 7. Update Photo Viewer Modal
     if (state.photoModalOpen && g && g.hasPhoto) {
       photoModalEl.hidden = false;
       photoModalCaptionEl.textContent = 'PHOTO: ' + g.photoId;
@@ -385,7 +643,18 @@ export function initPanels(data, callbacks) {
       photoModalEl.hidden = true;
     }
 
-    // 7. Update CALL GHOST Button & Lamps
+    // 8. Update Mission Complete Panel & Badge
+    if (allDone && !state.missionCompleteDismissed) {
+      missionCompletePanelEl.hidden = false;
+      if (!badgeDrawn) {
+        drawMissionBadge(badgeCanvasEl);
+        badgeDrawn = true;
+      }
+    } else {
+      missionCompletePanelEl.hidden = true;
+    }
+
+    // 9. Update CALL GHOST Button & Lamps
     const callLabel = (calling ? 'CALLING...' : 'CALL GHOST') + ' [C]';
     callBtn.textContent = callLabel;
     phoneCallBtn.textContent = callLabel;
@@ -397,6 +666,8 @@ export function initPanels(data, callbacks) {
     noSignalLampEl.classList.toggle('round-lamp--nosignal-on', noSigOn);
     phoneSignalLamp.classList.toggle('round-lamp--signal-on', sigOn);
     phoneNoSignalLamp.classList.toggle('round-lamp--nosignal-on', noSigOn);
+
+    return { viewportChanged: wasCorner !== isPhotoTakeover };
   }
 
   return { render };

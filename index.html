@@ -56,8 +56,18 @@
         <button id="begin-btn" type="button" class="boot-begin-btn" hidden>BEGIN GHOST CHECK</button>
       </div>
 
-      <!-- Main Screen View (Moon Globe + Hardware Plot) -->
+      <!-- Main Screen View (Moon Globe, Photo Takeover, Laser Show, Hardware Plot, Mission Complete) -->
       <div id="main-content" class="main-content" hidden>
+        <!-- Photo Takeover View (Desktop & Tablet when ghost has photo) -->
+        <div id="takeover-photo-wrap" class="takeover-photo-wrap" hidden>
+          <button id="takeover-photo-btn" type="button" class="takeover-photo-btn" aria-label="View larger photo">
+            <img id="takeover-photo-img" class="takeover-photo-img" src="" alt="">
+          </button>
+          <span id="takeover-photo-badge" class="takeover-photo-badge"></span>
+          <button id="back-to-moon-btn" type="button" class="back-to-moon-btn" aria-label="Return to full Moon globe">BACK TO MOON</button>
+        </div>
+
+        <!-- 3D Moon Globe Viewport -->
         <div id="moon-viewport" class="moon-viewport">
           <div id="moon-canvas-wrap" class="moon-canvas-wrap" role="img" aria-label="3D Moon globe showing near-side landing sites, drag to spin"></div>
           <div id="ping-layer" class="ping-layer" aria-hidden="true" hidden>
@@ -66,10 +76,25 @@
             <div id="ping-3" class="ping-ring ping ping-ring--3"></div>
           </div>
           <div id="pins-layer" class="pins-layer"></div>
+          <div id="drag-hint" class="drag-hint" aria-hidden="true">DRAG TO SPIN</div>
           <button id="face-earth-btn" type="button" class="face-earth-btn" aria-label="Rotate Moon globe back to face Earth">FACE EARTH</button>
         </div>
 
-        <div id="hardware-plot" aria-live="polite" class="hardware-plot">
+        <!-- Laser Show Overlay (Laser Mirror) -->
+        <div id="laser-layer" class="laser-layer" aria-hidden="true" hidden>
+          <svg id="laser-svg" class="laser-svg" viewBox="0 0 728 424" preserveAspectRatio="none">
+            <line id="laser-beam-glow" class="laser-beam-glow" x1="0" y1="0" x2="0" y2="0"></line>
+            <line id="laser-beam-line" class="laser-beam-line" x1="0" y1="0" x2="0" y2="0"></line>
+            <circle id="laser-pulse-dot" class="laser-pulse-dot" cx="0" cy="0" r="4"></circle>
+          </svg>
+          <div id="laser-earth-node" class="laser-earth-node">
+            <span class="laser-earth-dot"></span>
+            <span class="laser-earth-label">EARTH</span>
+          </div>
+        </div>
+
+        <!-- Right Half of Main Screen: Hardware Plot -->
+        <div id="hardware-plot" class="hardware-plot">
           <p class="plot-kicker">LUNAR SURFACE · HARDWARE PLOT</p>
 
           <!-- Idle 4 SITES · 6 MACHINES legend -->
@@ -81,6 +106,7 @@
           <!-- Selected Ghost Plot -->
           <div id="plot-selected-wrap" class="plot-selected-wrap" hidden>
             <p id="plot-ghost-name" class="plot-ghost-name"></p>
+            <p id="plot-ghost-meta" class="plot-ghost-meta" hidden></p>
             <figure id="plot-photo-fig" class="plot-photo-fig" hidden>
               <button id="plot-photo-btn" type="button" class="plot-photo-btn" aria-label="View larger photo">
                 <img id="plot-photo-img" class="plot-photo-img" src="" alt="">
@@ -88,8 +114,27 @@
               <figcaption id="plot-photo-cap" class="plot-photo-cap"></figcaption>
             </figure>
             <div id="plot-photo-placeholder" class="plot-photo-placeholder" hidden></div>
-            <div id="plot-signal-box" class="plot-signal-box">
-              <span id="plot-signal-text">SIGNAL CHECK: PRESS CALL GHOST</span>
+          </div>
+
+          <!-- Status Box (always visible on main screen: idle explainer, calling, laser timer, or call result) -->
+          <div id="plot-signal-box" class="plot-signal-box">
+            <span id="plot-signal-text" aria-hidden="true">Pick a machine, then press CALL GHOST to radio it. See who answers.</span>
+          </div>
+        </div>
+
+        <!-- Polite Live Region for Screen Readers (announces call status & final results without announcing every 50ms laser tick) -->
+        <div id="sr-status-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+        <!-- Mission Complete Panel (6 of 6 Checked) -->
+        <div id="mission-complete-panel" class="mission-complete-panel" role="dialog" aria-labelledby="mission-complete-title" hidden>
+          <div class="mission-complete-card">
+            <div class="mission-complete-top">
+              <p id="mission-complete-title" class="mission-complete-title">GHOST CHECK COMPLETE. You checked every machine NASA left on the Moon.</p>
+              <button id="close-complete-btn" type="button" class="mission-complete-close" aria-label="Close mission complete panel">CLOSE</button>
+            </div>
+            <canvas id="badge-canvas" class="badge-canvas" width="440" height="200" role="img" aria-label="Junior Flight Controller Ghost Rovers badge"></canvas>
+            <div class="mission-complete-actions">
+              <button id="save-badge-btn" type="button" class="save-badge-btn">SAVE BADGE</button>
             </div>
           </div>
         </div>
@@ -135,8 +180,6 @@
       <!-- Left Console CRT Monitor -->
       <div class="console-monitor-bezel">
         <article aria-label="Console monitor" class="console-monitor">
-          <div aria-hidden="true" class="crt-scanlines"></div>
-
           <div id="monitor-idle" class="monitor-idle">
             <p class="monitor-ready-title">CONSOLE READY.</p>
             <p class="monitor-ready-sub">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
@@ -148,12 +191,22 @@
             <p id="file-header" class="file-header"></p>
             <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="file-job"></span></p>
             <p id="file-body" class="file-body"></p>
+            <div id="file-answer-box" class="file-answer-box" hidden>
+              <div class="file-answer-content">
+                <span class="file-answer-label">ANSWER: </span>
+                <span id="file-answer-text" class="file-answer-text"></span>
+              </div>
+              <button id="file-answer-clear" type="button" class="file-answer-clear" aria-label="Clear answer">×</button>
+            </div>
             <div class="file-actions">
               <span class="ask-label">ASK:</span>
               <button id="q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
               <button id="q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
               <button id="q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
-              <a id="nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
+              <button id="read-btn" type="button" class="read-btn" aria-pressed="false">READ TO ME</button>
+              <a id="nasa-link" href="https://nssdc.gsfc.nasa.gov/" target="_blank" rel="noopener noreferrer" class="nasa-link">
+                <span>NASA RECORD</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+              </a>
               <!-- TODO: Study notebook link -->
             </div>
           </div>
@@ -189,6 +242,7 @@
             <span id="nosignal-lamp" aria-hidden="true" class="round-lamp"></span>
             <span class="lamp-caption">NO SIGNAL</span>
           </span>
+          <button id="reset-btn" type="button" class="reset-btn">RESET CONSOLE</button>
         </div>
       </nav>
     </div>
@@ -211,23 +265,32 @@
 
       <div class="phone-sheet-crt-bezel">
         <article class="phone-sheet-crt">
-          <div aria-hidden="true" class="crt-scanlines"></div>
           <p id="phone-file-header" class="file-header"></p>
           <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="phone-file-job"></span></p>
           <p id="phone-file-body" class="file-body"></p>
+          <div id="phone-file-answer-box" class="file-answer-box" hidden>
+            <div class="file-answer-content">
+              <span class="file-answer-label">ANSWER: </span>
+              <span id="phone-file-answer-text" class="file-answer-text"></span>
+            </div>
+            <button id="phone-file-answer-clear" type="button" class="file-answer-clear" aria-label="Clear answer">×</button>
+          </div>
           <div class="file-actions">
             <span class="ask-label">ASK:</span>
             <button id="phone-q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
             <button id="phone-q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
             <button id="phone-q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
-            <a id="phone-nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
+            <button id="phone-read-btn" type="button" class="read-btn" aria-pressed="false">READ TO ME</button>
+            <a id="phone-nasa-link" href="https://nssdc.gsfc.nasa.gov/" target="_blank" rel="noopener noreferrer" class="nasa-link">
+              <span>NASA RECORD</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
             <!-- TODO: Study notebook link -->
           </div>
         </article>
       </div>
 
       <div id="phone-sheet-signal-box" class="phone-sheet-signal-box">
-        <span id="phone-sheet-signal-text">SIGNAL CHECK: PRESS CALL GHOST</span>
+        <span id="phone-sheet-signal-text" aria-hidden="true">Pick a machine, then press CALL GHOST to radio it. See who answers.</span>
       </div>
 
       <div class="phone-sheet-call-row">
@@ -240,6 +303,7 @@
           <span id="phone-nosignal-lamp" aria-hidden="true" class="round-lamp"></span>
           <span class="lamp-caption">NO SIGNAL</span>
         </span>
+        <button id="phone-reset-btn" type="button" class="reset-btn">RESET CONSOLE</button>
       </div>
     </section>
 

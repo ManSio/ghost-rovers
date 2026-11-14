@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /spike/
+
+Sitemap: https://earlgreyhot1701d.github.io/ghost-rovers/sitemap.xml

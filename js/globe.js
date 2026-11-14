@@ -1,4 +1,4 @@
-// js/globe.js: Three.js 0.187.0 3D Moon globe with NASA LRO texture and drag/target rotation
+// js/globe.js: Three.js 0.187.0 3D Moon globe with NASA LRO texture, drag/target rotation, and room scale awareness
 
 import { latLonToXYZ, getTargetRotationForSite, worldToViewportPx } from './projection.js';
 import { showErrorBanner } from './data.js';
@@ -6,7 +6,7 @@ import { showErrorBanner } from './data.js';
 const THREE_CDN = 'https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.min.js';
 const TEXTURE_URL = 'assets/nasa/lroc_color_2k.jpg';
 
-export async function createMoonGlobe(containerEl, onFrameUpdate) {
+export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) {
   let THREE;
   try {
     THREE = await import(THREE_CDN);
@@ -81,6 +81,7 @@ export async function createMoonGlobe(containerEl, onFrameUpdate) {
     globeGroup.add(sphere);
 
     let isDragging = false;
+    let hasNotifiedDrag = false;
     let prevX = 0;
     let prevY = 0;
     let targetRotX = null;
@@ -110,8 +111,15 @@ export async function createMoonGlobe(containerEl, onFrameUpdate) {
 
     canvas.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      const dx = e.clientX - prevX;
-      const dy = e.clientY - prevY;
+      const scale = options.getRoomScale ? options.getRoomScale() : 1;
+      const dx = (e.clientX - prevX) / (scale || 1);
+      const dy = (e.clientY - prevY) / (scale || 1);
+      if ((Math.abs(dx) > 1 || Math.abs(dy) > 1) && !hasNotifiedDrag) {
+        hasNotifiedDrag = true;
+        if (options.onFirstDrag) {
+          options.onFirstDrag();
+        }
+      }
       prevX = e.clientX;
       prevY = e.clientY;
       globeGroup.rotation.y += dx * dragSpeed;

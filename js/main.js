@@ -1,4 +1,4 @@
-// js/main.js: Main application state, boot sequence, clocks, audio, keyboard, photo modal, and 3D globe integration
+// js/main.js: Main application state, room scaling, boot sequence, clocks, audio, speech synthesis, laser show, badge download, and 3D globe integration
 
 import { loadGhostData, showErrorBanner } from './data.js';
 import { createMoonGlobe } from './globe.js';
@@ -34,6 +34,14 @@ function since(iso, nowMs) {
     hms: hh + ':' + mm + ':' + ss,
     hm: hh + ':' + mm
   };
+}
+
+function prefersReducedMotion() {
+  try {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {
+    return false;
+  }
 }
 
 // Synthesized console sounds (Web Audio, no files), from design/mission-control-prototype.dc.html
@@ -111,10 +119,17 @@ async function startApp() {
   const { ghosts, sites, bootLines } = data;
   const sfx = makeAudio();
 
+  const speechSupported = Boolean(
+    typeof window !== 'undefined' &&
+      'speechSynthesis' in window &&
+      'SpeechSynthesisUtterance' in window
+  );
+
   const state = {
     phase: 'boot',
     step: 0,
     sel: null,
+    viewMode: 'moon', // 'moon' or 'photo'
     call: null,
     openQ: null,
     now: Date.now(),
@@ -122,15 +137,28 @@ async function startApp() {
     muted: false,
     phoneSheetOpen: false,
     photoModalOpen: false,
-    photoTriggerEl: null
+    photoTriggerEl: null,
+    missionCompleteDismissed: false,
+    speechSupported,
+    speaking: false,
+    laserActive: false,
+    laserStaticDone: false,
+    laserElapsed: 0
   };
 
+  let currentRoomScale = 1;
   let bootTimer = null;
   let callTimer = null;
+  let laserRafId = null;
+  let dragHintTimer = null;
+  let dragHintDismissed = false;
   let globeController = null;
   let markersController = null;
 
   // DOM Elements
+  const roomEl = document.getElementById('room');
+  const mainScreenEl = document.getElementById('main-screen') || document.querySelector('.main-screen');
+  const moonViewportEl = document.getElementById('moon-viewport');
   const gmtValEl = document.getElementById('gmt-val');
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
@@ -148,7 +176,44 @@ async function startApp() {
   const mainContentEl = document.getElementById('main-content');
   const moonCanvasWrapEl = document.getElementById('moon-canvas-wrap');
   const faceEarthBtnEl = document.getElementById('face-earth-btn');
+  const dragHintEl = document.getElementById('drag-hint');
   const photoModalCloseEl = document.getElementById('photo-modal-close');
+  const srStatusLiveEl = document.getElementById('sr-status-live');
+
+  // Laser Show DOM Elements
+  const laserLayerEl = document.getElementById('laser-layer');
+  const laserSvgEl = document.getElementById('laser-svg');
+  const laserBeamGlowEl = document.getElementById('laser-beam-glow');
+  const laserBeamLineEl = document.getElementById('laser-beam-line');
+  const laserPulseDotEl = document.getElementById('laser-pulse-dot');
+  const laserEarthNodeEl = document.getElementById('laser-earth-node');
+
+  function announcePolite(message) {
+    if (!srStatusLiveEl) return;
+    srStatusLiveEl.textContent = message;
+  }
+
+  function updateRoomScale() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    if (vw <= 599) {
+      currentRoomScale = 1;
+      roomEl.style.transform = '';
+      return;
+    }
+    let baseW = 1280;
+    let baseH = 800;
+    if (vw <= 959) {
+      baseW = 820;
+      baseH = 1180;
+    } else if (vw <= 1219) {
+      baseW = 1180;
+      baseH = 820;
+    }
+    const scale = Math.min(vw / baseW, vh / baseH);
+    currentRoomScale = scale;
+    roomEl.style.transform = 'translate(-50%, -50%) scale(' + scale.toFixed(4) + ')';
+  }
 
   function playSound(name) {
     if (!state.muted && sfx[name]) {
@@ -156,6 +221,142 @@ async function startApp() {
         sfx[name]();
       } catch (e) {}
     }
+  }
+
+  function stopSpeech() {
+    if (speechSupported) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch (e) {}
+    }
+    state.speaking = false;
+  }
+
+  function toggleSpeech() {
+    if (!speechSupported) return;
+    playSound('click');
+    if (state.speaking) {
+      stopSpeech();
+      updateAll();
+      return;
+    }
+    const g = ghosts.find((x) => x.id === state.sel);
+    if (!g) return;
+
+    try {
+      window.speechSynthesis.cancel();
+      const openAnswer = state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : null;
+      const fullText =
+        'Mission: ' + g.job + ' ' + g.story + (openAnswer ? ' Answer: ' + openAnswer : '');
+      const utter = new SpeechSynthesisUtterance(fullText);
+      utter.rate = 0.95;
+      utter.onend = () => {
+        state.speaking = false;
+        updateAll();
+      };
+      utter.onerror = () => {
+        state.speaking = false;
+        updateAll();
+      };
+      state.speaking = true;
+      window.speechSynthesis.speak(utter);
+      updateAll();
+    } catch (e) {
+      state.speaking = false;
+      updateAll();
+    }
+  }
+
+  function stopLaserShow() {
+    if (laserRafId) {
+      cancelAnimationFrame(laserRafId);
+      laserRafId = null;
+    }
+    state.laserActive = false;
+    state.laserStaticDone = false;
+    state.laserElapsed = 0;
+    laserLayerEl.hidden = true;
+  }
+
+  function updateLaserGeometry(progress, staticFullLine) {
+    if (!globeController || !mainScreenEl || !moonViewportEl) return;
+    const sw = mainScreenEl.clientWidth || 728;
+    const sh = mainScreenEl.clientHeight || 424;
+    laserSvgEl.setAttribute('viewBox', '0 0 ' + sw + ' ' + sh);
+
+    const vpLeft = moonViewportEl.offsetLeft;
+    const vpTop = moonViewportEl.offsetTop;
+
+    const a11 = sites.A11;
+    const pos = globeController.projectLatLon(a11.lat, a11.lon);
+    const targetX = vpLeft + pos.x;
+    const targetY = vpTop + pos.y;
+
+    const earthX = 24;
+    const earthY = Math.round(sh * 0.52);
+    laserEarthNodeEl.style.left = '8px';
+    laserEarthNodeEl.style.top = earthY + 'px';
+
+    let x1 = earthX;
+    let y1 = earthY;
+    let x2 = targetX;
+    let y2 = targetY;
+    let dotX = targetX;
+    let dotY = targetY;
+
+    if (!staticFullLine) {
+      if (progress <= 0.5) {
+        // Outbound leg: Earth -> A11 (0 to 1.25s)
+        const t = progress / 0.5;
+        x2 = earthX + (targetX - earthX) * t;
+        y2 = earthY + (targetY - earthY) * t;
+        dotX = x2;
+        dotY = y2;
+      } else {
+        // Return leg: A11 -> Earth (1.25s to 2.5s)
+        const t = (progress - 0.5) / 0.5;
+        x1 = targetX;
+        y1 = targetY;
+        x2 = targetX + (earthX - targetX) * t;
+        y2 = targetY + (earthY - targetY) * t;
+        dotX = x2;
+        dotY = y2;
+      }
+      laserPulseDotEl.style.display = '';
+      laserPulseDotEl.setAttribute('cx', dotX.toFixed(1));
+      laserPulseDotEl.setAttribute('cy', dotY.toFixed(1));
+    } else {
+      laserPulseDotEl.style.display = 'none';
+    }
+
+    laserBeamGlowEl.setAttribute('x1', x1.toFixed(1));
+    laserBeamGlowEl.setAttribute('y1', y1.toFixed(1));
+    laserBeamGlowEl.setAttribute('x2', x2.toFixed(1));
+    laserBeamGlowEl.setAttribute('y2', y2.toFixed(1));
+
+    laserBeamLineEl.setAttribute('x1', x1.toFixed(1));
+    laserBeamLineEl.setAttribute('y1', y1.toFixed(1));
+    laserBeamLineEl.setAttribute('x2', x2.toFixed(1));
+    laserBeamLineEl.setAttribute('y2', y2.toFixed(1));
+  }
+
+  function dismissDragHint() {
+    if (dragHintDismissed) return;
+    dragHintDismissed = true;
+    clearTimeout(dragHintTimer);
+    if (prefersReducedMotion()) {
+      dragHintEl.hidden = true;
+    } else {
+      dragHintEl.classList.add('drag-hint--hidden');
+    }
+  }
+
+  function scheduleDragHintFade() {
+    if (dragHintDismissed) return;
+    clearTimeout(dragHintTimer);
+    dragHintTimer = setTimeout(() => {
+      dismissDragHint();
+    }, 8000);
   }
 
   function isPhoneWidth() {
@@ -207,15 +408,16 @@ async function startApp() {
       const done = state.step >= bootLines.length;
       bootCursorEl.hidden = done;
       beginBtnEl.hidden = !done;
-    } else if (globeController) {
-      globeController.resize();
     }
   }
 
   function updateAll() {
     renderBoot();
     renderClocks();
-    panels.render(state);
+    const res = panels.render(state);
+    if (globeController && (res.viewportChanged || state.phase === 'main')) {
+      globeController.resize();
+    }
     if (markersController) {
       const g = ghosts.find((x) => x.id === state.sel) || null;
       const showPing = Boolean(state.call === 'done' && g && g.answers);
@@ -223,6 +425,12 @@ async function startApp() {
       if (globeController) {
         markersController.updatePositions(globeController.projectLatLon, showPing);
       }
+    }
+    if (state.laserStaticDone) {
+      laserLayerEl.hidden = false;
+      updateLaserGeometry(1, true);
+    } else if (!state.laserActive) {
+      laserLayerEl.hidden = true;
     }
   }
 
@@ -251,14 +459,18 @@ async function startApp() {
   function pickGhostById(id) {
     if (state.phase === 'boot') return;
     clearTimeout(callTimer);
+    stopLaserShow();
+    stopSpeech();
     playSound('click');
+
+    const g = ghosts.find((x) => x.id === id);
     state.sel = id;
+    state.viewMode = g && g.hasPhoto ? 'photo' : 'moon';
     state.call = null;
     state.openQ = null;
     state.phoneSheetOpen = true;
     state.photoModalOpen = false;
 
-    const g = ghosts.find((x) => x.id === id);
     if (g && globeController) {
       const site = sites[g.site];
       const lat = site ? site.lat : g.lat;
@@ -275,45 +487,164 @@ async function startApp() {
     pickGhostById(siteGhosts[nextIdx].id);
   }
 
+  function finishCallForGhost(g) {
+    const wasAllDone = ghosts.every((x) => state.checked[x.id]);
+    state.checked = Object.assign({}, state.checked, { [g.id]: true });
+    const nowAllDone = ghosts.every((x) => state.checked[x.id]);
+    if (nowAllDone && !wasAllDone) {
+      state.missionCompleteDismissed = false;
+      setTimeout(() => playSound('done'), 900);
+    }
+    playSound(g.answers ? 'ping' : 'nosignal');
+    state.call = 'done';
+    announcePolite(g.reply);
+    updateAll();
+  }
+
   function doCall() {
     if (state.phase === 'boot') return;
     const g = ghosts.find((x) => x.id === state.sel);
     if (!g) {
       playSound('nosignal');
       state.call = 'nosel';
+      announcePolite('Pick a ghost first, then call.');
       updateAll();
       return;
     }
+
     clearTimeout(callTimer);
+    stopLaserShow();
+    stopSpeech();
+
+    // Special Laser Show for Laser Mirror (id === 'mirror')
+    if (g.id === 'mirror') {
+      // Return to full Moon view on desktop/tablet so the Earth->A11 laser beam is clearly visible
+      state.viewMode = 'moon';
+      if (globeController) {
+        const site = sites.A11;
+        globeController.rotateToSite(site.lat, site.lon);
+      }
+
+      if (prefersReducedMotion()) {
+        state.laserStaticDone = true;
+        state.laserElapsed = 2.5;
+        finishCallForGhost(g);
+        return;
+      }
+
+      playSound('calling');
+      state.call = 'calling';
+      state.openQ = null;
+      state.laserActive = true;
+      state.laserElapsed = 0;
+      laserLayerEl.hidden = false;
+      announcePolite('Firing laser beam to Apollo 11 Laser Mirror.');
+      updateAll();
+
+      const startTime = performance.now();
+      const durationMs = 2500;
+
+      const stepLaser = (nowPerf) => {
+        const elapsedMs = Math.min(durationMs, Math.max(0, nowPerf - startTime));
+        state.laserElapsed = elapsedMs / 1000;
+        const progress = elapsedMs / durationMs;
+        updateLaserGeometry(progress, false);
+        panels.render(state);
+
+        if (elapsedMs < durationMs) {
+          laserRafId = requestAnimationFrame(stepLaser);
+        } else {
+          laserRafId = null;
+          state.laserActive = false;
+          state.laserStaticDone = true;
+          finishCallForGhost(g);
+        }
+      };
+
+      laserRafId = requestAnimationFrame(stepLaser);
+      return;
+    }
+
+    // Standard radio call for all other 5 ghosts
     playSound('calling');
     state.call = 'calling';
     state.openQ = null;
+    announcePolite('Radioing the Moon. 1.3 seconds each way.');
     updateAll();
 
     callTimer = setTimeout(() => {
-      const wasAllDone = ghosts.every((x) => state.checked[x.id]);
-      state.checked = Object.assign({}, state.checked, { [g.id]: true });
-      const nowAllDone = ghosts.every((x) => state.checked[x.id]);
-      playSound(g.answers ? 'ping' : 'nosignal');
-      if (nowAllDone && !wasAllDone) {
-        setTimeout(() => playSound('done'), 1700);
-      }
-      state.call = 'done';
-      updateAll();
+      finishCallForGhost(g);
     }, 1600);
   }
 
+  function resetConsole() {
+    if (state.phase === 'boot') return;
+    clearTimeout(callTimer);
+    stopLaserShow();
+    stopSpeech();
+    playSound('click');
+
+    state.sel = null;
+    state.viewMode = 'moon';
+    state.call = null;
+    state.openQ = null;
+    state.checked = {};
+    state.phoneSheetOpen = false;
+    state.photoModalOpen = false;
+    state.missionCompleteDismissed = false;
+
+    if (globeController) {
+      globeController.faceEarth();
+    }
+    announcePolite('Console reset. Pick a machine, then press CALL GHOST to radio it.');
+    updateAll();
+  }
+
+  function backToMoon() {
+    if (state.phase === 'boot') return;
+    playSound('click');
+    state.viewMode = 'moon';
+    updateAll();
+  }
+
   function toggleQuestion(qIndex) {
+    stopSpeech();
     playSound('click');
     state.openQ = state.openQ === qIndex ? null : qIndex;
     updateAll();
   }
 
+  function clearQuestion() {
+    stopSpeech();
+    playSound('click');
+    state.openQ = null;
+    updateAll();
+  }
+
+  function saveBadge(canvasEl) {
+    if (!canvasEl) return;
+    playSound('click');
+    try {
+      const dataUrl = canvasEl.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'ghost-rovers-junior-flight-controller.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (e) {}
+  }
+
   const panels = initPanels(data, {
     onPickGhostId: pickGhostById,
     onToggleQuestion: toggleQuestion,
+    onClearQuestion: clearQuestion,
     onCallGhost: doCall,
+    onResetConsole: resetConsole,
+    onBackToMoon: backToMoon,
+    onToggleSpeech: toggleSpeech,
     onClosePhoneSheet: () => {
+      stopSpeech();
       playSound('click');
       state.phoneSheetOpen = false;
       updateAll();
@@ -324,19 +655,20 @@ async function startApp() {
       updateAll();
     },
     onOpenPhotoModal: openPhotoModal,
-    onClosePhotoModal: closePhotoModal
+    onClosePhotoModal: closePhotoModal,
+    onCloseMissionComplete: () => {
+      playSound('click');
+      state.missionCompleteDismissed = true;
+      updateAll();
+    },
+    onSaveBadge: saveBadge
   });
 
   markersController = initSiteMarkers(sites, ghosts, pickSitePin);
 
   function startBootSequence() {
     clearInterval(bootTimer);
-    let reduce = false;
-    try {
-      reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    } catch (e) {}
-
-    if (reduce) {
+    if (prefersReducedMotion()) {
       state.step = bootLines.length;
       updateAll();
       return;
@@ -359,6 +691,7 @@ async function startApp() {
     state.phase = 'main';
     state.step = bootLines.length;
     updateAll();
+    scheduleDragHintFade();
   });
 
   skipIntroBtnEl.addEventListener('click', () => {
@@ -366,18 +699,23 @@ async function startApp() {
     state.phase = 'main';
     state.step = bootLines.length;
     updateAll();
+    scheduleDragHintFade();
   });
 
   replayBtnEl.addEventListener('click', () => {
     clearTimeout(callTimer);
+    stopLaserShow();
+    stopSpeech();
     state.phase = 'boot';
     state.step = 0;
     state.sel = null;
+    state.viewMode = 'moon';
     state.call = null;
     state.openQ = null;
     state.checked = {};
     state.phoneSheetOpen = false;
     state.photoModalOpen = false;
+    state.missionCompleteDismissed = false;
     if (globeController) {
       globeController.faceEarth();
     }
@@ -405,6 +743,7 @@ async function startApp() {
         return;
       }
       if (state.phoneSheetOpen) {
+        stopSpeech();
         state.phoneSheetOpen = false;
         updateAll();
         return;
@@ -422,7 +761,9 @@ async function startApp() {
   });
 
   window.addEventListener('resize', () => {
+    updateRoomScale();
     renderClocks();
+    updateAll();
   });
 
   setInterval(() => {
@@ -430,17 +771,28 @@ async function startApp() {
     renderClocks();
   }, 1000);
 
+  updateRoomScale();
   updateAll();
   startBootSequence();
 
   // Initialize Three.js 0.187.0 Globe
   try {
-    globeController = await createMoonGlobe(moonCanvasWrapEl, (projectLatLon) => {
-      if (!markersController || state.phase === 'boot') return;
-      const g = ghosts.find((x) => x.id === state.sel) || null;
-      const showPing = Boolean(state.call === 'done' && g && g.answers);
-      markersController.updatePositions(projectLatLon, showPing);
-    });
+    globeController = await createMoonGlobe(
+      moonCanvasWrapEl,
+      (projectLatLon) => {
+        if (!markersController || state.phase === 'boot') return;
+        const g = ghosts.find((x) => x.id === state.sel) || null;
+        const showPing = Boolean(state.call === 'done' && g && g.answers);
+        markersController.updatePositions(projectLatLon, showPing);
+        if (state.laserStaticDone) {
+          updateLaserGeometry(1, true);
+        }
+      },
+      {
+        getRoomScale: () => currentRoomScale,
+        onFirstDrag: dismissDragHint
+      }
+    );
     updateAll();
   } catch (err) {
     showErrorBanner('3D Moon Globe failed to initialize: ' + (err && err.message ? err.message : String(err)));
