@@ -4,6 +4,18 @@ function p2(n) {
   return String(n).padStart(2, '0');
 }
 
+function fitFont(ctx, text, weight, maxPx, minPx, family, maxWidth) {
+  let size = maxPx;
+  while (size > minPx) {
+    ctx.font = weight + ' ' + size + 'px ' + family;
+    if (ctx.measureText(text).width <= maxWidth) {
+      break;
+    }
+    size -= 0.5;
+  }
+  return ctx.font;
+}
+
 // Draw the 1969 Console Junior Flight Controller Badge on <canvas>
 // Contest rule: NO NASA logo, insignia, mission patch, or flag
 export function drawMissionBadge(canvas) {
@@ -58,9 +70,9 @@ export function drawMissionBadge(canvas) {
   });
 
   // Left Emblem: Geometric Moon Globe with 4 Landing Site Squares
-  const cx = 74;
+  const cx = 72;
   const cy = h / 2;
-  const r = 46;
+  const r = 44;
 
   ctx.fillStyle = '#162224';
   ctx.beginPath();
@@ -100,24 +112,31 @@ export function drawMissionBadge(canvas) {
     ctx.strokeRect(pt.x - 4, pt.y - 4, 8, 8);
   });
 
-  // Right Typography Block
-  const tx = 138;
+  // Right Typography Block (fit every line via measureText inside inner border)
+  const tx = 132;
+  const maxTextW = w - tx - 24;
+  const monoFont = '"IBM Plex Mono", monospace';
+  const sansFont = '"Archivo Narrow", Arial, sans-serif';
 
   // Top red Dymo-style strip
+  const dymoText = 'CONSOLE 7 · MISSION COMPLETE';
+  fitFont(ctx, dymoText, '700', 11, 8, monoFont, maxTextW - 16);
+  const dymoW = Math.ceil(ctx.measureText(dymoText).width) + 16;
   ctx.fillStyle = '#9E2B25';
-  ctx.fillRect(tx, 26, 204, 20);
+  ctx.fillRect(tx, 26, dymoW, 20);
   ctx.fillStyle = '#F4F4F0';
-  ctx.font = '700 11px "IBM Plex Mono", monospace';
-  ctx.fillText('CONSOLE 7 · MISSION COMPLETE', tx + 8, 40);
+  ctx.fillText(dymoText, tx + 8, 40);
 
   // Main Badge Title
+  const title1 = 'JUNIOR FLIGHT CONTROLLER';
   ctx.fillStyle = '#FFE9B0';
-  ctx.font = '700 21px "Archivo Narrow", Arial, sans-serif';
-  ctx.fillText('JUNIOR FLIGHT CONTROLLER', tx, 74);
+  fitFont(ctx, title1, '700', 21, 12, sansFont, maxTextW);
+  ctx.fillText(title1, tx, 74);
 
+  const title2 = 'GHOST ROVERS · LUNAR HARDWARE CHECK';
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = '700 16px "Archivo Narrow", Arial, sans-serif';
-  ctx.fillText('GHOST ROVERS · LUNAR HARDWARE CHECK', tx, 97);
+  fitFont(ctx, title2, '700', 16, 10, sansFont, maxTextW);
+  ctx.fillText(title2, tx, 97);
 
   // Divider
   ctx.strokeStyle = 'rgba(201, 184, 113, 0.4)';
@@ -128,16 +147,20 @@ export function drawMissionBadge(canvas) {
   ctx.stroke();
 
   // Telemetry verification lines
+  const line1 = 'LOG STATUS : 06 OF 06 MACHINES CHECKED';
   ctx.fillStyle = '#C9DDE0';
-  ctx.font = '600 11px "IBM Plex Mono", monospace';
-  ctx.fillText('LOG STATUS : 06 OF 06 MACHINES CHECKED', tx, 132);
+  fitFont(ctx, line1, '600', 11, 8, monoFont, maxTextW);
+  ctx.fillText(line1, tx, 132);
 
+  const line2 = 'ACTIVE LINK: A11 LASER MIRROR (2.5 SEC)';
   ctx.fillStyle = '#9BEFB0';
-  ctx.fillText('ACTIVE LINK: A11 LASER MIRROR (2.5 SEC)', tx, 152);
+  fitFont(ctx, line2, '600', 11, 8, monoFont, maxTextW);
+  ctx.fillText(line2, tx, 152);
 
+  const line3 = '4 APOLLO & SURVEYOR SITES · NEAR SIDE';
   ctx.fillStyle = '#8FA5A9';
-  ctx.font = '400 10px "IBM Plex Mono", monospace';
-  ctx.fillText('4 APOLLO & SURVEYOR SITES · NEAR SIDE', tx, 172);
+  fitFont(ctx, line3, '400', 10, 8, monoFont, maxTextW);
+  ctx.fillText(line3, tx, 172);
 }
 
 export function initPanels(data, callbacks) {
@@ -348,7 +371,10 @@ export function initPanels(data, callbacks) {
   let badgeDrawn = false;
 
   closeCompleteBtn.addEventListener('click', onCloseMissionComplete);
-  saveBadgeBtn.addEventListener('click', () => onSaveBadge(badgeCanvasEl));
+  saveBadgeBtn.addEventListener('click', () => {
+    drawMissionBadge(badgeCanvasEl);
+    onSaveBadge(badgeCanvasEl);
+  });
 
   // DOM References for Dynamic Updates
   const takeoverPhotoWrap = document.getElementById('takeover-photo-wrap');
@@ -367,7 +393,6 @@ export function initPanels(data, callbacks) {
   const plotSignalText = document.getElementById('plot-signal-text');
 
   const logCountEl = document.getElementById('log-count');
-  const logAllDoneEl = document.getElementById('log-all-done');
   const compactLogTextEl = document.getElementById('compact-log-text');
 
   const monitorIdleEl = document.getElementById('monitor-idle');
@@ -449,7 +474,6 @@ export function initPanels(data, callbacks) {
     const checkedStr = p2(nChecked) + ' OF 06 CHECKED';
     logCountEl.textContent = checkedStr;
     compactLogTextEl.textContent = 'GHOST LOG · ' + checkedStr;
-    logAllDoneEl.hidden = !allDone;
 
     // 3. Update Console Ghost Buttons
     ghostButtons.forEach((item) => {
@@ -648,6 +672,9 @@ export function initPanels(data, callbacks) {
       missionCompletePanelEl.hidden = false;
       if (!badgeDrawn) {
         drawMissionBadge(badgeCanvasEl);
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => drawMissionBadge(badgeCanvasEl));
+        }
         badgeDrawn = true;
       }
     } else {
