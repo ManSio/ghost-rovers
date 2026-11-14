@@ -12,8 +12,8 @@
       "code": "A11",
       "legendCode": "A-11",
       "name": "Sea of Tranquility",
-      "lat": 0.674,
-      "lon": 23.473,
+      "lat": 0.67416,
+      "lon": 23.47314,
       "x": 280,
       "y": 198
     },
@@ -21,8 +21,8 @@
       "code": "A12",
       "legendCode": "A-12",
       "name": "Ocean of Storms",
-      "lat": -3.012,
-      "lon": -23.422,
+      "lat": -3.0128,
+      "lon": -23.4219,
       "x": 121,
       "y": 211
     },
@@ -30,8 +30,8 @@
       "code": "A15",
       "legendCode": "A-15",
       "name": "Hadley-Apennine",
-      "lat": 26.132,
-      "lon": 3.634,
+      "lat": 26.13239,
+      "lon": 3.6333,
       "x": 211,
       "y": 112
     },
@@ -39,8 +39,8 @@
       "code": "A17",
       "legendCode": "A-17",
       "name": "Taurus-Littrow",
-      "lat": 20.191,
-      "lon": 30.772,
+      "lat": 20.1911,
+      "lon": 30.7723,
       "x": 296,
       "y": 131
     }
@@ -48,7 +48,7 @@
   "ghosts": [
     {
       "id": "mirror",
-      "draft": true,
+      "draft": false,
       "num": "01",
       "code": "A11-LRRR",
       "name": "Laser Mirror",
@@ -56,9 +56,9 @@
       "mission": "Apollo 11",
       "site": "A11",
       "siteName": "Sea of Tranquility",
-      "lat": 0.674,
-      "lon": 23.473,
-      "landed": "1969-07-20T20:17:00Z",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "landed": "1969-07-20T20:17:40Z",
       "landedTxt": "1969-07-20",
       "quiet": "NEVER",
       "answers": true,
@@ -73,17 +73,21 @@
         [
           "What did scientists learn?",
           "The Moon is drifting away from Earth, about 3.8 cm every year. That's about how fast your fingernails grow."
+        ],
+        [
+          "What's it made of?",
+          "100 glass corner cubes set in a metal panel about 46 cm wide. Each cube sends light straight back to where it came from."
         ]
       ],
-      "photo": "",
-      "photoAlt": "",
+      "photo": "assets/nasa/as11-37-5551_800.jpg",
+      "photoAlt": "The Apollo 11 laser reflector and seismic experiment deployed on the lunar surface",
       "photoId": "NASA AS11-37-5551",
-      "hasPhoto": false,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "hasPhoto": true,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
     },
     {
       "id": "eagle",
-      "draft": true,
+      "draft": false,
       "num": "02",
       "code": "A11-LM",
       "name": "Eagle's Launch Pad",
@@ -91,9 +95,9 @@
       "mission": "Apollo 11",
       "site": "A11",
       "siteName": "Sea of Tranquility",
-      "lat": 0.674,
-      "lon": 23.473,
-      "landed": "1969-07-20T20:17:00Z",
+      "lat": 0.67416,
+      "lon": 23.47314,
+      "landed": "1969-07-20T20:17:40Z",
       "landedTxt": "1969-07-20",
       "quiet": "1969",
       "answers": false,
@@ -108,17 +112,21 @@
         [
           "Can anyone see it now?",
           "Yes! NASA's Lunar Reconnaissance Orbiter has photographed the landing site from above."
+        ],
+        [
+          "What's it made of?",
+          "Four legs with round footpads, 4.2 m across. Its landing rocket engine is still inside, pointing at the ground."
         ]
       ],
       "photo": "assets/nasa/eagle_800.jpg",
       "photoAlt": "The Apollo 11 lunar module Eagle in lunar orbit, July 1969",
       "photoId": "NASA AS11-44-6581",
       "hasPhoto": true,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-059C"
     },
     {
       "id": "surveyor",
-      "draft": true,
+      "draft": false,
       "num": "03",
       "code": "S-3",
       "name": "Surveyor 3",
@@ -126,15 +134,15 @@
       "mission": "Surveyor",
       "site": "A12",
       "siteName": "Ocean of Storms",
-      "lat": -3.012,
-      "lon": -23.422,
-      "landed": "1967-04-20T00:04:00Z",
+      "lat": -3.0162,
+      "lon": -23.418,
+      "landed": "1967-04-20T00:04:17Z",
       "landedTxt": "1967-04-20",
       "quiet": "1967",
       "answers": false,
       "job": "A robot lander sent to prove a spacecraft could land softly, and to dig into the soil before astronauts came.",
       "reply": "NO SIGNAL. QUIET SINCE 1967.",
-      "story": "I landed here alone. Two years later, two astronauts walked over to visit and took my camera home to Earth.",
+      "story": "I landed here alone. Two and a half years later, two astronauts walked over to visit and took my camera home to Earth.",
       "qs": [
         [
           "Why did astronauts visit?",
@@ -143,17 +151,21 @@
         [
           "Is it still there?",
           "Yes, minus the camera and a few parts the astronauts took home."
+        ],
+        [
+          "What's it made of?",
+          "Three legs, a solar panel to make power, a TV camera, and a 12 cm scoop on a long arm for digging."
         ]
       ],
       "photo": "assets/nasa/surveyor3_800.jpg",
       "photoAlt": "Surveyor 3 on the Moon, photographed by the Apollo 12 crew",
       "photoId": "NASA AS12-48-7121",
       "hasPhoto": true,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1967-035A"
     },
     {
       "id": "alsep",
-      "draft": true,
+      "draft": false,
       "num": "04",
       "code": "A12-ALSEP",
       "name": "Moonquake Station",
@@ -161,9 +173,9 @@
       "mission": "Apollo 12",
       "site": "A12",
       "siteName": "Ocean of Storms",
-      "lat": -3.012,
-      "lon": -23.422,
-      "landed": "1969-11-19T06:54:00Z",
+      "lat": -3.0128,
+      "lon": -23.4219,
+      "landed": "1969-11-19T06:54:35Z",
       "landedTxt": "1969-11-19",
       "quiet": "1977",
       "answers": false,
@@ -177,18 +189,22 @@
         ],
         [
           "Why was it turned off?",
-          "In 1977 NASA switched the stations off to save money for new missions."
+          "On September 30, 1977, NASA switched off all the Apollo stations. The money was needed for other missions, and their power was running low."
+        ],
+        [
+          "What's it made of?",
+          "A box of science tools wired to a heat battery. The battery used plutonium to make about 70 watts of power."
         ]
       ],
-      "photo": "",
-      "photoAlt": "",
+      "photo": "assets/nasa/as12-47-6918_800.jpg",
+      "photoAlt": "Deployed components of the Apollo 12 science station on the Moon with orange cables",
       "photoId": "NASA AS12-47-6918",
-      "hasPhoto": false,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "hasPhoto": true,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-099C"
     },
     {
       "id": "lrv15",
-      "draft": true,
+      "draft": false,
       "num": "05",
       "code": "A15-LRV",
       "name": "Apollo 15 Rover",
@@ -196,15 +212,15 @@
       "mission": "Apollo 15",
       "site": "A15",
       "siteName": "Hadley-Apennine",
-      "lat": 26.132,
-      "lon": 3.634,
-      "landed": "1971-07-30T22:16:00Z",
+      "lat": 26.13239,
+      "lon": 3.6333,
+      "landed": "1971-07-30T22:16:29Z",
       "landedTxt": "1971-07-30",
       "quiet": "1971",
       "answers": false,
-      "job": "The first Moon car, brought by Apollo 15 so astronauts could explore much farther from their lander.",
+      "job": "The first car astronauts drove on the Moon, brought by Apollo 15 so they could explore much farther from their lander.",
       "reply": "NO SIGNAL. PARKED SINCE 1971.",
-      "story": "I was the first car on the Moon. Two astronauts drove me over hills and craters, then parked me for good.",
+      "story": "I was the first car astronauts ever drove on the Moon. Two astronauts drove me over hills and craters, then parked me for good.",
       "qs": [
         [
           "Could I drive it?",
@@ -213,17 +229,21 @@
         [
           "Why bring a car?",
           "To explore farther than walking allowed, and to carry rocks and tools."
+        ],
+        [
+          "What's it made of?",
+          "It's electric! Each of its 4 wheels had its own motor, its tires were woven from steel wire, and its batteries couldn't be recharged."
         ]
       ],
-      "photo": "",
-      "photoAlt": "",
+      "photo": "assets/nasa/as15-88-11901_800.jpg",
+      "photoAlt": "The Apollo 15 Lunar Roving Vehicle parked on the Moon with its umbrella antenna",
       "photoId": "NASA AS15-88-11901",
-      "hasPhoto": false,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "hasPhoto": true,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1971-063C"
     },
     {
       "id": "lrv17",
-      "draft": true,
+      "draft": false,
       "num": "06",
       "code": "A17-LRV",
       "name": "Apollo 17 Rover",
@@ -231,9 +251,9 @@
       "mission": "Apollo 17",
       "site": "A17",
       "siteName": "Taurus-Littrow",
-      "lat": 20.191,
-      "lon": 30.772,
-      "landed": "1972-12-11T19:54:00Z",
+      "lat": 20.1911,
+      "lon": 30.7723,
+      "landed": "1972-12-11T19:54:57Z",
       "landedTxt": "1972-12-11",
       "quiet": "1972",
       "answers": false,
@@ -247,14 +267,18 @@
         ],
         [
           "Who drove it last?",
-          "The Apollo 17 crew, in December 1972. Nobody has driven on the Moon since."
+          "The Apollo 17 crew, in December 1972. No astronaut has driven on the Moon since."
+        ],
+        [
+          "What's it made of?",
+          "It's electric! Each of its 4 wheels had its own motor, its tires were woven from steel wire, and its batteries couldn't be recharged."
         ]
       ],
       "photo": "",
       "photoAlt": "",
       "photoId": "NASA AS17-137-20979",
       "hasPhoto": false,
-      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1972-096C"
     }
   ]
 }

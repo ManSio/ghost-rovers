@@ -1,4 +1,4 @@
-// js/main.js: Main application state, boot sequence, clocks, audio, keyboard, and 3D globe integration
+// js/main.js: Main application state, boot sequence, clocks, audio, keyboard, photo modal, and 3D globe integration
 
 import { loadGhostData, showErrorBanner } from './data.js';
 import { createMoonGlobe } from './globe.js';
@@ -120,7 +120,9 @@ async function startApp() {
     now: Date.now(),
     checked: {},
     muted: false,
-    phoneSheetOpen: false
+    phoneSheetOpen: false,
+    photoModalOpen: false,
+    photoTriggerEl: null
   };
 
   let bootTimer = null;
@@ -146,6 +148,7 @@ async function startApp() {
   const mainContentEl = document.getElementById('main-content');
   const moonCanvasWrapEl = document.getElementById('moon-canvas-wrap');
   const faceEarthBtnEl = document.getElementById('face-earth-btn');
+  const photoModalCloseEl = document.getElementById('photo-modal-close');
 
   function playSound(name) {
     if (!state.muted && sfx[name]) {
@@ -223,6 +226,28 @@ async function startApp() {
     }
   }
 
+  function openPhotoModal(triggerEl) {
+    const g = ghosts.find((x) => x.id === state.sel) || null;
+    if (!g || !g.hasPhoto) return;
+    playSound('click');
+    state.photoModalOpen = true;
+    state.photoTriggerEl = triggerEl || null;
+    updateAll();
+    photoModalCloseEl.focus();
+  }
+
+  function closePhotoModal() {
+    if (!state.photoModalOpen) return;
+    playSound('click');
+    state.photoModalOpen = false;
+    const trigger = state.photoTriggerEl;
+    state.photoTriggerEl = null;
+    updateAll();
+    if (trigger && typeof trigger.focus === 'function') {
+      trigger.focus();
+    }
+  }
+
   function pickGhostById(id) {
     if (state.phase === 'boot') return;
     clearTimeout(callTimer);
@@ -231,10 +256,14 @@ async function startApp() {
     state.call = null;
     state.openQ = null;
     state.phoneSheetOpen = true;
+    state.photoModalOpen = false;
 
     const g = ghosts.find((x) => x.id === id);
     if (g && globeController) {
-      globeController.rotateToSite(g.lat, g.lon);
+      const site = sites[g.site];
+      const lat = site ? site.lat : g.lat;
+      const lon = site ? site.lon : g.lon;
+      globeController.rotateToSite(lat, lon);
     }
     updateAll();
   }
@@ -293,7 +322,9 @@ async function startApp() {
       playSound('click');
       state.phoneSheetOpen = true;
       updateAll();
-    }
+    },
+    onOpenPhotoModal: openPhotoModal,
+    onClosePhotoModal: closePhotoModal
   });
 
   markersController = initSiteMarkers(sites, ghosts, pickSitePin);
@@ -346,6 +377,7 @@ async function startApp() {
     state.openQ = null;
     state.checked = {};
     state.phoneSheetOpen = false;
+    state.photoModalOpen = false;
     if (globeController) {
       globeController.faceEarth();
     }
@@ -367,12 +399,18 @@ async function startApp() {
 
   window.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    if (e.key === 'Escape' && state.phoneSheetOpen) {
-      state.phoneSheetOpen = false;
-      updateAll();
-      return;
+    if (e.key === 'Escape') {
+      if (state.photoModalOpen) {
+        closePhotoModal();
+        return;
+      }
+      if (state.phoneSheetOpen) {
+        state.phoneSheetOpen = false;
+        updateAll();
+        return;
+      }
     }
-    if (state.phase === 'boot') return;
+    if (state.phase === 'boot' || state.photoModalOpen) return;
     if (e.key >= '1' && e.key <= '6') {
       const idx = Number(e.key) - 1;
       if (ghosts[idx]) {

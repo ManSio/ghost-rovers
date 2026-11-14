@@ -6,31 +6,31 @@ Every fact and image traces back to a NASA source. Status shows what is verified
 
 | Source | What we use | How we use it | Status |
 |---|---|---|---|
-| NASA Space Science Data Coordinated Archive (NSSDCA), nssdc.gsfc.nasa.gov | Mission records for each machine: landing date, site, what it did, current status | Every fact on every story card is checked against this. Each ghost links to its own record | To do: Block 3 fact-check |
+| NASA Space Science Data Coordinated Archive (NSSDCA), nssdc.gsfc.nasa.gov | Mission records for each machine: landing date, site, what it did, current status | Every fact on every story card is checked against this. Each ghost links to its own record | Done Nov 14, 2026. Records: 1969-059C, 1967-035A, 1969-099C, 1971-063C, 1972-096C, plus the NSSDCA LRV page. Full log in docs/FACT_CHECK.md |
 | NASA Goddard Scientific Visualization Studio, CGI Moon Kit (svs.gsfc.nasa.gov/4720), LRO color map lroc_color_2k.jpg | Global color map of the Moon from the Lunar Reconnaissance Orbiter | Reprojected into a near-side view by tools/render_moon.py; landing sites placed by latitude and longitude | In use |
-| NASA Image and Video Library (images.nasa.gov) | Hardware photos | Shown unmodified (resized) on story cards, credited by NASA ID | 2 of 6 in use |
+| NASA Image and Video Library (images.nasa.gov) | Hardware photos | Shown unmodified (resized) on story cards, credited by NASA ID | 5 of 6 in use (Apollo 17 Rover photo candidate pending selection) |
 
 ## Photos
 
-| NASA ID | Shows | Used for | Status |
-|---|---|---|---|
-| as11-44-6581 | Apollo 11 lunar module Eagle in lunar orbit | Eagle's Launch Pad | In assets |
-| as12-48-7121 | Surveyor 3 on the Moon, photographed by Apollo 12 | Surveyor 3 | In assets |
-| as11-37-5551 | Apollo 11 experiments package with the laser reflector, from the LM window | Laser Mirror | Still to save |
-| as12-47-6918 | Parts of the Apollo 12 ALSEP | Moonquake Station | Still to save |
-| as15-88-11901 | Apollo 15 Lunar Roving Vehicle | Apollo 15 Rover | Still to save |
-| as17-137-20979 | Apollo 17 Lunar Roving Vehicle close-up | Apollo 17 Rover | Still to save |
+| NASA ID | Source URL | Shows | Used for | Status |
+|---|---|---|---|---|
+| as11-44-6581 | https://images.nasa.gov/details/as11-44-6581 | Apollo 11 lunar module Eagle in lunar orbit | Eagle's Launch Pad | In assets (`assets/nasa/eagle_800.jpg`) |
+| as12-48-7121 | https://images.nasa.gov/details/as12-48-7121 | Surveyor 3 on the Moon, photographed by Apollo 12 | Surveyor 3 | In assets (`assets/nasa/surveyor3_800.jpg`) |
+| as11-37-5551 | https://images.nasa.gov/details/as11-37-5551 | Apollo 11 experiments package with the laser reflector, from the LM window | Laser Mirror | In assets (`assets/nasa/as11-37-5551_800.jpg`) |
+| as12-47-6918 | https://images.nasa.gov/details/as12-47-6918 | Parts of the Apollo 12 ALSEP | Moonquake Station | In assets (`assets/nasa/as12-47-6918_800.jpg`) |
+| as15-88-11901 | https://images.nasa.gov/details/as15-88-11901 | Apollo 15 Lunar Roving Vehicle | Apollo 15 Rover | In assets (`assets/nasa/as15-88-11901_800.jpg`) |
+| as17-137-20979 | https://images.nasa.gov/details/as17-137-20979 | Apollo 17 Lunar Roving Vehicle (replacement candidate pending) | Apollo 17 Rover | Placeholder until whole-rover photo is selected |
 
 All photos were chosen to show hardware only, with no people in frame.
 
-## Landing site coordinates (draft, verify in Block 3)
+## Landing site coordinates (verified in Block 3, NSSDCA LRO-derived)
 
 | Site | Latitude | Longitude | Ghosts |
 |---|---|---|---|
-| Apollo 11, Sea of Tranquility | 0.674 N | 23.473 E | Laser Mirror, Eagle's Launch Pad |
-| Apollo 12 / Surveyor 3, Ocean of Storms | 3.012 S | 23.422 W | Surveyor 3, Moonquake Station |
-| Apollo 15, Hadley-Apennine | 26.132 N | 3.634 E | Apollo 15 Rover |
-| Apollo 17, Taurus-Littrow | 20.191 N | 30.772 E | Apollo 17 Rover |
+| Apollo 11, Sea of Tranquility | 0.67416 N | 23.47314 E | Laser Mirror, Eagle's Launch Pad |
+| Apollo 12 / Surveyor 3, Ocean of Storms | 3.0128 S (Surveyor 3: 3.0162 S) | 23.4219 W (Surveyor 3: 23.418 W) | Surveyor 3, Moonquake Station |
+| Apollo 15, Hadley-Apennine | 26.13239 N | 3.63330 E | Apollo 15 Rover |
+| Apollo 17, Taurus-Littrow | 20.1911 N | 30.7723 E | Apollo 17 Rover |
 
 ## Other resources
 

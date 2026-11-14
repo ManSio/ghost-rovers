@@ -82,7 +82,9 @@
           <div id="plot-selected-wrap" class="plot-selected-wrap" hidden>
             <p id="plot-ghost-name" class="plot-ghost-name"></p>
             <figure id="plot-photo-fig" class="plot-photo-fig" hidden>
-              <img id="plot-photo-img" class="plot-photo-img" src="" alt="">
+              <button id="plot-photo-btn" type="button" class="plot-photo-btn" aria-label="View larger photo">
+                <img id="plot-photo-img" class="plot-photo-img" src="" alt="">
+              </button>
               <figcaption id="plot-photo-cap" class="plot-photo-cap"></figcaption>
             </figure>
             <div id="plot-photo-placeholder" class="plot-photo-placeholder" hidden></div>
@@ -150,6 +152,7 @@
               <span class="ask-label">ASK:</span>
               <button id="q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
               <button id="q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
+              <button id="q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
               <a id="nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
               <!-- TODO: Study notebook link -->
             </div>
@@ -196,7 +199,9 @@
       <button id="phone-sheet-close" type="button" class="phone-sheet-close" aria-label="Close ghost file">CLOSE</button>
 
       <div class="phone-sheet-top">
-        <img id="phone-sheet-photo" class="phone-sheet-photo" src="" alt="" hidden>
+        <button id="phone-sheet-photo-btn" type="button" class="phone-sheet-photo-btn" aria-label="View larger photo" hidden>
+          <img id="phone-sheet-photo" class="phone-sheet-photo" src="" alt="">
+        </button>
         <div id="phone-sheet-placeholder" class="phone-sheet-placeholder" hidden></div>
         <div class="phone-sheet-title-col">
           <p id="phone-sheet-name" class="phone-sheet-name"></p>
@@ -214,6 +219,7 @@
             <span class="ask-label">ASK:</span>
             <button id="phone-q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
             <button id="phone-q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
+            <button id="phone-q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
             <a id="phone-nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
             <!-- TODO: Study notebook link -->
           </div>
@@ -236,6 +242,20 @@
         </span>
       </div>
     </section>
+
+    <!-- 1969 Slide Viewer Modal -->
+    <div id="photo-modal" class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photo-modal-caption" hidden>
+      <div id="photo-modal-backdrop" class="photo-modal-backdrop"></div>
+      <div class="photo-modal-frame">
+        <div class="photo-modal-topbar">
+          <span id="photo-modal-caption" class="photo-modal-caption"></span>
+          <button id="photo-modal-close" type="button" class="photo-modal-close" aria-label="Close photo viewer">CLOSE</button>
+        </div>
+        <div class="photo-modal-stage">
+          <img id="photo-modal-img" class="photo-modal-img" src="" alt="">
+        </div>
+      </div>
+    </div>
 
     <!-- Boot Room Dimmer & Skip Intro -->
     <div id="boot-dimmer" aria-hidden="true" class="boot-dimmer"></div>

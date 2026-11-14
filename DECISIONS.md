@@ -19,3 +19,7 @@
 
 - Nov 14, 10:27 a.m.: Design is like-for-like for Antigravity. Agent may suggest improvements but builds none without Shara's approval. Added to AGENTS.md and CLAUDE.md.
 - Nov 14, 10:40 a.m.: Added 5 desktop state screenshots to docs/design-screens (from the prototype GIF). AGENTS.md now ranks design sources and requires browser-subagent screenshot comparison before any UI block is done.
+- Nov 14, 10:57 a.m.: Block 1 spike PASSED on Shara's Android phone. Globe (Three.js 0.187.0): load 1,412 ms (limit 3,000), 60 FPS, smooth spin, marker opens on first tap. Moon oversized on phone; not a spike criterion, real build sizes to design.
+- Nov 14, 10:58 a.m.: Shara chose the spinning 3D globe (Three.js 0.187.0) for the real build, replacing the flat disk on the main screen. At rest it must match the design's near-side view; needs a 'face Earth' reset so kids can't lose the landing sites.
+- Nov 14, 11:15 a.m.: Block 3 fact check done against NSSDCA (see docs/FACT_CHECK.md). 6 ghosts verified; 5 wording fixes, landing seconds added, coordinates refined, each ghost linked to its own NSSDCA record.
+- Nov 14, 11:18 a.m.: Shara approved a third ASK button per ghost ('What's it made of?') with built-with facts from NSSDCA. Chosen over a new spec panel to keep the design like-for-like. Ships with the fact-check fixes after Block 4.

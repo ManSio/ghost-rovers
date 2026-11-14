@@ -1,4 +1,4 @@
-// js/card.js: Render side screens, hardware plot, console monitor, and phone sheet using textContent only
+// js/card.js: Render side screens, hardware plot, console monitor, phone sheet, and photo viewer using textContent only
 
 function p2(n) {
   return String(n).padStart(2, '0');
@@ -6,7 +6,15 @@ function p2(n) {
 
 export function initPanels(data, callbacks) {
   const { ghosts, sites } = data;
-  const { onPickGhostId, onToggleQuestion, onCallGhost, onClosePhoneSheet, onOpenPhoneSheet } = callbacks;
+  const {
+    onPickGhostId,
+    onToggleQuestion,
+    onCallGhost,
+    onClosePhoneSheet,
+    onOpenPhoneSheet,
+    onOpenPhotoModal,
+    onClosePhotoModal
+  } = callbacks;
 
   // 1. Build Static Legend on Main Screen (4 SITES · 6 MACHINES)
   const legendListEl = document.getElementById('site-legend-list');
@@ -110,16 +118,24 @@ export function initPanels(data, callbacks) {
     return { ghost: g, btn };
   });
 
-  // 5. Wire Question Buttons & Call/Close Buttons
-  const qBtn0 = document.getElementById('q-btn-0');
-  const qBtn1 = document.getElementById('q-btn-1');
-  const phoneQBtn0 = document.getElementById('phone-q-btn-0');
-  const phoneQBtn1 = document.getElementById('phone-q-btn-1');
+  // 5. Wire Question Buttons (3 per ghost) & Call/Close/Photo Buttons
+  const qBtns = [
+    document.getElementById('q-btn-0'),
+    document.getElementById('q-btn-1'),
+    document.getElementById('q-btn-2')
+  ];
+  const phoneQBtns = [
+    document.getElementById('phone-q-btn-0'),
+    document.getElementById('phone-q-btn-1'),
+    document.getElementById('phone-q-btn-2')
+  ];
 
-  qBtn0.addEventListener('click', () => onToggleQuestion(0));
-  qBtn1.addEventListener('click', () => onToggleQuestion(1));
-  phoneQBtn0.addEventListener('click', () => onToggleQuestion(0));
-  phoneQBtn1.addEventListener('click', () => onToggleQuestion(1));
+  qBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => onToggleQuestion(idx));
+  });
+  phoneQBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => onToggleQuestion(idx));
+  });
 
   const callBtn = document.getElementById('call-btn');
   const phoneCallBtn = document.getElementById('phone-call-btn');
@@ -131,6 +147,22 @@ export function initPanels(data, callbacks) {
 
   const compactOpenFileBtn = document.getElementById('compact-open-file-btn');
   compactOpenFileBtn.addEventListener('click', onOpenPhoneSheet);
+
+  const plotPhotoBtn = document.getElementById('plot-photo-btn');
+  const phoneSheetPhotoBtn = document.getElementById('phone-sheet-photo-btn');
+
+  plotPhotoBtn.addEventListener('click', () => onOpenPhotoModal(plotPhotoBtn));
+  phoneSheetPhotoBtn.addEventListener('click', () => onOpenPhotoModal(phoneSheetPhotoBtn));
+
+  // Photo Viewer Modal DOM
+  const photoModalEl = document.getElementById('photo-modal');
+  const photoModalBackdropEl = document.getElementById('photo-modal-backdrop');
+  const photoModalCloseEl = document.getElementById('photo-modal-close');
+  const photoModalCaptionEl = document.getElementById('photo-modal-caption');
+  const photoModalImgEl = document.getElementById('photo-modal-img');
+
+  photoModalCloseEl.addEventListener('click', onClosePhotoModal);
+  photoModalBackdropEl.addEventListener('click', onClosePhotoModal);
 
   // DOM References for Dynamic Updates
   const plotLegendWrap = document.getElementById('plot-legend-wrap');
@@ -248,6 +280,7 @@ export function initPanels(data, callbacks) {
       if (g.hasPhoto) {
         plotPhotoFig.hidden = false;
         plotPhotoPlaceholder.hidden = true;
+        plotPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
         plotPhotoImg.src = g.photo;
         plotPhotoImg.alt = g.photoAlt;
         plotPhotoCap.textContent = 'PHOTO: ' + g.photoId;
@@ -285,31 +318,35 @@ export function initPanels(data, callbacks) {
 
       const headerLine =
         'FILE ' + g.num + ' · ' + g.mission + ' · LANDED ' + g.landedTxt + ' · ' + g.siteName;
-      const bodyText = state.openQ !== null ? g.qs[state.openQ][1] : g.story;
+      const bodyText = state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : g.story;
 
       fileHeaderEl.textContent = headerLine;
       fileJobEl.textContent = g.job;
       fileBodyEl.textContent = bodyText;
       nasaLinkEl.href = g.nasaUrl;
 
-      qBtn0.textContent = g.qs[0][0];
-      qBtn0.setAttribute('aria-expanded', state.openQ === 0 ? 'true' : 'false');
-      qBtn0.classList.toggle('q-btn--open', state.openQ === 0);
-
-      qBtn1.textContent = g.qs[1][0];
-      qBtn1.setAttribute('aria-expanded', state.openQ === 1 ? 'true' : 'false');
-      qBtn1.classList.toggle('q-btn--open', state.openQ === 1);
+      qBtns.forEach((btn, idx) => {
+        if (g.qs[idx]) {
+          btn.hidden = false;
+          btn.textContent = g.qs[idx][0];
+          btn.setAttribute('aria-expanded', state.openQ === idx ? 'true' : 'false');
+          btn.classList.toggle('q-btn--open', state.openQ === idx);
+        } else {
+          btn.hidden = true;
+        }
+      });
 
       // Phone Sheet updates
       phoneSheetName.textContent = g.name;
       phoneSheetPhotoId.textContent = 'PHOTO: ' + g.photoId;
       if (g.hasPhoto) {
-        phoneSheetPhoto.hidden = false;
+        phoneSheetPhotoBtn.hidden = false;
         phoneSheetPlaceholder.hidden = true;
+        phoneSheetPhotoBtn.setAttribute('aria-label', 'View larger photo of ' + g.name);
         phoneSheetPhoto.src = g.photo;
         phoneSheetPhoto.alt = g.photoAlt;
       } else {
-        phoneSheetPhoto.hidden = true;
+        phoneSheetPhotoBtn.hidden = true;
         phoneSheetPlaceholder.hidden = false;
         phoneSheetPlaceholder.textContent = 'PHOTO ' + g.photoId + '\nLOADING IN BUILD';
       }
@@ -319,13 +356,16 @@ export function initPanels(data, callbacks) {
       phoneFileBody.textContent = bodyText;
       phoneNasaLink.href = g.nasaUrl;
 
-      phoneQBtn0.textContent = g.qs[0][0];
-      phoneQBtn0.setAttribute('aria-expanded', state.openQ === 0 ? 'true' : 'false');
-      phoneQBtn0.classList.toggle('q-btn--open', state.openQ === 0);
-
-      phoneQBtn1.textContent = g.qs[1][0];
-      phoneQBtn1.setAttribute('aria-expanded', state.openQ === 1 ? 'true' : 'false');
-      phoneQBtn1.classList.toggle('q-btn--open', state.openQ === 1);
+      phoneQBtns.forEach((btn, idx) => {
+        if (g.qs[idx]) {
+          btn.hidden = false;
+          btn.textContent = g.qs[idx][0];
+          btn.setAttribute('aria-expanded', state.openQ === idx ? 'true' : 'false');
+          btn.classList.toggle('q-btn--open', state.openQ === idx);
+        } else {
+          btn.hidden = true;
+        }
+      });
 
       phoneSheetSignalText.textContent = plotSignalText.textContent;
       phoneSheetSignalText.style.color = plotSignalText.style.color;
@@ -335,7 +375,17 @@ export function initPanels(data, callbacks) {
       compactOpenFileBtn.hidden = state.phoneSheetOpen;
     }
 
-    // 6. Update CALL GHOST Button & Lamps
+    // 6. Update Photo Viewer Modal
+    if (state.photoModalOpen && g && g.hasPhoto) {
+      photoModalEl.hidden = false;
+      photoModalCaptionEl.textContent = 'PHOTO: ' + g.photoId;
+      photoModalImgEl.src = g.photo;
+      photoModalImgEl.alt = g.photoAlt;
+    } else {
+      photoModalEl.hidden = true;
+    }
+
+    // 7. Update CALL GHOST Button & Lamps
     const callLabel = (calling ? 'CALLING...' : 'CALL GHOST') + ' [C]';
     callBtn.textContent = callLabel;
     phoneCallBtn.textContent = callLabel;
