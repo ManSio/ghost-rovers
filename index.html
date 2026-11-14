@@ -55,7 +55,7 @@
         <span class="clock-val">DEC 1972</span>
       </div>
       <button id="mute-btn" type="button" class="clock-btn clock-btn--mute" aria-pressed="false">SOUND ON</button>
-      <button id="about-btn" type="button" class="clock-btn clock-btn--about" aria-keyshortcuts="?">ABOUT</button>
+      <button id="about-btn" type="button" class="clock-btn clock-btn--about" aria-label="About Ghost Rovers and teacher resources" aria-keyshortcuts="?">ABOUT · TEACHERS</button>
       <button id="replay-btn" type="button" class="clock-btn clock-btn--replay"></button>
     </section>
 
@@ -234,30 +234,34 @@
           </div>
 
           <div id="monitor-file" class="monitor-file" hidden>
-            <p id="file-header" class="file-header"></p>
-            <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="file-job"></span></p>
-            <p id="file-body" class="file-body"></p>
-            <div id="file-answer-box" class="file-answer-box" hidden>
-              <div class="file-answer-content">
-                <span class="file-answer-label">ANSWER: </span>
-                <span id="file-answer-text" class="file-answer-text"></span>
+            <div class="monitor-file-scroll">
+              <p id="file-header" class="file-header"></p>
+              <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="file-job"></span></p>
+              <p id="file-body" class="file-body"></p>
+              <div id="file-answer-box" class="file-answer-box" hidden>
+                <div class="file-answer-content">
+                  <span class="file-answer-label">ANSWER: </span>
+                  <span id="file-answer-text" class="file-answer-text"></span>
+                </div>
+                <button id="file-answer-clear" type="button" class="file-answer-clear" aria-label="Clear answer">×</button>
               </div>
-              <button id="file-answer-clear" type="button" class="file-answer-clear" aria-label="Clear answer">×</button>
+              <div class="file-actions">
+                <span class="ask-label">ASK:</span>
+                <button id="q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
+                <button id="q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
+                <button id="q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
+                <button id="read-btn" type="button" class="read-btn" aria-pressed="false">READ TO ME</button>
+              </div>
             </div>
-            <div class="file-actions">
-              <span class="ask-label">ASK:</span>
-              <button id="q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
-              <button id="q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
-              <button id="q-btn-2" type="button" class="q-btn" aria-expanded="false"></button>
-              <button id="read-btn" type="button" class="read-btn" aria-pressed="false">READ TO ME</button>
+            <div class="file-links-pinned">
               <a id="nasa-link" href="https://nssdc.gsfc.nasa.gov/" target="_blank" rel="noopener noreferrer" class="nasa-link">
                 <span>NASA RECORD</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
               </a>
               <a id="notebook-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="nasa-link">
-                <span>GO DEEPER: STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+                <span>STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
               </a>
               <a id="podcast-link" href="https://notebooklm.link.google/6jQu39y3UHio" target="_blank" rel="noopener noreferrer" class="nasa-link">
-                <span>LISTEN: MOON PODCAST (AI VOICES)</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+                <span>PODCAST (AI VOICES)</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
               </a>
             </div>
           </div>
@@ -386,6 +390,12 @@
           <button id="about-modal-close" type="button" class="about-modal-close" aria-label="Close About dialog">CLOSE</button>
         </div>
         <div class="about-modal-body">
+          <div class="about-teachers-box">
+            <p class="about-teachers-p"><strong class="about-teachers-label">FOR TEACHERS:</strong> Free, no login, no data collected. Pair it with the study notebook’s quiz, flashcards, and podcast.</p>
+            <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="about-link-btn">
+              <span>STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </div>
           <p class="about-modal-p">Every fact is checked against NASA’s records (NSSDCA). Photos and the Moon map are NASA’s.</p>
           <p class="about-modal-p">Made by La Shara Cordero, team Clew Labs, for the NASA Space Apps Challenge 2026.</p>
           <p class="about-modal-tagline">AI assisted. Human approved.</p>
@@ -398,12 +408,6 @@
             </a>
             <a href="https://github.com/earlgreyhot1701D/ghost-rovers" target="_blank" rel="noopener noreferrer" class="about-link-btn">
               <span>CODE</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
-            </a>
-          </div>
-          <div class="about-teachers-box">
-            <p class="about-teachers-p"><strong class="about-teachers-label">FOR TEACHERS:</strong> Free, no login, no data collected. Pair it with the study notebook’s quiz, flashcards, and podcast.</p>
-            <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="about-link-btn">
-              <span>STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
         </div>

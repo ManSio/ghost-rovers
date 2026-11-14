@@ -169,6 +169,9 @@ async function startApp() {
   const moonClockValEl = document.getElementById('moon-clock-val');
   const muteBtnEl = document.getElementById('mute-btn');
   const aboutBtnEl = document.getElementById('about-btn');
+  if (aboutBtnEl) {
+    aboutBtnEl.textContent = 'ABOUT ·\nTEACHERS';
+  }
   const replayBtnEl = document.getElementById('replay-btn');
   replayBtnEl.textContent = 'REPLAY\nPOWER-ON';
 
