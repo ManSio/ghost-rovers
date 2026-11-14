@@ -1,0 +1,97 @@
+/* styles/tokens.css: Design tokens from design/mission-control-prototype.dc.html */
+
+:root {
+  --bg-room: #0E1110;
+  --bg-clock: #050605;
+  --border-clock: #262B28;
+  --border-clock-cell: #1E2220;
+
+  --text-primary: #E8F0EA;
+  --text-crt: #EDF3EE;
+  --text-clock-label: #B9C4BD;
+  --text-clock-val: #FFE9B0;
+  --text-screen-cyan: #C9DDE0;
+  --text-screen-bright: #E6F2F4;
+  --text-log-head: #C9D3CC;
+  --text-muted-cyan: #8FA5A9;
+
+  --accent-signal: #7BE495;
+  --accent-signal-text: #9BEFB0;
+  --accent-nosignal: #E8735C;
+  --accent-nosignal-text: #F2A08F;
+  --accent-call-red: #C8382D;
+  --accent-dymo-red: #9E2B25;
+  --accent-focus: #FFE27A;
+
+  --btn-lit-bg: #F6F2E2;
+  --btn-lit-fg: #151816;
+  --btn-green-bg: #2F4A36;
+  --btn-green-fg: #D7F5DE;
+  --btn-dark-bg: #2C312E;
+  --btn-dark-fg: #D5DDD7;
+
+  --lamp-off: #3A403C;
+  --lamp-round-off: #2B302D;
+
+  --font-sans: 'Archivo Narrow', 'Arial Narrow', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-vt: 'VT323', monospace;
+}
+
+@keyframes crtOn {
+  0% {
+    transform: scaleX(0.02) scaleY(0.006);
+    filter: brightness(5);
+  }
+  45% {
+    transform: scaleX(1) scaleY(0.006);
+    filter: brightness(3);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.crt-on {
+  animation: crtOn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.ping {
+  animation: ping 1.6s ease-out infinite;
+}
+
+.blink {
+  animation: blink 0.8s steps(1) infinite;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--accent-focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt-on,
+  .ping,
+  .blink {
+    animation: none !important;
+  }
+}

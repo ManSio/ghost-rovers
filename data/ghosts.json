@@ -1,0 +1,260 @@
+{
+  "bootLines": [
+    "NASA MISSION CONTROL · HOUSTON",
+    "CONSOLE 7 POWERED ON",
+    "SCANNING THE MOON ... 4 SITES FOUND",
+    "HARDWARE ON SURFACE: 6 MACHINES",
+    "LAST CREW LEFT: DECEMBER 1972",
+    "READY FOR GHOST CHECK."
+  ],
+  "sites": {
+    "A11": {
+      "code": "A11",
+      "legendCode": "A-11",
+      "name": "Sea of Tranquility",
+      "lat": 0.674,
+      "lon": 23.473,
+      "x": 280,
+      "y": 198
+    },
+    "A12": {
+      "code": "A12",
+      "legendCode": "A-12",
+      "name": "Ocean of Storms",
+      "lat": -3.012,
+      "lon": -23.422,
+      "x": 121,
+      "y": 211
+    },
+    "A15": {
+      "code": "A15",
+      "legendCode": "A-15",
+      "name": "Hadley-Apennine",
+      "lat": 26.132,
+      "lon": 3.634,
+      "x": 211,
+      "y": 112
+    },
+    "A17": {
+      "code": "A17",
+      "legendCode": "A-17",
+      "name": "Taurus-Littrow",
+      "lat": 20.191,
+      "lon": 30.772,
+      "x": 296,
+      "y": 131
+    }
+  },
+  "ghosts": [
+    {
+      "id": "mirror",
+      "draft": true,
+      "num": "01",
+      "code": "A11-LRRR",
+      "name": "Laser Mirror",
+      "shortName": "LASER MIRROR",
+      "mission": "Apollo 11",
+      "site": "A11",
+      "siteName": "Sea of Tranquility",
+      "lat": 0.674,
+      "lon": 23.473,
+      "landed": "1969-07-20T20:17:00Z",
+      "landedTxt": "1969-07-20",
+      "quiet": "NEVER",
+      "answers": true,
+      "job": "Placed by the Apollo 11 crew as a target for lasers fired from Earth, to measure exactly how far away the Moon is.",
+      "reply": "SIGNAL RETURNED. LIGHT MADE THE ROUND TRIP IN 2.5 SECONDS.",
+      "story": "I'm a tray of 100 tiny mirrors. Scientists on Earth still aim lasers at me, and I bounce the light right back.",
+      "qs": [
+        [
+          "How can a mirror still work?",
+          "It needs no power at all. It just sits there and bounces light back, like a bike reflector."
+        ],
+        [
+          "What did scientists learn?",
+          "The Moon is drifting away from Earth, about 3.8 cm every year. That's about how fast your fingernails grow."
+        ]
+      ],
+      "photo": "",
+      "photoAlt": "",
+      "photoId": "NASA AS11-37-5551",
+      "hasPhoto": false,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    },
+    {
+      "id": "eagle",
+      "draft": true,
+      "num": "02",
+      "code": "A11-LM",
+      "name": "Eagle's Launch Pad",
+      "shortName": "EAGLE'S LAUNCH PAD",
+      "mission": "Apollo 11",
+      "site": "A11",
+      "siteName": "Sea of Tranquility",
+      "lat": 0.674,
+      "lon": 23.473,
+      "landed": "1969-07-20T20:17:00Z",
+      "landedTxt": "1969-07-20",
+      "quiet": "1969",
+      "answers": false,
+      "job": "Apollo 11's lander. It carried the first two people down to the Moon's surface in July 1969.",
+      "reply": "NO SIGNAL. RESTING SINCE 1969.",
+      "story": "Half of me stayed behind. When the astronauts blasted off, my top half flew back to their ship. My legs are still standing in the dust.",
+      "qs": [
+        [
+          "Why leave it there?",
+          "The bottom half was the launch pad. Leaving it behind made the trip home lighter."
+        ],
+        [
+          "Can anyone see it now?",
+          "Yes! NASA's Lunar Reconnaissance Orbiter has photographed the landing site from above."
+        ]
+      ],
+      "photo": "assets/nasa/eagle_800.jpg",
+      "photoAlt": "The Apollo 11 lunar module Eagle in lunar orbit, July 1969",
+      "photoId": "NASA AS11-44-6581",
+      "hasPhoto": true,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    },
+    {
+      "id": "surveyor",
+      "draft": true,
+      "num": "03",
+      "code": "S-3",
+      "name": "Surveyor 3",
+      "shortName": "SURVEYOR 3",
+      "mission": "Surveyor",
+      "site": "A12",
+      "siteName": "Ocean of Storms",
+      "lat": -3.012,
+      "lon": -23.422,
+      "landed": "1967-04-20T00:04:00Z",
+      "landedTxt": "1967-04-20",
+      "quiet": "1967",
+      "answers": false,
+      "job": "A robot lander sent to prove a spacecraft could land softly, and to dig into the soil before astronauts came.",
+      "reply": "NO SIGNAL. QUIET SINCE 1967.",
+      "story": "I landed here alone. Two years later, two astronauts walked over to visit and took my camera home to Earth.",
+      "qs": [
+        [
+          "Why did astronauts visit?",
+          "To see what years on the Moon do to a machine. They brought parts home to study."
+        ],
+        [
+          "Is it still there?",
+          "Yes, minus the camera and a few parts the astronauts took home."
+        ]
+      ],
+      "photo": "assets/nasa/surveyor3_800.jpg",
+      "photoAlt": "Surveyor 3 on the Moon, photographed by the Apollo 12 crew",
+      "photoId": "NASA AS12-48-7121",
+      "hasPhoto": true,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    },
+    {
+      "id": "alsep",
+      "draft": true,
+      "num": "04",
+      "code": "A12-ALSEP",
+      "name": "Moonquake Station",
+      "shortName": "MOONQUAKE STN",
+      "mission": "Apollo 12",
+      "site": "A12",
+      "siteName": "Ocean of Storms",
+      "lat": -3.012,
+      "lon": -23.422,
+      "landed": "1969-11-19T06:54:00Z",
+      "landedTxt": "1969-11-19",
+      "quiet": "1977",
+      "answers": false,
+      "job": "A set of science instruments left by Apollo 12 to measure moonquakes, magnetism, and the solar wind.",
+      "reply": "NO SIGNAL. SWITCHED OFF IN 1977.",
+      "story": "I listened to the Moon. I felt moonquakes and space rocks hitting the ground, and I radioed it all home for years.",
+      "qs": [
+        [
+          "What's a moonquake?",
+          "The Moon shakes too! Instruments like me felt moonquakes and meteorite hits."
+        ],
+        [
+          "Why was it turned off?",
+          "In 1977 NASA switched the stations off to save money for new missions."
+        ]
+      ],
+      "photo": "",
+      "photoAlt": "",
+      "photoId": "NASA AS12-47-6918",
+      "hasPhoto": false,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    },
+    {
+      "id": "lrv15",
+      "draft": true,
+      "num": "05",
+      "code": "A15-LRV",
+      "name": "Apollo 15 Rover",
+      "shortName": "APOLLO 15 ROVER",
+      "mission": "Apollo 15",
+      "site": "A15",
+      "siteName": "Hadley-Apennine",
+      "lat": 26.132,
+      "lon": 3.634,
+      "landed": "1971-07-30T22:16:00Z",
+      "landedTxt": "1971-07-30",
+      "quiet": "1971",
+      "answers": false,
+      "job": "The first Moon car, brought by Apollo 15 so astronauts could explore much farther from their lander.",
+      "reply": "NO SIGNAL. PARKED SINCE 1971.",
+      "story": "I was the first car on the Moon. Two astronauts drove me over hills and craters, then parked me for good.",
+      "qs": [
+        [
+          "Could I drive it?",
+          "Its batteries are dead, so it can't move now. Astronauts drove it about 28 km on the Moon."
+        ],
+        [
+          "Why bring a car?",
+          "To explore farther than walking allowed, and to carry rocks and tools."
+        ]
+      ],
+      "photo": "",
+      "photoAlt": "",
+      "photoId": "NASA AS15-88-11901",
+      "hasPhoto": false,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    },
+    {
+      "id": "lrv17",
+      "draft": true,
+      "num": "06",
+      "code": "A17-LRV",
+      "name": "Apollo 17 Rover",
+      "shortName": "APOLLO 17 ROVER",
+      "mission": "Apollo 17",
+      "site": "A17",
+      "siteName": "Taurus-Littrow",
+      "lat": 20.191,
+      "lon": 30.772,
+      "landed": "1972-12-11T19:54:00Z",
+      "landedTxt": "1972-12-11",
+      "quiet": "1972",
+      "answers": false,
+      "job": "Carried the last Apollo crew across the Taurus-Littrow valley to collect rocks and samples.",
+      "reply": "NO SIGNAL. PARKED SINCE 1972.",
+      "story": "I was driven on the very last Apollo trip. After my astronauts left, I've been parked in this valley ever since.",
+      "qs": [
+        [
+          "How far did it go?",
+          "About 36 km, the farthest any Apollo rover drove."
+        ],
+        [
+          "Who drove it last?",
+          "The Apollo 17 crew, in December 1972. Nobody has driven on the Moon since."
+        ]
+      ],
+      "photo": "",
+      "photoAlt": "",
+      "photoId": "NASA AS17-137-20979",
+      "hasPhoto": false,
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/"
+    }
+  ]
+}

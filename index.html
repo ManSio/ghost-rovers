@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghost Rovers: Mission Control 1969</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Archivo+Narrow:wght@500;700&family=VT323&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+  <div id="room" class="room">
+    <div aria-hidden="true" class="room-glow"></div>
+
+    <!-- Top Mission Clocks Strip -->
+    <section aria-label="Mission clocks" class="clock-strip">
+      <div class="clock-cell">
+        <span class="clock-label">GMT · NOW</span>
+        <span id="gmt-val" class="clock-val">--:--:--</span>
+      </div>
+      <div class="clock-cell clock-cell--moon">
+        <span id="moon-clock-label" class="clock-label">TIME ON THE MOON · PICK A GHOST</span>
+        <span id="moon-clock-val" class="clock-val">--Y --M --D --:--:--</span>
+      </div>
+      <div class="clock-cell">
+        <span id="light-time-label" class="clock-label">LIGHT TIME EARTH TO MOON</span>
+        <span class="clock-val">1.3 SEC</span>
+      </div>
+      <div class="clock-cell">
+        <span class="clock-label">LAST CREW LEFT</span>
+        <span class="clock-val">DEC 1972</span>
+      </div>
+      <button id="mute-btn" type="button" class="clock-btn clock-btn--mute" aria-pressed="false">SOUND ON</button>
+      <button id="replay-btn" type="button" class="clock-btn clock-btn--replay"></button>
+    </section>
+
+    <!-- Left Angled Screen: LANDED BY YEAR -->
+    <section aria-label="Side screen: when each machine landed" class="side-screen-left">
+      <p class="side-heading">LANDED · BY YEAR</p>
+      <ol id="timeline-list" class="timeline-list"></ol>
+    </section>
+
+    <!-- Center Curved Wall Screen -->
+    <section aria-label="Main wall screen: the Moon and its landing sites" class="main-screen">
+      <!-- Boot Sequence Panel -->
+      <div id="boot-panel" class="boot-panel crt-on">
+        <p class="boot-title">GHOST ROVERS</p>
+        <div id="boot-lines-wrap" aria-live="polite" class="boot-lines">
+          <div id="boot-lines"></div>
+          <span id="boot-cursor" class="boot-cursor blink">_</span>
+        </div>
+        <button id="begin-btn" type="button" class="boot-begin-btn" hidden>BEGIN GHOST CHECK</button>
+      </div>
+
+      <!-- Main Screen View (Moon Globe + Hardware Plot) -->
+      <div id="main-content" class="main-content" hidden>
+        <div id="moon-viewport" class="moon-viewport">
+          <div id="moon-canvas-wrap" class="moon-canvas-wrap" role="img" aria-label="3D Moon globe showing near-side landing sites, drag to spin"></div>
+          <div id="ping-layer" class="ping-layer" aria-hidden="true" hidden>
+            <div id="ping-1" class="ping-ring ping"></div>
+            <div id="ping-2" class="ping-ring ping ping-ring--2"></div>
+            <div id="ping-3" class="ping-ring ping ping-ring--3"></div>
+          </div>
+          <div id="pins-layer" class="pins-layer"></div>
+          <button id="face-earth-btn" type="button" class="face-earth-btn" aria-label="Rotate Moon globe back to face Earth">FACE EARTH</button>
+        </div>
+
+        <div id="hardware-plot" aria-live="polite" class="hardware-plot">
+          <p class="plot-kicker">LUNAR SURFACE · HARDWARE PLOT</p>
+
+          <!-- Idle 4 SITES · 6 MACHINES legend -->
+          <div id="plot-legend-wrap" class="plot-legend-wrap">
+            <p class="plot-heading">4 SITES · 6 MACHINES</p>
+            <div id="site-legend-list"></div>
+          </div>
+
+          <!-- Selected Ghost Plot -->
+          <div id="plot-selected-wrap" class="plot-selected-wrap" hidden>
+            <p id="plot-ghost-name" class="plot-ghost-name"></p>
+            <figure id="plot-photo-fig" class="plot-photo-fig" hidden>
+              <img id="plot-photo-img" class="plot-photo-img" src="" alt="">
+              <figcaption id="plot-photo-cap" class="plot-photo-cap"></figcaption>
+            </figure>
+            <div id="plot-photo-placeholder" class="plot-photo-placeholder" hidden></div>
+            <div id="plot-signal-box" class="plot-signal-box">
+              <span id="plot-signal-text">SIGNAL CHECK: PRESS CALL GHOST</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div aria-hidden="true" class="screen-vignette"></div>
+      <div aria-hidden="true" class="screen-grid"></div>
+    </section>
+
+    <!-- Right Angled Screen: GHOST LOG -->
+    <section aria-label="Status lights" class="side-screen-right">
+      <p class="side-heading side-heading--log">GHOST LOG</p>
+      <ul id="log-list" class="log-list"></ul>
+      <p id="log-count" class="log-count">00 OF 06 CHECKED</p>
+      <p id="log-all-done" class="log-all-done" hidden>GHOST CHECK COMPLETE. ONLY THE LASER MIRROR STILL ANSWERS, AND SCIENTISTS USE IT TODAY.</p>
+    </section>
+
+    <!-- Compact Summary Strip (Tablet Portrait 820px & Phone 390px) -->
+    <div aria-label="Mission status summary" class="compact-summary-strip">
+      <div class="compact-summary-cell">
+        <span id="compact-log-text">GHOST LOG · 00 OF 06 CHECKED</span>
+      </div>
+      <div class="compact-summary-cell compact-summary-cell--landed">
+        <span>LANDED 1967 · 1969 · 1971 · 1972</span>
+      </div>
+      <button id="compact-open-file-btn" type="button" class="compact-open-file-btn" hidden>OPEN FILE</button>
+    </div>
+
+    <!-- Curved Metallic Console Lip & Desk -->
+    <div aria-hidden="true" class="console-lip"></div>
+    <div class="console-desk">
+      <span aria-hidden="true" class="rivet rivet--1"></span>
+      <span aria-hidden="true" class="rivet rivet--2"></span>
+      <span aria-hidden="true" class="rivet rivet--3"></span>
+      <span aria-hidden="true" class="rivet rivet--4"></span>
+      <span aria-hidden="true" class="rivet rivet--5"></span>
+      <span aria-hidden="true" class="rivet rivet--6"></span>
+
+      <div class="dymo-wrap">
+        <span class="dymo-tape">Ghost Rovers · Lunar hardware check</span>
+      </div>
+
+      <!-- Left Console CRT Monitor -->
+      <div class="console-monitor-bezel">
+        <article aria-label="Console monitor" class="console-monitor">
+          <div aria-hidden="true" class="crt-scanlines"></div>
+
+          <div id="monitor-idle" class="monitor-idle">
+            <p class="monitor-ready-title">CONSOLE READY.</p>
+            <p class="monitor-ready-sub">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
+            <p class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C).</p>
+            <p id="monitor-warn" aria-live="polite" class="monitor-warn" hidden>&gt; PICK A GHOST FIRST, THEN CALL.</p>
+          </div>
+
+          <div id="monitor-file" class="monitor-file" hidden>
+            <p id="file-header" class="file-header"></p>
+            <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="file-job"></span></p>
+            <p id="file-body" class="file-body"></p>
+            <div class="file-actions">
+              <span class="ask-label">ASK:</span>
+              <button id="q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
+              <button id="q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
+              <a id="nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
+              <!-- TODO: Study notebook link -->
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Right Console Switch Bank -->
+      <nav aria-label="Console: pick a ghost" class="console-panel">
+        <div aria-hidden="true" class="indicator-strip">
+          <span class="ind-lamp ind-lamp--on">PWR</span>
+          <span class="ind-lamp ind-lamp--on">COMM</span>
+          <span class="ind-lamp">TLM</span>
+          <span class="ind-lamp">DSKY</span>
+          <span class="ind-lamp ind-lamp--on">GET</span>
+          <span class="ind-lamp">S-BAND</span>
+          <span class="ind-lamp">ALT</span>
+          <span class="ind-lamp">RCS</span>
+          <span class="ind-lamp">GUID</span>
+          <span class="ind-lamp">UPLNK</span>
+          <span class="ind-lamp">RCDR</span>
+          <span class="ind-lamp">AUX</span>
+        </div>
+
+        <div id="ghost-btn-grid" class="ghost-btn-grid"></div>
+
+        <div class="call-row">
+          <button id="call-btn" type="button" class="call-btn" aria-keyshortcuts="C">CALL GHOST [C]</button>
+          <span class="lamp-group">
+            <span id="signal-lamp" aria-hidden="true" class="round-lamp"></span>
+            <span class="lamp-caption">SIGNAL</span>
+          </span>
+          <span class="lamp-group">
+            <span id="nosignal-lamp" aria-hidden="true" class="round-lamp"></span>
+            <span class="lamp-caption">NO SIGNAL</span>
+          </span>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Phone Bottom Sheet for Ghost File -->
+    <section id="phone-sheet" aria-label="Ghost file details" class="phone-sheet" hidden>
+      <div aria-hidden="true" class="phone-sheet-handle"></div>
+      <button id="phone-sheet-close" type="button" class="phone-sheet-close" aria-label="Close ghost file">CLOSE</button>
+
+      <div class="phone-sheet-top">
+        <img id="phone-sheet-photo" class="phone-sheet-photo" src="" alt="" hidden>
+        <div id="phone-sheet-placeholder" class="phone-sheet-placeholder" hidden></div>
+        <div class="phone-sheet-title-col">
+          <p id="phone-sheet-name" class="phone-sheet-name"></p>
+          <p id="phone-sheet-photoid" class="phone-sheet-photoid"></p>
+        </div>
+      </div>
+
+      <div class="phone-sheet-crt-bezel">
+        <article class="phone-sheet-crt">
+          <div aria-hidden="true" class="crt-scanlines"></div>
+          <p id="phone-file-header" class="file-header"></p>
+          <p class="file-mission"><span class="file-mission-label">MISSION: </span><span id="phone-file-job"></span></p>
+          <p id="phone-file-body" class="file-body"></p>
+          <div class="file-actions">
+            <span class="ask-label">ASK:</span>
+            <button id="phone-q-btn-0" type="button" class="q-btn" aria-expanded="false"></button>
+            <button id="phone-q-btn-1" type="button" class="q-btn" aria-expanded="false"></button>
+            <a id="phone-nasa-link" href="https://nssdc.gsfc.nasa.gov/" class="nasa-link">NASA RECORD</a>
+            <!-- TODO: Study notebook link -->
+          </div>
+        </article>
+      </div>
+
+      <div id="phone-sheet-signal-box" class="phone-sheet-signal-box">
+        <span id="phone-sheet-signal-text">SIGNAL CHECK: PRESS CALL GHOST</span>
+      </div>
+
+      <div class="phone-sheet-call-row">
+        <button id="phone-call-btn" type="button" class="call-btn" aria-keyshortcuts="C">CALL GHOST [C]</button>
+        <span class="lamp-group">
+          <span id="phone-signal-lamp" aria-hidden="true" class="round-lamp"></span>
+          <span class="lamp-caption">SIGNAL</span>
+        </span>
+        <span class="lamp-group">
+          <span id="phone-nosignal-lamp" aria-hidden="true" class="round-lamp"></span>
+          <span class="lamp-caption">NO SIGNAL</span>
+        </span>
+      </div>
+    </section>
+
+    <!-- Boot Room Dimmer & Skip Intro -->
+    <div id="boot-dimmer" aria-hidden="true" class="boot-dimmer"></div>
+    <button id="skip-intro-btn" type="button" class="skip-intro-btn">SKIP INTRO</button>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

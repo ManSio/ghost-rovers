@@ -1,0 +1,1681 @@
+/* styles/main.css: Like-for-like layout for 1280px, 1180px, 820px, and 390px */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-room);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--text-crt);
+}
+a:hover {
+  color: #FFFFFF;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Error Banner */
+.error-banner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #3D1418;
+  border: 2px solid #F85149;
+  color: #FFDCD7;
+  font: 600 13px var(--font-mono);
+  padding: 10px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   DEFAULT DESKTOP LAYOUT (1280 x 800, prototype exact values)
+   ========================================================================== */
+
+.room {
+  width: 1280px;
+  height: 800px;
+  position: relative;
+  overflow: hidden;
+  background: #0E1110;
+  color: #E8F0EA;
+  font-family: var(--font-sans);
+  margin: 0 auto;
+}
+
+.room-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 520px;
+  background: radial-gradient(ellipse 60% 75% at 50% 55%, #1C2628 0%, #0E1110 72%);
+  pointer-events: none;
+}
+
+/* Mission Clocks Strip */
+.clock-strip {
+  z-index: 5;
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 14px;
+  height: 56px;
+  background: #050605;
+  border: 1px solid #262B28;
+  display: flex;
+  align-items: stretch;
+}
+
+.clock-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 14px;
+  border-right: 1px solid #1E2220;
+  min-width: 0;
+}
+
+.clock-cell--moon {
+  flex: 1.7;
+  background: rgba(255, 233, 176, 0.04);
+}
+
+.clock-label {
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.14em;
+  color: #B9C4BD;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clock-val {
+  font: 400 28px var(--font-vt);
+  line-height: 1;
+  color: #FFE9B0;
+  text-shadow: 0 0 10px rgba(255, 220, 140, 0.55);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.clock-btn {
+  min-width: 104px;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid #1E2220;
+  color: #B9C4BD;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  padding: 0 10px;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.clock-btn--replay {
+  border-right: 0;
+  white-space: pre-line;
+}
+
+/* Left Angled Screen: LANDED BY YEAR */
+.side-screen-left {
+  position: absolute;
+  left: 40px;
+  top: 84px;
+  transform: perspective(900px) rotateY(16deg);
+  transform-origin: right center;
+  border-radius: 6px;
+  width: 220px;
+  height: 424px;
+  background: radial-gradient(ellipse at 50% 45%, #10191B 0%, #070A0A 80%);
+  border: 2px solid #050605;
+  padding: 14px 16px;
+  opacity: 0.92;
+}
+
+.side-heading {
+  margin: 0 0 12px;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.12em;
+  color: #C9DDE0;
+}
+
+.timeline-list {
+  margin: 0 0 0 6px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-left: 1px solid rgba(201, 221, 224, 0.35);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 14px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -5px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.timeline-year {
+  display: block;
+  font: 400 24px var(--font-vt);
+  line-height: 1;
+}
+
+.timeline-label {
+  display: block;
+  font: 600 12px var(--font-mono);
+  line-height: 1.25;
+}
+
+/* Center Curved Main Wall Screen */
+.main-screen {
+  z-index: 5;
+  position: absolute;
+  left: 276px;
+  top: 84px;
+  width: 728px;
+  height: 424px;
+  overflow: hidden;
+  border-radius: 50% / 7%;
+  background: radial-gradient(ellipse at 34% 50%, #182628 0%, #0A1012 58%, #060909 100%);
+  border: 3px solid #050605;
+  box-shadow:
+    0 0 80px rgba(150, 200, 210, 0.2),
+    inset 0 0 70px rgba(0, 0, 0, 0.75),
+    inset 0 2px 0 rgba(200, 225, 230, 0.25);
+}
+
+.screen-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(ellipse 75% 85% at 50% 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.screen-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background-image:
+    linear-gradient(rgba(201, 221, 224, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 221, 224, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Boot Screen Inside Main Screen */
+.boot-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  padding: 46px 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: radial-gradient(ellipse at 50% 45%, #1C2A2C 0%, #0A1012 70%);
+}
+
+.boot-title {
+  margin: 0 0 8px;
+  font: 400 64px var(--font-vt);
+  line-height: 1;
+  color: #F4F1E4;
+  text-shadow: 0 0 14px rgba(244, 241, 228, 0.6);
+}
+
+.boot-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.boot-line {
+  margin: 0;
+  font: 400 30px var(--font-vt);
+  color: #DCE6DF;
+  text-shadow: 0 0 8px rgba(220, 230, 223, 0.4);
+}
+
+.boot-cursor {
+  font: 400 30px var(--font-vt);
+  color: #DCE6DF;
+}
+
+.boot-begin-btn {
+  margin-top: 16px;
+  align-self: flex-start;
+  min-height: 60px;
+  padding: 0 28px;
+  background: #F4F1E4;
+  color: #070908;
+  border: 0;
+  border-radius: 3px;
+  font: 400 36px var(--font-vt);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(244, 241, 228, 0.55);
+}
+
+/* Main Screen Content: Moon Globe & Hardware Plot */
+.main-content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.moon-viewport {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  width: 400px;
+  height: 400px;
+  touch-action: none;
+  user-select: none;
+}
+
+.moon-canvas-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 50%;
+  filter: grayscale(0.8) brightness(1.06) contrast(1.12) drop-shadow(0 0 22px rgba(200, 225, 230, 0.3));
+}
+
+.moon-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.moon-canvas-wrap canvas:active {
+  cursor: grabbing;
+}
+
+.ping-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ping-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #9BEFB0;
+}
+
+.ping-ring--2 {
+  animation-delay: 0.5s;
+}
+
+.ping-ring--3 {
+  animation-delay: 1s;
+}
+
+.pins-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.site-pin {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid rgba(232, 240, 234, 0.85);
+  background: rgba(6, 9, 9, 0.25);
+  box-shadow: none;
+}
+
+.site-pin--lit {
+  border: 3px solid #FFFFFF;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.7);
+}
+
+/* FACE EARTH button on main screen (bottom-left of Moon viewport) */
+.face-earth-btn {
+  position: absolute;
+  left: -6px;
+  bottom: 4px;
+  z-index: 6;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 3px;
+  border: 2px solid #1A1D1B;
+  background: #2C312E;
+  color: #D5DDD7;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.06);
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.face-earth-btn:hover {
+  background: #363C38;
+  color: #FFFFFF;
+}
+
+/* Right Half of Main Screen: Hardware Plot */
+.hardware-plot {
+  position: absolute;
+  left: 436px;
+  top: 24px;
+  width: 250px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  color: #C9DDE0;
+  z-index: 5;
+}
+
+.plot-kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+
+.plot-legend-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plot-heading {
+  margin: 0 0 4px;
+  font: 400 28px var(--font-vt);
+  line-height: 1;
+  color: #E6F2F4;
+}
+
+.legend-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 0;
+  border-top: 1px solid rgba(201, 221, 224, 0.18);
+}
+
+.legend-code {
+  font: 400 22px var(--font-vt);
+  min-width: 44px;
+  color: #E6F2F4;
+}
+
+.legend-text {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.plot-selected-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.plot-ghost-name {
+  margin: 0;
+  font: 400 28px var(--font-vt);
+  line-height: 1;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.plot-photo-fig {
+  margin: 0;
+}
+
+.plot-photo-img {
+  width: 250px;
+  height: 158px;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.6) contrast(1.05);
+  border: 1px solid rgba(201, 221, 224, 0.3);
+}
+
+.plot-photo-cap {
+  font-size: 10px;
+  color: #8FA5A9;
+  padding-top: 3px;
+}
+
+.plot-photo-placeholder {
+  width: 250px;
+  height: 158px;
+  border: 1px dashed rgba(201, 221, 224, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #8FA5A9;
+  text-align: center;
+  padding: 10px;
+  white-space: pre-line;
+  line-height: 1.4;
+}
+
+.plot-signal-box {
+  margin-top: auto;
+  padding: 10px 12px;
+  background: rgba(5, 6, 5, 0.75);
+  border: 1px solid rgba(201, 221, 224, 0.25);
+  font: 400 24px var(--font-vt);
+  line-height: 1.1;
+}
+
+/* Right Angled Screen: GHOST LOG */
+.side-screen-right {
+  position: absolute;
+  left: 1020px;
+  top: 84px;
+  transform: perspective(900px) rotateY(-16deg);
+  transform-origin: left center;
+  border-radius: 6px;
+  width: 220px;
+  height: 424px;
+  background: #0B0D0C;
+  border: 2px solid #050605;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0.95;
+}
+
+.side-heading--log {
+  margin: 0;
+  color: #C9D3CC;
+}
+
+.log-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.log-lamp {
+  width: 24px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  border: 1px solid #000;
+}
+
+.log-text-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.log-name {
+  font: 700 14px var(--font-sans);
+  text-transform: uppercase;
+  color: #E8F0EA;
+  line-height: 1.1;
+}
+
+.log-status {
+  font: 400 10px var(--font-mono);
+}
+
+.log-count {
+  margin: auto 0 0;
+  font: 400 24px var(--font-vt);
+  color: #FFE9B0;
+}
+
+.log-all-done {
+  margin: 0;
+  padding: 8px;
+  background: #2F4A36;
+  font: 400 20px var(--font-vt);
+  line-height: 1.1;
+  color: #D7F5DE;
+}
+
+/* Compact Summary Strip (used in Tablet Portrait 820px and Phone 390px) */
+.compact-summary-strip {
+  display: none;
+}
+
+/* Console Lip & Desk */
+.console-lip {
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  top: 512px;
+  height: 30px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(180deg, #C3CFCF 0%, #8C988F 60%, #6E7A72 100%);
+  box-shadow: 0 -6px 24px rgba(150, 200, 210, 0.12);
+}
+
+.console-desk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 532px;
+  bottom: 0;
+  border-radius: 50% 50% 0 0 / 14px 14px 0 0;
+  background: linear-gradient(180deg, #7D8981 0%, #6A766E 22px, #4E5852 24px, #56615A 60%, #4A544E 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.rivet {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C);
+}
+.rivet--1 { left: 14px; top: 10px; }
+.rivet--2 { left: 1256px; top: 10px; }
+.rivet--3 { left: 14px; top: 246px; }
+.rivet--4 { left: 1256px; top: 246px; }
+.rivet--5 { left: 690px; top: 10px; }
+.rivet--6 { left: 690px; top: 246px; }
+
+.dymo-wrap {
+  position: absolute;
+  left: 520px;
+  top: -22px;
+  z-index: 6;
+}
+
+.dymo-tape {
+  display: inline-block;
+  background: #9E2B25;
+  color: #F4F4F0;
+  font: 700 13px var(--font-sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.9), 0 -1px 0 rgba(255, 255, 255, 0.25);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transform: rotate(-0.8deg);
+  white-space: nowrap;
+}
+
+/* Console CRT Monitor */
+.console-monitor-bezel {
+  position: absolute;
+  left: 40px;
+  top: 12px;
+  width: 630px;
+  height: 244px;
+  background: #2A2F2C;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.console-monitor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 42%, #18201C 0%, #070908 75%);
+  border-radius: 22px / 30px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-mono);
+  color: #EDF3EE;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9);
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.monitor-idle {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.monitor-ready-title {
+  margin: 18px 0 0;
+  font: 400 32px var(--font-vt);
+  text-shadow: 0 0 8px rgba(237, 243, 238, 0.5);
+}
+
+.monitor-ready-sub {
+  margin: 0;
+  font: 400 24px var(--font-vt);
+  color: #C9D3CC;
+}
+
+.monitor-ready-hint {
+  margin: 0;
+  font-size: 14px;
+  color: #B9C4BD;
+}
+
+.monitor-warn {
+  margin: 6px 0 0;
+  font: 400 24px var(--font-vt);
+  color: #F2A08F;
+}
+
+.monitor-file {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 100%;
+}
+
+.file-header {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #B9C4BD;
+}
+
+.file-mission {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: #C9D6CE;
+}
+
+.file-mission-label {
+  color: #FFE9B0;
+  letter-spacing: 0.1em;
+}
+
+.file-body {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  min-height: 42px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: auto;
+}
+
+.ask-label {
+  font-size: 12px;
+  color: #B9C4BD;
+  letter-spacing: 0.1em;
+}
+
+.q-btn {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid rgba(237, 243, 238, 0.5);
+  background: transparent;
+  color: #EDF3EE;
+  font: 400 13px var(--font-mono);
+  cursor: pointer;
+}
+
+.q-btn--open {
+  background: #EDF3EE;
+  color: #070908;
+}
+
+.nasa-link {
+  font-size: 12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+/* Console Switch Panel (Right side of desk) */
+.console-panel {
+  position: absolute;
+  left: 700px;
+  top: 10px;
+  width: 546px;
+  padding: 8px 10px 10px;
+  border-radius: 16px;
+  background: rgba(20, 24, 22, 0.28);
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.indicator-strip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.ind-lamp {
+  width: 36px;
+  height: 18px;
+  border-radius: 2px;
+  background: #2B302D;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #8C978F;
+  font: 600 8px var(--font-mono);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ind-lamp--on {
+  background: #C9B871;
+  box-shadow: 0 0 8px rgba(233, 214, 120, 0.7);
+  color: #1A1A12;
+}
+
+.ghost-btn-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ghost-btn {
+  min-height: 56px;
+  padding: 4px 10px;
+  text-align: left;
+  border-radius: 3px;
+  border: 2px solid #1A1D1B;
+  background: #2C312E;
+  color: #D5DDD7;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+}
+
+.ghost-btn--answers {
+  background: #2F4A36;
+  color: #D7F5DE;
+  box-shadow: inset 0 0 14px rgba(140, 230, 160, 0.5);
+}
+
+.ghost-btn--selected {
+  background: #F6F2E2;
+  color: #151816;
+  box-shadow: 0 0 18px rgba(246, 242, 226, 0.7), inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.ghost-btn-code {
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.ghost-btn-name {
+  font: 700 16px var(--font-sans);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.call-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.call-btn {
+  min-height: 54px;
+  min-width: 230px;
+  padding: 0 20px;
+  border-radius: 4px;
+  border: 3px solid #2A0E0C;
+  background: #C8382D;
+  color: #FFFFFF;
+  font: 700 21px var(--font-sans);
+  letter-spacing: 0.08em;
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.25), 0 2px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.lamp-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.round-lamp {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #2B302D;
+  border: 2px solid #1A1D1B;
+}
+
+.round-lamp--signal-on {
+  background: #7BE495;
+  box-shadow: 0 0 14px rgba(123, 228, 149, 0.9);
+}
+
+.round-lamp--nosignal-on {
+  background: #E8735C;
+  box-shadow: 0 0 14px rgba(232, 115, 92, 0.9);
+}
+
+.lamp-caption {
+  font: 600 10px var(--font-mono);
+  color: #F2F5F3;
+}
+
+/* Boot Room Dimmer & Skip Intro */
+.boot-dimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(2, 3, 3, 0.86);
+}
+
+.skip-intro-btn {
+  position: absolute;
+  right: 40px;
+  bottom: 28px;
+  z-index: 7;
+  min-height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  border: 1px solid rgba(237, 243, 238, 0.45);
+  color: #C9D3CC;
+  font: 600 13px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+/* Phone Ghost File Sheet (hidden on desktop/tablet) */
+.phone-sheet {
+  display: none;
+}
+
+/* ==========================================================================
+   TABLET LANDSCAPE (1180 x 820, matches docs/design-screens/tablet-landscape.png)
+   ========================================================================== */
+@media (max-width: 1219px) and (min-width: 960px) {
+  .room {
+    width: 100%;
+    max-width: 1180px;
+    height: 820px;
+  }
+
+  .clock-strip {
+    left: 24px;
+    right: 24px;
+    top: 12px;
+    height: 54px;
+  }
+
+  .clock-btn {
+    min-width: 84px;
+    font-size: 10px;
+  }
+
+  .side-screen-left {
+    left: 24px;
+    top: 78px;
+    width: 162px;
+    height: 494px;
+    padding: 12px 12px;
+    transform: perspective(900px) rotateY(14deg);
+  }
+
+  .timeline-list {
+    margin-left: 0;
+    border-left: none;
+    gap: 12px;
+  }
+
+  .timeline-item {
+    padding-left: 0;
+  }
+
+  .timeline-dot {
+    display: none;
+  }
+
+  .main-screen {
+    left: 202px;
+    top: 78px;
+    width: 776px;
+    height: 494px;
+  }
+
+  .moon-viewport {
+    left: 22px;
+    top: 34px;
+    width: 420px;
+    height: 420px;
+  }
+
+  .hardware-plot {
+    left: 468px;
+    top: 38px;
+    width: 266px;
+    bottom: 34px;
+  }
+
+  .plot-photo-img,
+  .plot-photo-placeholder {
+    width: 260px;
+    height: 154px;
+  }
+
+  .side-screen-right {
+    left: 994px;
+    top: 78px;
+    width: 162px;
+    height: 494px;
+    padding: 12px;
+    transform: perspective(900px) rotateY(-14deg);
+  }
+
+  .log-lamp {
+    width: 8px;
+    height: 8px;
+    border: none;
+  }
+
+  .log-name {
+    font: 600 11px var(--font-mono);
+  }
+
+  .console-lip {
+    top: 586px;
+  }
+
+  .console-desk {
+    top: 600px;
+  }
+
+  .rivet {
+    display: none;
+  }
+
+  .dymo-wrap {
+    left: 50%;
+    top: -22px;
+    transform: translateX(-50%);
+  }
+
+  .dymo-tape {
+    transform: none;
+  }
+
+  .console-monitor-bezel {
+    left: 16px;
+    top: 12px;
+    width: 584px;
+    height: 196px;
+  }
+
+  .console-monitor {
+    padding: 10px 14px;
+    gap: 4px;
+  }
+
+  .file-body {
+    font-size: 13.5px;
+    line-height: 1.3;
+    min-height: 0;
+  }
+
+  .file-actions {
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
+  .q-btn {
+    min-height: 36px;
+    font-size: 11.5px;
+    padding: 0 7px;
+    white-space: nowrap;
+  }
+
+  .nasa-link {
+    min-height: 36px;
+    white-space: nowrap;
+  }
+
+  .console-panel {
+    left: 616px;
+    top: 12px;
+    width: 548px;
+    padding: 10px;
+  }
+
+  /* tablet-landscape.png omits the 12 tiny indicator lamps so buttons fit cleanly */
+  .indicator-strip {
+    display: none;
+  }
+
+  .ghost-btn {
+    min-height: 54px;
+  }
+
+  .call-row {
+    margin-top: 10px;
+  }
+
+  .call-btn {
+    min-height: 48px;
+  }
+}
+
+/* ==========================================================================
+   TABLET PORTRAIT (820 x 1180, matches docs/design-screens/tablet-portrait.png)
+   ========================================================================== */
+@media (max-width: 959px) and (min-width: 600px) {
+  .room {
+    width: 100%;
+    max-width: 820px;
+    height: 1180px;
+  }
+
+  .room-glow {
+    height: 680px;
+  }
+
+  /* 2x2 Clock Grid at top */
+  .clock-strip {
+    left: 24px;
+    right: 24px;
+    top: 16px;
+    height: 102px;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr auto auto;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .clock-cell:nth-child(1) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    border-bottom: 1px solid #1E2220;
+  }
+
+  .clock-cell--moon {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    border-bottom: 1px solid #1E2220;
+  }
+
+  .clock-cell:nth-child(3) {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+
+  .clock-cell:nth-child(4) {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+  }
+
+  .clock-btn {
+    grid-row: 1 / 3;
+    min-width: 82px;
+    font-size: 10px;
+  }
+
+  .side-screen-left,
+  .side-screen-right {
+    display: none;
+  }
+
+  /* Large Main Curved Screen */
+  .main-screen {
+    left: 24px;
+    right: 24px;
+    top: 132px;
+    width: auto;
+    height: 542px;
+    border-radius: 50% / 4%;
+  }
+
+  .moon-viewport {
+    left: 50%;
+    top: 10px;
+    transform: translateX(-50%);
+    width: 368px;
+    height: 368px;
+  }
+
+  .face-earth-btn {
+    left: -176px;
+    bottom: 64px;
+  }
+
+  .hardware-plot {
+    left: 28px;
+    right: 28px;
+    top: auto;
+    bottom: 14px;
+    width: auto;
+  }
+
+  .plot-kicker {
+    display: none;
+  }
+
+  .plot-legend-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 18px;
+  }
+
+  .legend-row {
+    padding: 4px 0;
+  }
+
+  .plot-heading {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 24px;
+  }
+
+  .plot-selected-wrap {
+    display: grid;
+    grid-template-columns: 154px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 18px;
+    row-gap: 6px;
+    align-items: end;
+  }
+
+  .plot-photo-fig,
+  .plot-photo-placeholder {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    width: 154px;
+    height: 98px;
+  }
+
+  .plot-photo-img {
+    width: 154px;
+    height: 98px;
+  }
+
+  .plot-photo-cap {
+    display: none;
+  }
+
+  .plot-ghost-name {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    font-size: 32px;
+  }
+
+  .plot-signal-box {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    margin-top: 0;
+  }
+
+  /* 2-Column Summary Strip below Main Screen */
+  .compact-summary-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    top: 688px;
+    height: 36px;
+    background: #050605;
+    border: 1px solid #262B28;
+    z-index: 5;
+    font: 600 12px var(--font-mono);
+    letter-spacing: 0.1em;
+    color: #C9D3CC;
+  }
+
+  .compact-summary-cell {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+  }
+
+  .compact-summary-cell:first-child {
+    border-right: 1px solid #1E2220;
+  }
+
+  .compact-open-file-btn {
+    display: none;
+  }
+
+  /* Console Lip & Desk in Tablet Portrait */
+  .console-lip {
+    top: 742px;
+  }
+
+  .console-desk {
+    top: 756px;
+  }
+
+  .rivet {
+    display: none;
+  }
+
+  .dymo-wrap {
+    left: 50%;
+    top: -22px;
+    transform: translateX(-50%);
+  }
+
+  .dymo-tape {
+    transform: none;
+  }
+
+  .console-monitor-bezel {
+    left: 18px;
+    right: 18px;
+    top: 14px;
+    width: auto;
+    height: 190px;
+  }
+
+  .console-panel {
+    left: 18px;
+    right: 18px;
+    top: 214px;
+    width: auto;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .indicator-strip {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   PHONE (390 x 844, matches docs/design-screens/phone-*.png)
+   ========================================================================== */
+@media (max-width: 599px) {
+  .room {
+    width: 100%;
+    max-width: 430px;
+    min-height: 844px;
+    height: 100vh;
+  }
+
+  .room-glow {
+    height: 460px;
+  }
+
+  .clock-strip {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    height: 50px;
+  }
+
+  .clock-cell:nth-child(1),
+  .clock-cell:nth-child(3),
+  .clock-cell:nth-child(4),
+  .clock-btn--replay {
+    display: none;
+  }
+
+  .clock-cell--moon {
+    flex: 1;
+    background: transparent;
+  }
+
+  .clock-val {
+    font-size: 25px;
+  }
+
+  .clock-btn--mute {
+    min-width: 66px;
+    border-right: 0;
+    font-size: 11px;
+  }
+
+  .side-screen-left,
+  .side-screen-right {
+    display: none;
+  }
+
+  .main-screen {
+    left: 12px;
+    right: 12px;
+    top: 70px;
+    width: auto;
+    height: 382px;
+    border-radius: 50% / 4%;
+  }
+
+  .boot-panel {
+    padding: 24px 20px;
+  }
+
+  .boot-title {
+    font-size: 44px;
+  }
+
+  .boot-line,
+  .boot-cursor {
+    font-size: 21px;
+  }
+
+  .boot-begin-btn {
+    font-size: 28px;
+    min-height: 50px;
+    padding: 0 18px;
+  }
+
+  .moon-viewport {
+    left: 50%;
+    top: 8px;
+    transform: translateX(-50%);
+    width: 286px;
+    height: 286px;
+  }
+
+  /* Keep FACE EARTH tucked at bottom-left of Moon viewport, above status box */
+  .face-earth-btn {
+    left: -32px;
+    bottom: 2px;
+    min-height: 44px;
+    padding: 0 8px;
+    font-size: 9px;
+  }
+
+  .hardware-plot {
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 14px;
+    width: auto;
+  }
+
+  .plot-kicker,
+  .plot-legend-wrap,
+  .plot-ghost-name,
+  .plot-photo-fig,
+  .plot-photo-placeholder {
+    display: none;
+  }
+
+  .plot-selected-wrap {
+    display: block !important;
+  }
+
+  .plot-signal-box {
+    margin-top: 0;
+    padding: 10px 12px;
+    font-size: 23px;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* GHOST LOG · 00 OF 06 CHECKED row */
+  .compact-summary-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 458px;
+    height: 28px;
+    z-index: 5;
+    font: 600 11px var(--font-mono);
+    letter-spacing: 0.1em;
+    color: #FFE9B0;
+  }
+
+  .compact-summary-cell--landed {
+    display: none;
+  }
+
+  .compact-open-file-btn {
+    min-height: 32px;
+    padding: 0 10px;
+    background: #2C312E;
+    border: 1px solid rgba(237, 243, 238, 0.4);
+    color: #EDF3EE;
+    font: 600 10px var(--font-mono);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  .console-lip {
+    top: 488px;
+    height: 22px;
+  }
+
+  .console-desk {
+    top: 500px;
+  }
+
+  .rivet,
+  .dymo-wrap,
+  .console-monitor-bezel,
+  .indicator-strip {
+    display: none;
+  }
+
+  .console-panel {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    width: auto;
+    padding: 10px;
+  }
+
+  .ghost-btn-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .ghost-btn {
+    min-height: 54px;
+  }
+
+  .call-row {
+    margin-top: 12px;
+    gap: 12px;
+  }
+
+  .call-btn {
+    min-width: 196px;
+    min-height: 52px;
+    font-size: 19px;
+    padding: 0 14px;
+  }
+
+  /* Phone Bottom Sheet (matches docs/design-screens/phone-ghost-file.png) */
+  .phone-sheet {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 230px;
+    bottom: 0;
+    z-index: 20;
+    border-radius: 22px 22px 0 0;
+    background: linear-gradient(180deg, #7D8981 0%, #525C55 24px, #4A544E 100%);
+    box-shadow: 0 -300px 0 300px rgba(2, 3, 3, 0.78), 0 -16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    padding: 10px 10px 14px;
+  }
+
+  .phone-sheet-handle {
+    width: 44px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(232, 240, 234, 0.55);
+    margin: 2px auto 12px;
+  }
+
+  .phone-sheet-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    min-width: 64px;
+    min-height: 44px;
+    background: rgba(20, 24, 22, 0.35);
+    border: 1px solid rgba(237, 243, 238, 0.65);
+    color: #FFFFFF;
+    font: 700 12px var(--font-mono);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  .phone-sheet-top {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 4px 6px 10px;
+  }
+
+  .phone-sheet-photo {
+    width: 110px;
+    height: 76px;
+    object-fit: cover;
+    filter: grayscale(0.6) contrast(1.05);
+    border: 1px solid rgba(201, 221, 224, 0.35);
+    flex-shrink: 0;
+  }
+
+  .phone-sheet-placeholder {
+    width: 110px;
+    height: 76px;
+    border: 1px dashed rgba(201, 221, 224, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 400 10px var(--font-mono);
+    color: #C9D3CC;
+    text-align: center;
+    padding: 6px;
+    flex-shrink: 0;
+    white-space: pre-line;
+  }
+
+  .phone-sheet-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-right: 64px;
+  }
+
+  .phone-sheet-name {
+    margin: 0;
+    font: 400 32px var(--font-vt);
+    line-height: 1;
+    color: #FFFFFF;
+    text-transform: uppercase;
+  }
+
+  .phone-sheet-photoid {
+    margin: 0;
+    font: 400 11px var(--font-mono);
+    color: #D5DDD7;
+  }
+
+  .phone-sheet-crt-bezel {
+    background: #2A2F2C;
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.65);
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+
+  .phone-sheet-crt {
+    position: relative;
+    width: 100%;
+    background: radial-gradient(ellipse at 50% 42%, #18201C 0%, #070908 75%);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: var(--font-mono);
+    color: #EDF3EE;
+    overflow-y: auto;
+  }
+
+  .phone-sheet-signal-box {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #070908;
+    border: 1px solid rgba(201, 221, 224, 0.25);
+    font: 400 22px var(--font-vt);
+    line-height: 1.1;
+  }
+
+  .phone-sheet-call-row {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 8px;
+  }
+}
