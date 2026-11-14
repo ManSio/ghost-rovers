@@ -33,7 +33,7 @@
   <div id="error-banner" class="error-banner" role="alert" hidden></div>
 
   <main id="room" class="room">
-    <h1 class="sr-only">Ghost Rovers: Lunar Hardware Check</h1>
+    <h1 id="page-h1" class="sr-only">Ghost Rovers: Lunar Hardware Check</h1>
     <div aria-hidden="true" class="room-glow"></div>
 
     <!-- Top Mission Clocks Strip -->
@@ -48,11 +48,15 @@
       </div>
       <div class="clock-cell">
         <span id="light-time-label" class="clock-label">LIGHT TIME EARTH TO MOON</span>
-        <span class="clock-val">1.3 SEC</span>
+        <span id="light-time-val" class="clock-val">1.3 SEC</span>
       </div>
       <div class="clock-cell">
-        <span class="clock-label">LAST CREW LEFT</span>
-        <span class="clock-val">DEC 1972</span>
+        <span id="last-crew-label" class="clock-label">LAST CREW LEFT</span>
+        <span id="last-crew-val" class="clock-val">DEC 1972</span>
+      </div>
+      <div role="group" aria-label="Select world" class="world-toggle">
+        <button id="world-moon-btn" type="button" class="clock-btn world-btn" aria-pressed="true" aria-keyshortcuts="M">MOON</button>
+        <button id="world-mars-btn" type="button" class="clock-btn world-btn" aria-pressed="false" aria-keyshortcuts="M">MARS</button>
       </div>
       <button id="mute-btn" type="button" class="clock-btn clock-btn--mute" aria-pressed="false">SOUND ON</button>
       <button id="about-btn" type="button" class="clock-btn clock-btn--about" aria-label="About Ghost Rovers and teacher resources" aria-keyshortcuts="?">ABOUT · TEACHERS</button>
@@ -118,11 +122,11 @@
 
         <!-- Right Half of Main Screen: Hardware Plot -->
         <div id="hardware-plot" class="hardware-plot">
-          <p class="plot-kicker">LUNAR SURFACE · HARDWARE PLOT</p>
+          <p id="plot-kicker" class="plot-kicker">LUNAR SURFACE · HARDWARE PLOT</p>
 
           <!-- Idle 4 SITES · 6 MACHINES legend -->
           <div id="plot-legend-wrap" class="plot-legend-wrap">
-            <p class="plot-heading">4 SITES · 6 MACHINES</p>
+            <p id="plot-heading" class="plot-heading">4 SITES · 6 MACHINES</p>
             <div id="site-legend-list"></div>
           </div>
 
@@ -132,7 +136,7 @@
             <p id="plot-ghost-meta" class="plot-ghost-meta" hidden></p>
             <div id="plot-takeover-stats" class="plot-takeover-stats" hidden>
               <div aria-hidden="true" class="plot-takeover-visual">
-                <span class="plot-takeover-label">ON THE MOON FOR</span>
+                <span id="plot-takeover-label" class="plot-takeover-label">ON THE MOON FOR</span>
                 <span id="plot-takeover-ymd" class="plot-takeover-ymd">-- YRS · -- MOS · -- DAYS</span>
                 <span id="plot-takeover-hms" class="plot-takeover-hms">-- HRS · -- MIN · -- SEC</span>
                 <span id="plot-takeover-status" class="plot-takeover-status"></span>
@@ -171,13 +175,13 @@
             <div class="mission-complete-study">
               <div class="mission-complete-study-row">
                 <span class="mission-complete-study-label">KEEP EXPLORING:</span>
-                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/16590fae-9e4f-4a0a-ba03-4c358ff32eb4" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                <a id="study-quiz-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/16590fae-9e4f-4a0a-ba03-4c358ff32eb4" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
                   <span>QUIZ</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
                 </a>
-                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/4f152dbc-f384-42c2-9dde-87a6737de1c1" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                <a id="study-flashcards-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/4f152dbc-f384-42c2-9dde-87a6737de1c1" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
                   <span>FLASHCARDS</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
                 </a>
-                <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/84801d62-dea7-4568-b396-a85e777e915d" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
+                <a id="study-mindmap-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/84801d62-dea7-4568-b396-a85e777e915d" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
                   <span>MIND MAP</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
                 </a>
               </div>
@@ -204,7 +208,7 @@
         <span id="compact-log-text">GHOST LOG · 00 OF 06 CHECKED</span>
       </div>
       <div class="compact-summary-cell compact-summary-cell--landed">
-        <span>LANDED 1967 · 1969 · 1971 · 1972</span>
+        <span id="compact-landed-text">LANDED 1967 · 1969 · 1971 · 1972</span>
       </div>
       <button id="compact-open-file-btn" type="button" class="compact-open-file-btn" hidden>OPEN FILE</button>
     </div>
@@ -220,7 +224,7 @@
       <span aria-hidden="true" class="rivet rivet--6"></span>
 
       <div class="dymo-wrap">
-        <span class="dymo-tape">Ghost Rovers · Lunar hardware check</span>
+        <span id="dymo-tape" class="dymo-tape">Ghost Rovers · Lunar hardware check</span>
       </div>
 
       <!-- Left Console CRT Monitor -->
@@ -229,7 +233,7 @@
           <div id="monitor-idle" class="monitor-idle">
             <p class="monitor-ready-title">CONSOLE READY.</p>
             <p class="monitor-ready-sub">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
-            <p class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C). Press ? for About.</p>
+            <p id="monitor-ready-hint" class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C). Press M for Mars. Press ? for About.</p>
             <p id="monitor-warn" aria-live="polite" class="monitor-warn" hidden>&gt; PICK A GHOST FIRST, THEN CALL.</p>
           </div>
 
@@ -396,7 +400,7 @@
               <span>STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
             </a>
           </div>
-          <p class="about-modal-p">Every fact is checked against NASA’s records (NSSDCA). Photos and the Moon map are NASA’s.</p>
+          <p class="about-modal-p">Every fact is checked against NASA’s records (NSSDCA). Photos and the Moon and Mars maps are NASA’s.</p>
           <p class="about-modal-p">Made by La Shara Cordero, team Clew Labs, for the NASA Space Apps Challenge 2026.</p>
           <p class="about-modal-tagline">AI assisted. Human approved.</p>
           <div class="about-modal-links">

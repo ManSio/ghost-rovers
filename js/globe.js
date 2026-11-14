@@ -1,10 +1,13 @@
-// js/globe.js: Three.js 0.187.0 3D Moon globe with NASA LRO texture, drag/target rotation, and room scale awareness
+// js/globe.js: Three.js 0.187.0 3D Moon and Mars globe with NASA textures, drag/target rotation, and room scale awareness
 
 import { latLonToXYZ, getTargetRotationForSite, worldToViewportPx } from './projection.js';
 import { showErrorBanner } from './data.js';
 
 const THREE_CDN = 'https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.min.js';
-const TEXTURE_URL = 'assets/nasa/lroc_color_2k.jpg';
+const TEXTURE_URLS = {
+  moon: 'assets/nasa/lroc_color_2k.jpg',
+  mars: 'assets/nasa/mars_2k.jpg'
+};
 
 export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) {
   let THREE;
@@ -33,22 +36,40 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
     globeGroup.rotation.order = 'YXZ';
     scene.add(globeGroup);
 
-    const texture = await new Promise((resolve, reject) => {
-      const loader = new THREE.TextureLoader();
-      loader.load(
-        TEXTURE_URL,
-        (tex) => resolve(tex),
-        undefined,
-        () => reject(new Error('Failed to load lunar texture ' + TEXTURE_URL))
-      );
-    });
-    texture.colorSpace = THREE.NoColorSpace;
-    texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
+    const loader = new THREE.TextureLoader();
+    const maxAniso = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
+    const textures = {};
 
-    // Shader replicates tools/render_moon.py view-space upper-left lighting
+    function loadWorldTexture(worldKey) {
+      if (textures[worldKey]) {
+        return Promise.resolve(textures[worldKey]);
+      }
+      const url = TEXTURE_URLS[worldKey] || TEXTURE_URLS.moon;
+      return new Promise((resolve, reject) => {
+        loader.load(
+          url,
+          (tex) => {
+            tex.colorSpace = THREE.NoColorSpace;
+            tex.anisotropy = maxAniso;
+            textures[worldKey] = tex;
+            resolve(tex);
+          },
+          undefined,
+          () => reject(new Error('Failed to load globe texture ' + url))
+        );
+      });
+    }
+
+    let currentWorld = options.initialWorld === 'mars' ? 'mars' : 'moon';
+    const initialTexture = await loadWorldTexture(currentWorld);
+    // Preload the other world texture in background
+    loadWorldTexture(currentWorld === 'mars' ? 'moon' : 'mars').catch(() => {});
+
+    // Shader replicates tools/render_moon.py view-space upper-left lighting, with warm Mars lighting tint when uIsMars > 0.5
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        uMap: { value: texture }
+        uMap: { value: initialTexture },
+        uIsMars: { value: currentWorld === 'mars' ? 1.0 : 0.0 }
       },
       vertexShader: `
         varying vec2 vUv;
@@ -61,6 +82,7 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
       `,
       fragmentShader: `
         uniform sampler2D uMap;
+        uniform float uIsMars;
         varying vec2 vUv;
         varying vec3 vViewNormal;
         void main() {
@@ -68,7 +90,8 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
           vec3 L = normalize(vec3(-0.45, 0.35, 0.82));
           float d = clamp(dot(normalize(vViewNormal), L), 0.0, 1.0);
           float shade = 0.18 + 0.92 * pow(d, 0.8);
-          vec3 rgb = clamp(tex.rgb * shade * 1.05, 0.0, 1.0);
+          vec3 tint = mix(vec3(1.0, 1.0, 1.0), vec3(1.12, 0.93, 0.82), uIsMars);
+          vec3 rgb = clamp(tex.rgb * tint * shade * 1.05, 0.0, 1.0);
           gl_FragColor = vec4(rgb, 1.0);
         }
       `
@@ -76,7 +99,7 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
 
     const geometry = new THREE.SphereGeometry(1, 64, 64);
     const sphere = new THREE.Mesh(geometry, material);
-    // Align u = 0.5 (0 deg lon in NASA LRO map) toward +Z camera
+    // Align u = 0.5 (0 deg lon in NASA LRO & Viking maps) toward +Z camera
     sphere.rotation.y = -Math.PI / 2;
     globeGroup.add(sphere);
 
@@ -94,6 +117,19 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
         return false;
       }
     }
+
+    function getDefaultRotation(worldKey) {
+      if (worldKey === 'mars') {
+        // Mars start/reset view centers on 0° N, 30° W (lat: 0, lon: -30)
+        return getTargetRotationForSite(0, -30);
+      }
+      return { rotX: 0, rotY: 0 };
+    }
+
+    const initRot = getDefaultRotation(currentWorld);
+    globeGroup.rotation.x = initRot.rotX;
+    globeGroup.rotation.y = initRot.rotY;
+    containerEl.classList.toggle('moon-canvas-wrap--mars', currentWorld === 'mars');
 
     const canvas = renderer.domElement;
     const dragSpeed = 0.007;
@@ -160,8 +196,8 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
       return worldToViewportPx(tempVec, w, h);
     }
 
-    function setTargetRotation(rotX, rotY) {
-      if (prefersReducedMotion()) {
+    function setTargetRotation(rotX, rotY, immediate = false) {
+      if (immediate || prefersReducedMotion()) {
         globeGroup.rotation.x = rotX;
         globeGroup.rotation.y = rotY;
         targetRotX = null;
@@ -175,13 +211,36 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
       }
     }
 
-    function rotateToSite(latDeg, lonDeg) {
+    function rotateToSite(latDeg, lonDeg, immediate = false) {
       const { rotX, rotY } = getTargetRotationForSite(latDeg, lonDeg);
-      setTargetRotation(rotX, rotY);
+      setTargetRotation(rotX, rotY, immediate);
     }
 
-    function faceEarth() {
-      setTargetRotation(0, 0);
+    function faceEarth(immediate = false) {
+      const def = getDefaultRotation(currentWorld);
+      setTargetRotation(def.rotX, def.rotY, immediate);
+    }
+
+    function getRotation() {
+      return {
+        rotX: targetRotX !== null ? targetRotX : globeGroup.rotation.x,
+        rotY: targetRotY !== null ? targetRotY : globeGroup.rotation.y
+      };
+    }
+
+    async function setWorld(worldKey, savedRotation = null) {
+      currentWorld = worldKey === 'mars' ? 'mars' : 'moon';
+      containerEl.classList.toggle('moon-canvas-wrap--mars', currentWorld === 'mars');
+      material.uniforms.uIsMars.value = currentWorld === 'mars' ? 1.0 : 0.0;
+      const tex = await loadWorldTexture(currentWorld);
+      material.uniforms.uMap.value = tex;
+      material.needsUpdate = true;
+
+      if (savedRotation && typeof savedRotation.rotX === 'number' && typeof savedRotation.rotY === 'number') {
+        setTargetRotation(savedRotation.rotX, savedRotation.rotY, true);
+      } else {
+        faceEarth(true);
+      }
     }
 
     function tick() {
@@ -218,7 +277,9 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
       rotateToSite,
       faceEarth,
       projectLatLon,
-      resize
+      resize,
+      setWorld,
+      getRotation
     };
   } catch (err) {
     showErrorBanner('3D GLOBE INIT ERROR: ' + (err && err.message ? err.message : String(err)));

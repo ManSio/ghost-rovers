@@ -1,0 +1,304 @@
+{
+  "world": "mars",
+  "bootLines": [
+    "SWITCHING CONSOLE TO MARS",
+    "SCANNING MARS ... 6 SITES FOUND",
+    "HARDWARE ON SURFACE: 6 MACHINES",
+    "PEOPLE ON MARS: NONE YET",
+    "READY FOR GHOST CHECK."
+  ],
+  "clocks": {
+    "lightTimeLabel": "LIGHT TIME EARTH TO MARS",
+    "lightTime": "3 TO 22 MIN",
+    "lastCrewLabel": "PEOPLE ON MARS",
+    "lastCrew": "NONE YET"
+  },
+  "today": "TODAY · All 6 are still there. None answer yet.",
+  "studyLinks": {
+    "quiz": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/8aadc4fb-082f-4480-8e58-87a441b310e6",
+    "flashcards": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/a4b7a31a-a118-41e8-8546-850d7beb838e",
+    "mindMap": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/12879205-9943-4eb8-892d-d3e87302e118",
+    "notebook": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378",
+    "podcast": null
+  },
+  "sites": {
+    "V1": {
+      "code": "V1",
+      "legendCode": "V-1",
+      "name": "Chryse Planitia",
+      "lat": 22.27,
+      "lon": -47.95
+    },
+    "V2": {
+      "code": "V2",
+      "legendCode": "V-2",
+      "name": "Utopia Planitia",
+      "lat": 47.6673,
+      "lon": 134.2809
+    },
+    "MPF": {
+      "code": "MPF",
+      "legendCode": "MPF",
+      "name": "Ares Vallis",
+      "lat": 19.33,
+      "lon": -33.55
+    },
+    "MER-A": {
+      "code": "MER-A",
+      "legendCode": "MER-A",
+      "name": "Gusev Crater",
+      "lat": -14.572,
+      "lon": 175.478
+    },
+    "MER-B": {
+      "code": "MER-B",
+      "legendCode": "MER-B",
+      "name": "Meridiani Planum",
+      "lat": -1.946,
+      "lon": -5.527
+    },
+    "INS": {
+      "code": "INS",
+      "legendCode": "INS",
+      "name": "Elysium Planitia",
+      "lat": 4.502,
+      "lon": 135.623
+    }
+  },
+  "ghosts": [
+    {
+      "id": "viking1",
+      "num": "01",
+      "code": "V1-LANDER",
+      "name": "Viking 1 Lander",
+      "shortName": "VIKING 1",
+      "mission": "Viking 1",
+      "site": "V1",
+      "siteName": "Chryse Planitia",
+      "lat": 22.27,
+      "lon": -47.95,
+      "landed": "1976-07-20T11:53:06Z",
+      "landedTxt": "1976-07-20",
+      "quiet": "1982",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-075C",
+      "job": "NASA's first spacecraft to land safely on Mars. It studied the soil, the air, and the weather.",
+      "reply": "NO SIGNAL. QUIET SINCE 1982.",
+      "story": "I started sending my first picture of Mars just 25 seconds after I landed. Then I kept working for more than six years.",
+      "qs": [
+        [
+          "How did it get power?",
+          "Two nuclear heat batteries filled with plutonium. Each one made about 30 watts, enough to run me day and night."
+        ],
+        [
+          "Why did it go quiet?",
+          "NASA lost contact with me on November 13, 1982, after more than six years on Mars."
+        ],
+        [
+          "What's it made of?",
+          "A six-sided aluminum body on three legs, a robot arm with a scoop for soil, and two cameras that could look all the way around."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    },
+    {
+      "id": "viking2",
+      "num": "02",
+      "code": "V2-LANDER",
+      "name": "Viking 2 Lander",
+      "shortName": "VIKING 2",
+      "mission": "Viking 2",
+      "site": "V2",
+      "siteName": "Utopia Planitia",
+      "lat": 47.6673,
+      "lon": 134.2809,
+      "landed": "1976-09-03T22:58:20Z",
+      "landedTxt": "1976-09-03",
+      "quiet": "1980",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1975-083C",
+      "job": "Viking 1's twin, sent to land far to the north and study a different part of Mars.",
+      "reply": "NO SIGNAL. BATTERIES FAILED IN 1980.",
+      "story": "I landed on a wide, rocky plain far from my twin. I worked for 1,281 Mars days before my batteries gave out.",
+      "qs": [
+        [
+          "What's a Mars day?",
+          "A Mars day is called a sol. It's about 40 minutes longer than a day on Earth."
+        ],
+        [
+          "Why did it stop?",
+          "NASA turned me off on April 11, 1980, when my batteries failed."
+        ],
+        [
+          "What's it made of?",
+          "Just like my twin: an aluminum body on three legs, a robot arm with a scoop, two cameras, and two nuclear heat batteries."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    },
+    {
+      "id": "sojourner",
+      "num": "03",
+      "code": "MPF-ROVER",
+      "name": "Sojourner Rover",
+      "shortName": "SOJOURNER",
+      "mission": "Mars Pathfinder",
+      "site": "MPF",
+      "siteName": "Ares Vallis",
+      "lat": 19.33,
+      "lon": -33.55,
+      "landed": "1997-07-04T16:56:55Z",
+      "landedTxt": "1997-07-04",
+      "quiet": "1997",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1996-068A",
+      "job": "NASA's first rover on Mars. It tested driving a robot on another planet and studied rocks near its lander.",
+      "reply": "NO SIGNAL. QUIET SINCE 1997.",
+      "story": "A 12-year-old girl named me. I bounced onto Mars inside giant airbags, then rolled off a ramp and explored the rocks around my lander.",
+      "qs": [
+        [
+          "Who named it?",
+          "Valerie Ambroise, age 12, won a contest. She named me after Sojourner Truth, a hero who fought slavery and fought for women's rights."
+        ],
+        [
+          "How did it land?",
+          "My lander hit the ground wrapped in airbags and bounced about 12 meters high, taller than a 3-story house, before it rolled to a stop."
+        ],
+        [
+          "What's it made of?",
+          "Six wheels, a flat top covered in solar panels, and cameras. I weighed about 10.5 kg (23 pounds)."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    },
+    {
+      "id": "spirit",
+      "num": "04",
+      "code": "MER-A",
+      "name": "Spirit Rover",
+      "shortName": "SPIRIT",
+      "mission": "Mars Exploration Rover",
+      "site": "MER-A",
+      "siteName": "Gusev Crater",
+      "lat": -14.572,
+      "lon": 175.478,
+      "landed": "2004-01-04T04:35:00Z",
+      "landedTxt": "2004-01-04",
+      "quiet": "2010",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-027A",
+      "job": "A robot geologist sent to a crater that may once have held a lake, to look for clues that Mars once had water.",
+      "reply": "NO SIGNAL. QUIET SINCE 2010.",
+      "story": "A third grader named me. I was built to work for 90 days, but I kept going for six years. In the end I got stuck in soft sand.",
+      "qs": [
+        [
+          "How did it get stuck?",
+          "In 2009 I broke through a thin crust into a pocket of sand. By May I couldn't move at all."
+        ],
+        [
+          "How far did it drive?",
+          "About 7.7 km, even after one of my six wheels stopped working."
+        ],
+        [
+          "What's it made of?",
+          "Six wheels, solar panels shaped like wings, rechargeable batteries, and a tall mast with cameras like eyes."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    },
+    {
+      "id": "opportunity",
+      "num": "05",
+      "code": "MER-B",
+      "name": "Opportunity Rover",
+      "shortName": "OPPORTUNITY",
+      "mission": "Mars Exploration Rover",
+      "site": "MER-B",
+      "siteName": "Meridiani Planum",
+      "lat": -1.946,
+      "lon": -5.527,
+      "landed": "2004-01-25T04:54:22Z",
+      "landedTxt": "2004-01-25",
+      "quiet": "2018",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2003-032A",
+      "job": "Spirit's twin, sent to the other side of Mars to search the rocks for signs that water once flowed there.",
+      "reply": "NO SIGNAL. QUIET SINCE 2018.",
+      "story": "My mission was planned for 90 days. I kept going for over 14 years and drove farther than a marathon.",
+      "qs": [
+        [
+          "Why did it go quiet?",
+          "In June 2018, a giant dust storm covered Mars. I ran on solar power, and NASA never heard from me again."
+        ],
+        [
+          "How far did it go?",
+          "About 45 km. That's farther than a marathon, and when I stopped, it was farther than any rover had ever driven on another world."
+        ],
+        [
+          "What did it find?",
+          "I landed in a spot full of hematite, a mineral that usually forms in water. It was a clue that Mars was once wet."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    },
+    {
+      "id": "insight",
+      "num": "06",
+      "code": "INSIGHT",
+      "name": "InSight Lander",
+      "shortName": "INSIGHT",
+      "mission": "InSight",
+      "site": "INS",
+      "siteName": "Elysium Planitia",
+      "lat": 4.502,
+      "lon": 135.623,
+      "landed": "2018-11-26T19:52:59Z",
+      "landedTxt": "2018-11-26",
+      "quiet": "2022",
+      "nasaUrl": "https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2018-042A",
+      "job": "A lander that listened for marsquakes and took Mars's temperature, to learn what's deep inside the planet.",
+      "reply": "NO SIGNAL. LAST HEARD DECEMBER 2022.",
+      "story": "I listened to Mars shake. Dust slowly covered my solar panels, and I sent my last message in December 2022.",
+      "qs": [
+        [
+          "What's a marsquake?",
+          "Mars shakes too! My seismometer felt the ground move, which helps scientists map the inside of the planet."
+        ],
+        [
+          "What went wrong with the mole?",
+          "My heat probe, called the mole, was supposed to hammer 5 meters down. It got stuck only a few centimeters in."
+        ],
+        [
+          "What's it made of?",
+          "A seismometer, a heat probe, solar panels, a robot arm, and a tiny laser mirror like the one on the Moon."
+        ]
+      ],
+      "answers": false,
+      "draft": false,
+      "hasPhoto": false,
+      "photo": "",
+      "photoAlt": "",
+      "photoId": ""
+    }
+  ]
+}

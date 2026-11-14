@@ -45,9 +45,10 @@ function fitFont(ctx, text, weight, maxPx, minPx, family, maxWidth) {
 }
 
 // Draw the 1969 Console Junior Flight Controller Badge on <canvas>
-// Contest rule: NO NASA logo, insignia, mission patch, or flag
-export function drawMissionBadge(canvas) {
+// Contest rule: NO NASA logo, insignia, mission patch, flag, or mission identifiers
+export function drawMissionBadge(canvas, world = 'moon') {
   if (!canvas || !canvas.getContext) return;
+  const isMars = world === 'mars';
   const ctx = canvas.getContext('2d');
   const w = canvas.width;
   const h = canvas.height;
@@ -97,24 +98,24 @@ export function drawMissionBadge(canvas) {
     ctx.fill();
   });
 
-  // Left Emblem: Geometric Moon Globe with 4 Landing Site Squares
+  // Left Emblem: Geometric Globe with Landing Site Squares
   const cx = 72;
   const cy = h / 2;
   const r = 44;
 
-  ctx.fillStyle = '#162224';
+  ctx.fillStyle = isMars ? '#2A1712' : '#162224';
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = '#C9DDE0';
+  ctx.strokeStyle = isMars ? '#E8A88A' : '#C9DDE0';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.stroke();
 
   // Latitude/Longitude crosshairs
-  ctx.strokeStyle = 'rgba(201, 221, 224, 0.3)';
+  ctx.strokeStyle = isMars ? 'rgba(232, 168, 138, 0.3)' : 'rgba(201, 221, 224, 0.3)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(cx - r, cy);
@@ -127,13 +128,22 @@ export function drawMissionBadge(canvas) {
   ctx.ellipse(cx, cy, r * 0.55, r, 0, 0, Math.PI * 2);
   ctx.stroke();
 
-  // 4 Site hollow squares on the Moon emblem (A11 lit green)
-  const emblemSites = [
-    { x: cx + 16, y: cy - 2, lit: true },
-    { x: cx - 18, y: cy + 5, lit: false },
-    { x: cx + 3, y: cy - 22, lit: false },
-    { x: cx + 21, y: cy - 16, lit: false }
-  ];
+  // Site hollow squares on the emblem
+  const emblemSites = isMars
+    ? [
+        { x: cx - 18, y: cy - 14, lit: false },
+        { x: cx + 18, y: cy - 24, lit: false },
+        { x: cx - 10, y: cy - 11, lit: false },
+        { x: cx + 22, y: cy + 12, lit: false },
+        { x: cx - 2, y: cy + 4, lit: false },
+        { x: cx + 18, y: cy - 3, lit: false }
+      ]
+    : [
+        { x: cx + 16, y: cy - 2, lit: true },
+        { x: cx - 18, y: cy + 5, lit: false },
+        { x: cx + 3, y: cy - 22, lit: false },
+        { x: cx + 21, y: cy - 16, lit: false }
+      ];
   emblemSites.forEach((pt) => {
     ctx.strokeStyle = pt.lit ? '#7BE495' : '#FFFFFF';
     ctx.lineWidth = pt.lit ? 2 : 1.5;
@@ -156,12 +166,14 @@ export function drawMissionBadge(canvas) {
   ctx.fillText(dymoText, tx + 8, 40);
 
   // Main Badge Title
-  const title1 = 'JUNIOR FLIGHT CONTROLLER';
+  const title1 = isMars ? 'JUNIOR FLIGHT CONTROLLER · MARS' : 'JUNIOR FLIGHT CONTROLLER';
   ctx.fillStyle = '#FFE9B0';
   fitFont(ctx, title1, '700', 21, 12, sansFont, maxTextW);
   ctx.fillText(title1, tx, 74);
 
-  const title2 = 'GHOST ROVERS · LUNAR HARDWARE CHECK';
+  const title2 = isMars
+    ? 'GHOST ROVERS · MARS HARDWARE CHECK'
+    : 'GHOST ROVERS · LUNAR HARDWARE CHECK';
   ctx.fillStyle = '#FFFFFF';
   fitFont(ctx, title2, '700', 16, 10, sansFont, maxTextW);
   ctx.fillText(title2, tx, 97);
@@ -174,25 +186,29 @@ export function drawMissionBadge(canvas) {
   ctx.lineTo(w - 24, 110);
   ctx.stroke();
 
-  // Telemetry verification lines
+  // Telemetry verification lines (no mission identifiers)
   const line1 = 'LOG STATUS : 06 OF 06 MACHINES CHECKED';
   ctx.fillStyle = '#C9DDE0';
   fitFont(ctx, line1, '600', 11, 8, monoFont, maxTextW);
   ctx.fillText(line1, tx, 132);
 
-  const line2 = 'ACTIVE LINK: A11 LASER MIRROR (2.5 SEC)';
-  ctx.fillStyle = '#9BEFB0';
+  const line2 = isMars ? 'ACTIVE LINK: NONE YET' : 'ACTIVE LINK: LASER MIRROR (2.5 SEC)';
+  ctx.fillStyle = isMars ? '#F2A08F' : '#9BEFB0';
   fitFont(ctx, line2, '600', 11, 8, monoFont, maxTextW);
   ctx.fillText(line2, tx, 152);
 
-  const line3 = '4 APOLLO & SURVEYOR SITES · NEAR SIDE';
+  const line3 = isMars ? '6 MACHINES · 6 SITES · ALL QUIET' : '4 SITES · NEAR SIDE';
   ctx.fillStyle = '#8FA5A9';
   fitFont(ctx, line3, '400', 10, 8, monoFont, maxTextW);
   ctx.fillText(line3, tx, 172);
 }
 
-export function initPanels(data, callbacks) {
-  const { ghosts, sites } = data;
+export function initPanels(initialData, callbacks) {
+  let currentData = initialData;
+  let ghosts = currentData.ghosts;
+  let sites = currentData.sites;
+  let currentWorld = currentData.world === 'mars' ? 'mars' : 'moon';
+
   const {
     onPickGhostId,
     onPickSite,
@@ -212,128 +228,289 @@ export function initPanels(data, callbacks) {
     onSaveBadge
   } = callbacks;
 
-  // 1. Build Clickable Legend Buttons on Main Screen (4 SITES · 6 MACHINES)
   const legendListEl = document.getElementById('site-legend-list');
-  Object.keys(sites).forEach((siteKey) => {
-    const site = sites[siteKey];
-    const gs = ghosts.filter((x) => x.site === siteKey);
-    const row = document.createElement('button');
-    row.type = 'button';
-    row.className = 'legend-row';
-    const namesJoined =
-      gs.length === 2 ? gs[0].name + ' and ' + gs[1].name : gs.map((x) => x.name).join(', ');
-    row.setAttribute('aria-label', site.legendCode + ', ' + site.name + ': ' + namesJoined + '.');
-
-    const codeSpan = document.createElement('span');
-    codeSpan.className = 'legend-code';
-    codeSpan.textContent = site.legendCode;
-
-    const textSpan = document.createElement('span');
-    textSpan.className = 'legend-text';
-    textSpan.textContent = site.name.toUpperCase() + ': ' + gs.map((x) => x.name).join(', ');
-
-    row.appendChild(codeSpan);
-    row.appendChild(textSpan);
-    row.addEventListener('click', () => {
-      if (onPickSite) onPickSite(siteKey, gs);
-    });
-    legendListEl.appendChild(row);
-  });
-
-  // 2. Build Left Side Screen Clickable Timeline (LANDED · BY YEAR) + TODAY row
   const timelineListEl = document.getElementById('timeline-list');
-  const sortedByLanded = ghosts.slice().sort((a, b) => (a.landed < b.landed ? -1 : 1));
-  const timelineItems = sortedByLanded.map((g) => {
-    const li = document.createElement('li');
-    li.className = 'timeline-item';
-
-    const dot = document.createElement('span');
-    dot.className = 'timeline-dot';
-    dot.setAttribute('aria-hidden', 'true');
-
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'timeline-btn';
-    btn.setAttribute('aria-pressed', 'false');
-
-    const year = document.createElement('span');
-    year.className = 'timeline-year';
-    year.textContent = g.landed.slice(0, 4);
-
-    const label = document.createElement('span');
-    label.className = 'timeline-label';
-    label.textContent = g.name.toUpperCase();
-
-    btn.appendChild(year);
-    btn.appendChild(label);
-    btn.addEventListener('click', () => onPickGhostId(g.id));
-
-    li.appendChild(dot);
-    li.appendChild(btn);
-    timelineListEl.appendChild(li);
-
-    return { id: g.id, dot, btn, year, label };
-  });
-
-  // Append non-button TODAY row at the bottom of the timeline
-  const todayLi = document.createElement('li');
-  todayLi.className = 'timeline-today';
-  todayLi.textContent = 'TODAY · All 6 are still there. 1 still answers.';
-  timelineListEl.appendChild(todayLi);
-
-  // 3. Build Right Side Screen Ghost Log (GHOST LOG)
   const logListEl = document.getElementById('log-list');
-  const logItems = ghosts.map((g) => {
-    const li = document.createElement('li');
-    li.className = 'log-item';
-
-    const lamp = document.createElement('span');
-    lamp.className = 'log-lamp';
-    lamp.setAttribute('aria-hidden', 'true');
-
-    const col = document.createElement('span');
-    col.className = 'log-text-col';
-
-    const nameSpan = document.createElement('span');
-    nameSpan.className = 'log-name';
-
-    const statusSpan = document.createElement('span');
-    statusSpan.className = 'log-status';
-
-    col.appendChild(nameSpan);
-    col.appendChild(statusSpan);
-    li.appendChild(lamp);
-    li.appendChild(col);
-    logListEl.appendChild(li);
-
-    return { ghost: g, lamp, nameSpan, statusSpan };
-  });
-
-  // 4. Build 6 Console Ghost Buttons
   const btnGridEl = document.getElementById('ghost-btn-grid');
-  const ghostButtons = ghosts.map((g, i) => {
-    const keyNum = String(i + 1);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'ghost-btn' + (g.answers ? ' ghost-btn--answers' : '');
-    btn.setAttribute('aria-pressed', 'false');
-    btn.setAttribute('aria-keyshortcuts', keyNum);
 
-    const codeSpan = document.createElement('span');
-    codeSpan.className = 'ghost-btn-code';
-    codeSpan.textContent = '[' + keyNum + '] ' + g.code;
+  const pageH1El = document.getElementById('page-h1');
+  const mainScreenEl = document.querySelector('.main-screen');
+  const moonCanvasWrapEl = document.getElementById('moon-canvas-wrap');
+  const faceEarthBtnEl = document.getElementById('face-earth-btn');
+  const hardwarePlotEl = document.getElementById('hardware-plot');
+  const plotKickerEl = document.getElementById('plot-kicker');
+  const plotHeadingEl = document.getElementById('plot-heading');
+  const plotTakeoverLabelEl = document.getElementById('plot-takeover-label');
+  const lightTimeLabelEl = document.getElementById('light-time-label');
+  const lightTimeValEl = document.getElementById('light-time-val');
+  const lastCrewLabelEl = document.getElementById('last-crew-label');
+  const lastCrewValEl = document.getElementById('last-crew-val');
+  const compactLandedTextEl = document.getElementById('compact-landed-text');
+  const dymoTapeEl = document.getElementById('dymo-tape');
+  const monitorReadyHintEl = document.getElementById('monitor-ready-hint');
+  const missionCompleteTitleEl = document.getElementById('mission-complete-title');
 
-    const nameSpan = document.createElement('span');
-    nameSpan.className = 'ghost-btn-name';
-    nameSpan.textContent = g.name;
+  const studyQuizLinkEl = document.getElementById('study-quiz-link');
+  const studyFlashcardsLinkEl = document.getElementById('study-flashcards-link');
+  const studyMindmapLinkEl = document.getElementById('study-mindmap-link');
+  const notebookLinkEl = document.getElementById('notebook-link');
+  const podcastLinkEl = document.getElementById('podcast-link');
+  const phoneNotebookLinkEl = document.getElementById('phone-notebook-link');
+  const phonePodcastLinkEl = document.getElementById('phone-podcast-link');
 
-    btn.appendChild(codeSpan);
-    btn.appendChild(nameSpan);
-    btn.addEventListener('click', () => onPickGhostId(g.id));
-    btnGridEl.appendChild(btn);
+  let timelineItems = [];
+  let logItems = [];
+  let ghostButtons = [];
+  let badgeDrawnWorld = null;
 
-    return { ghost: g, btn };
-  });
+  function buildWorldDOM(dataObj) {
+    currentData = dataObj;
+    ghosts = dataObj.ghosts;
+    sites = dataObj.sites;
+    currentWorld = dataObj.world === 'mars' ? 'mars' : 'moon';
+    const isMars = currentWorld === 'mars';
+    badgeDrawnWorld = null;
+
+    // 1. Rebuild Clickable Legend Buttons on Main Screen
+    while (legendListEl.firstChild) {
+      legendListEl.removeChild(legendListEl.firstChild);
+    }
+    const siteKeys = Object.keys(sites);
+    siteKeys.forEach((siteKey) => {
+      const site = sites[siteKey];
+      const gs = ghosts.filter((x) => x.site === siteKey);
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'legend-row';
+      const namesJoined =
+        gs.length === 2 ? gs[0].name + ' and ' + gs[1].name : gs.map((x) => x.name).join(', ');
+      row.setAttribute('aria-label', site.legendCode + ', ' + site.name + ': ' + namesJoined + '.');
+
+      const codeSpan = document.createElement('span');
+      codeSpan.className = 'legend-code';
+      codeSpan.textContent = site.legendCode;
+
+      const textSpan = document.createElement('span');
+      textSpan.className = 'legend-text';
+      textSpan.textContent = site.name.toUpperCase() + ': ' + gs.map((x) => x.name).join(', ');
+
+      row.appendChild(codeSpan);
+      row.appendChild(textSpan);
+      row.addEventListener('click', () => {
+        if (onPickSite) onPickSite(siteKey, gs);
+      });
+      legendListEl.appendChild(row);
+    });
+
+    // 2. Rebuild Left Side Screen Clickable Timeline (LANDED · BY YEAR) + TODAY row
+    while (timelineListEl.firstChild) {
+      timelineListEl.removeChild(timelineListEl.firstChild);
+    }
+    const sortedByLanded = ghosts.slice().sort((a, b) => (a.landed < b.landed ? -1 : 1));
+    timelineItems = sortedByLanded.map((g) => {
+      const li = document.createElement('li');
+      li.className = 'timeline-item';
+
+      const dot = document.createElement('span');
+      dot.className = 'timeline-dot';
+      dot.setAttribute('aria-hidden', 'true');
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'timeline-btn';
+      btn.setAttribute('aria-pressed', 'false');
+
+      const year = document.createElement('span');
+      year.className = 'timeline-year';
+      year.textContent = g.landed.slice(0, 4);
+
+      const label = document.createElement('span');
+      label.className = 'timeline-label';
+      label.textContent = g.name.toUpperCase();
+
+      btn.appendChild(year);
+      btn.appendChild(label);
+      btn.addEventListener('click', () => onPickGhostId(g.id));
+
+      li.appendChild(dot);
+      li.appendChild(btn);
+      timelineListEl.appendChild(li);
+
+      return { id: g.id, dot, btn, year, label };
+    });
+
+    const todayLi = document.createElement('li');
+    todayLi.className = 'timeline-today';
+    todayLi.textContent =
+      dataObj.today ||
+      (isMars
+        ? 'TODAY · All 6 are still there. None answer yet.'
+        : 'TODAY · All 6 are still there. 1 still answers.');
+    timelineListEl.appendChild(todayLi);
+
+    // 3. Rebuild Right Side Screen Ghost Log (GHOST LOG)
+    while (logListEl.firstChild) {
+      logListEl.removeChild(logListEl.firstChild);
+    }
+    logItems = ghosts.map((g) => {
+      const li = document.createElement('li');
+      li.className = 'log-item';
+
+      const lamp = document.createElement('span');
+      lamp.className = 'log-lamp';
+      lamp.setAttribute('aria-hidden', 'true');
+
+      const col = document.createElement('span');
+      col.className = 'log-text-col';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'log-name';
+
+      const statusSpan = document.createElement('span');
+      statusSpan.className = 'log-status';
+
+      col.appendChild(nameSpan);
+      col.appendChild(statusSpan);
+      li.appendChild(lamp);
+      li.appendChild(col);
+      logListEl.appendChild(li);
+
+      return { ghost: g, lamp, nameSpan, statusSpan };
+    });
+
+    // 4. Rebuild 6 Console Ghost Buttons
+    while (btnGridEl.firstChild) {
+      btnGridEl.removeChild(btnGridEl.firstChild);
+    }
+    ghostButtons = ghosts.map((g, i) => {
+      const keyNum = String(i + 1);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ghost-btn' + (g.answers ? ' ghost-btn--answers' : '');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-keyshortcuts', keyNum);
+
+      const codeSpan = document.createElement('span');
+      codeSpan.className = 'ghost-btn-code';
+      codeSpan.textContent = '[' + keyNum + '] ' + g.code;
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'ghost-btn-name';
+      nameSpan.textContent = g.name;
+
+      btn.appendChild(codeSpan);
+      btn.appendChild(nameSpan);
+      btn.addEventListener('click', () => onPickGhostId(g.id));
+      btnGridEl.appendChild(btn);
+
+      return { ghost: g, btn };
+    });
+
+    // 5. Update World Labels, Clocks, Study Links, and Aria Labels
+    if (pageH1El) {
+      pageH1El.textContent = isMars
+        ? 'Ghost Rovers: Mars Hardware Check'
+        : 'Ghost Rovers: Lunar Hardware Check';
+    }
+    if (mainScreenEl) {
+      mainScreenEl.setAttribute(
+        'aria-label',
+        isMars
+          ? 'Main wall screen: Mars and its landing sites'
+          : 'Main wall screen: the Moon and its landing sites'
+      );
+    }
+    if (moonCanvasWrapEl) {
+      moonCanvasWrapEl.setAttribute(
+        'aria-label',
+        isMars
+          ? '3D Mars globe showing landing sites, drag to spin'
+          : '3D Moon globe showing near-side landing sites, drag to spin'
+      );
+    }
+    if (faceEarthBtnEl) {
+      faceEarthBtnEl.textContent = isMars ? 'RESET VIEW' : 'FACE EARTH';
+      faceEarthBtnEl.setAttribute(
+        'aria-label',
+        isMars ? 'Reset Mars globe view' : 'Rotate Moon globe back to face Earth'
+      );
+    }
+    if (backToMoonBtn) {
+      backToMoonBtn.textContent = isMars ? 'BACK TO MARS' : 'BACK TO MOON';
+      backToMoonBtn.setAttribute(
+        'aria-label',
+        isMars ? 'Return to full Mars globe' : 'Return to full Moon globe'
+      );
+    }
+    if (cornerMapBtn) {
+      cornerMapBtn.setAttribute(
+        'aria-label',
+        isMars ? 'Back to full Mars' : 'Back to the full Moon'
+      );
+    }
+    if (hardwarePlotEl) {
+      hardwarePlotEl.classList.toggle('hardware-plot--mars', isMars);
+    }
+    if (plotKickerEl) {
+      plotKickerEl.textContent = isMars
+        ? 'MARS SURFACE · HARDWARE PLOT'
+        : 'LUNAR SURFACE · HARDWARE PLOT';
+    }
+    if (plotHeadingEl) {
+      plotHeadingEl.textContent = siteKeys.length + ' SITES · ' + ghosts.length + ' MACHINES';
+    }
+    if (plotTakeoverLabelEl) {
+      plotTakeoverLabelEl.textContent = isMars ? 'ON MARS FOR' : 'ON THE MOON FOR';
+    }
+    if (dataObj.clocks) {
+      if (lightTimeLabelEl) lightTimeLabelEl.textContent = dataObj.clocks.lightTimeLabel;
+      if (lightTimeValEl) lightTimeValEl.textContent = dataObj.clocks.lightTime;
+      if (lastCrewLabelEl) lastCrewLabelEl.textContent = dataObj.clocks.lastCrewLabel;
+      if (lastCrewValEl) lastCrewValEl.textContent = dataObj.clocks.lastCrew;
+    }
+    if (compactLandedTextEl) {
+      const uniqueYears = Array.from(
+        new Set(sortedByLanded.map((g) => g.landed.slice(0, 4)))
+      ).join(' · ');
+      compactLandedTextEl.textContent = 'LANDED ' + uniqueYears;
+    }
+    if (dymoTapeEl) {
+      dymoTapeEl.textContent = isMars
+        ? 'Ghost Rovers · Mars hardware check'
+        : 'Ghost Rovers · Lunar hardware check';
+    }
+    if (monitorReadyHintEl) {
+      monitorReadyHintEl.textContent = isMars
+        ? 'Or tap a square on Mars. Then press CALL GHOST (or C). Press M for Moon. Press ? for About.'
+        : 'Or tap a square on the Moon. Then press CALL GHOST (or C). Press M for Mars. Press ? for About.';
+    }
+    if (missionCompleteTitleEl) {
+      missionCompleteTitleEl.textContent = isMars
+        ? 'MARS CHECK COMPLETE. None of them answer. Yet.'
+        : 'GHOST CHECK COMPLETE. You checked every machine NASA left on the Moon.';
+    }
+
+    const links = dataObj.studyLinks || {};
+    if (studyQuizLinkEl && links.quiz) studyQuizLinkEl.href = links.quiz;
+    if (studyFlashcardsLinkEl && links.flashcards) studyFlashcardsLinkEl.href = links.flashcards;
+    if (studyMindmapLinkEl && links.mindMap) studyMindmapLinkEl.href = links.mindMap;
+    if (notebookLinkEl && links.notebook) notebookLinkEl.href = links.notebook;
+    if (phoneNotebookLinkEl && links.notebook) phoneNotebookLinkEl.href = links.notebook;
+
+    if (links.podcast) {
+      if (podcastLinkEl) {
+        podcastLinkEl.hidden = false;
+        podcastLinkEl.href = links.podcast;
+      }
+      if (phonePodcastLinkEl) {
+        phonePodcastLinkEl.hidden = false;
+        phonePodcastLinkEl.href = links.podcast;
+      }
+    } else {
+      if (podcastLinkEl) podcastLinkEl.hidden = true;
+      if (phonePodcastLinkEl) phonePodcastLinkEl.hidden = true;
+    }
+  }
 
   // 5. Wire Question Buttons (3 per ghost), Clear Answer, Read To Me, Call, Reset, Close, Photo Buttons
   const qBtns = [
@@ -422,12 +599,11 @@ export function initPanels(data, callbacks) {
   const closeCompleteBtn = document.getElementById('close-complete-btn');
   const saveBadgeBtn = document.getElementById('save-badge-btn');
   const badgeCanvasEl = document.getElementById('badge-canvas');
-  let badgeDrawn = false;
 
   closeCompleteBtn.addEventListener('click', onCloseMissionComplete);
   saveBadgeBtn.addEventListener('click', () => {
-    drawMissionBadge(badgeCanvasEl);
-    onSaveBadge(badgeCanvasEl);
+    drawMissionBadge(badgeCanvasEl, currentWorld);
+    onSaveBadge(badgeCanvasEl, currentWorld);
   });
 
   // DOM References for Dynamic Updates
@@ -493,10 +669,13 @@ export function initPanels(data, callbacks) {
     fileAnswerTextEl.textContent = text;
     phoneFileAnswerText.textContent = text;
   }
+
   const phoneNasaLink = document.getElementById('phone-nasa-link');
   const phoneSheetSignalText = document.getElementById('phone-sheet-signal-text');
   const phoneSignalLamp = document.getElementById('phone-signal-lamp');
   const phoneNoSignalLamp = document.getElementById('phone-nosignal-lamp');
+
+  buildWorldDOM(initialData);
 
   function renderTakeoverClock(state) {
     const g = ghosts.find((x) => x.id === state.sel) || null;
@@ -528,8 +707,9 @@ export function initPanels(data, callbacks) {
       const ny = Number(c.y);
       const nm = Number(c.m);
       const nd = Number(c.d);
+      const worldPhrase = currentWorld === 'mars' ? 'On Mars for ' : 'On the Moon for ';
       plotTakeoverSr.textContent =
-        'On the Moon for ' +
+        worldPhrase +
         ny +
         (ny === 1 ? ' year, ' : ' years, ') +
         nm +
@@ -540,6 +720,7 @@ export function initPanels(data, callbacks) {
   }
 
   function render(state) {
+    const isMars = currentWorld === 'mars';
     const g = ghosts.find((x) => x.id === state.sel) || null;
     const nChecked = ghosts.filter((x) => state.checked[x.id]).length;
     const allDone = nChecked === ghosts.length;
@@ -599,7 +780,7 @@ export function initPanels(data, callbacks) {
       item.btn.classList.toggle('ghost-btn--answers', !on && x.answers);
     });
 
-    // 4. Update Photo Takeover & Corner Map vs Full Moon Viewport
+    // 4. Update Photo Takeover & Corner Map vs Full Moon/Mars Viewport
     const wasCorner = moonViewportEl.classList.contains('moon-viewport--corner');
     if (cornerMapBtn) {
       cornerMapBtn.hidden = !isPhotoTakeover;
@@ -653,7 +834,9 @@ export function initPanels(data, callbacks) {
         } else {
           plotPhotoFig.hidden = true;
           plotPhotoPlaceholder.hidden = false;
-          plotPhotoPlaceholder.textContent = 'PHOTO ' + g.photoId + '\nLOADING IN BUILD';
+          plotPhotoPlaceholder.textContent = g.photoId
+            ? 'PHOTO ' + g.photoId + '\nLOADING IN BUILD'
+            : 'NASA SURFACE PHOTO\nLOADING IN BUILD';
         }
       }
 
@@ -664,7 +847,9 @@ export function initPanels(data, callbacks) {
           plotSignalText.style.color = '#9BEFB0';
           plotSignalText.className = '';
         } else {
-          plotSignalText.textContent = 'Radioing the Moon… 1.3 seconds each way.';
+          plotSignalText.textContent = isMars
+            ? 'Radioing Mars… 3 to 22 minutes each way.'
+            : 'Radioing the Moon… 1.3 seconds each way.';
           plotSignalText.style.color = '#FFFFFF';
           plotSignalText.className = 'blink';
         }
@@ -733,7 +918,7 @@ export function initPanels(data, callbacks) {
 
       // Phone Sheet updates
       phoneSheetName.textContent = g.name;
-      phoneSheetPhotoId.textContent = 'PHOTO: ' + g.photoId;
+      phoneSheetPhotoId.textContent = g.photoId ? 'PHOTO: ' + g.photoId : 'NASA SURFACE PHOTO';
       if (g.hasPhoto) {
         phoneSheetPhotoBtn.hidden = false;
         phoneSheetPlaceholder.hidden = true;
@@ -743,7 +928,9 @@ export function initPanels(data, callbacks) {
       } else {
         phoneSheetPhotoBtn.hidden = true;
         phoneSheetPlaceholder.hidden = false;
-        phoneSheetPlaceholder.textContent = 'PHOTO ' + g.photoId + '\nLOADING IN BUILD';
+        phoneSheetPlaceholder.textContent = g.photoId
+          ? 'PHOTO ' + g.photoId + '\nLOADING IN BUILD'
+          : 'NASA SURFACE PHOTO\nLOADING IN BUILD';
       }
 
       phoneFileHeader.textContent = headerLine.toUpperCase();
@@ -795,32 +982,41 @@ export function initPanels(data, callbacks) {
     // 8. Update Mission Complete Panel & Badge
     if (allDone && !state.missionCompleteDismissed) {
       missionCompletePanelEl.hidden = false;
-      if (!badgeDrawn) {
-        drawMissionBadge(badgeCanvasEl);
+      if (badgeDrawnWorld !== currentWorld) {
+        drawMissionBadge(badgeCanvasEl, currentWorld);
         if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(() => drawMissionBadge(badgeCanvasEl));
+          document.fonts.ready.then(() => drawMissionBadge(badgeCanvasEl, currentWorld));
         }
-        badgeDrawn = true;
+        badgeDrawnWorld = currentWorld;
       }
     } else {
       missionCompletePanelEl.hidden = true;
     }
 
-    // 9. Update CALL GHOST Button & Lamps
-    const callLabel = (calling ? 'CALLING...' : 'CALL GHOST') + ' [C]';
-    callBtn.textContent = callLabel;
-    phoneCallBtn.textContent = callLabel;
+    // 9. Update Round Signal / No Signal Lamps (Console & Phone Sheet)
+    const sigLit = Boolean(answered && g && g.answers);
+    const noSigLit = Boolean(answered && g && !g.answers);
 
-    const sigOn = ping;
-    const noSigOn = Boolean(answered && g && !g.answers);
+    signalLampEl.style.background = sigLit ? '#7BE495' : '#263029';
+    signalLampEl.style.boxShadow = sigLit ? '0 0 12px #7BE495' : 'none';
+    noSignalLampEl.style.background = noSigLit ? '#E8735C' : '#302624';
+    noSignalLampEl.style.boxShadow = noSigLit ? '0 0 12px #E8735C' : 'none';
 
-    signalLampEl.classList.toggle('round-lamp--signal-on', sigOn);
-    noSignalLampEl.classList.toggle('round-lamp--nosignal-on', noSigOn);
-    phoneSignalLamp.classList.toggle('round-lamp--signal-on', sigOn);
-    phoneNoSignalLamp.classList.toggle('round-lamp--nosignal-on', noSigOn);
+    phoneSignalLamp.style.background = sigLit ? '#7BE495' : '#263029';
+    phoneSignalLamp.style.boxShadow = sigLit ? '0 0 12px #7BE495' : 'none';
+    phoneNoSignalLamp.style.background = noSigLit ? '#E8735C' : '#302624';
+    phoneNoSignalLamp.style.boxShadow = noSigLit ? '0 0 12px #E8735C' : 'none';
 
-    return { viewportChanged: wasCorner !== isPhotoTakeover };
+    return {
+      ping,
+      viewportChanged: wasCorner !== isPhotoTakeover
+    };
   }
 
-  return { render, renderTakeoverClock, renderAnswerText };
+  return {
+    render,
+    renderTakeoverClock,
+    renderAnswerText,
+    setWorldData: buildWorldDOM
+  };
 }

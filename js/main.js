@@ -1,6 +1,6 @@
-// js/main.js: Main application state, room scaling, boot sequence, clocks, audio, speech synthesis, laser show, badge download, and 3D globe integration
+// js/main.js: Main application state, world switching (Moon/Mars), room scaling, boot sequence, clocks, audio, speech synthesis, laser show, badge download, and 3D globe integration
 
-import { loadGhostData, showErrorBanner } from './data.js';
+import { loadAllWorldData, showErrorBanner } from './data.js';
 import { createMoonGlobe } from './globe.js';
 import { initSiteMarkers } from './markers.js';
 import { initPanels } from './card.js';
@@ -109,24 +109,50 @@ function makeAudio() {
   };
 }
 
+function makeEmptyWorldMem() {
+  return {
+    sel: null,
+    viewMode: 'moon',
+    call: null,
+    openQ: null,
+    checked: {},
+    missionCompleteDismissed: false,
+    laserStaticDone: false,
+    hasBooted: false,
+    globeRotation: null
+  };
+}
+
 async function startApp() {
-  let data;
+  let worldDataMap;
   try {
-    data = await loadGhostData();
+    worldDataMap = await loadAllWorldData();
   } catch (err) {
     return;
   }
 
-  const { ghosts, sites, bootLines } = data;
+  const initialWorld = window.location.hash.toLowerCase() === '#mars' ? 'mars' : 'moon';
+  let data = worldDataMap[initialWorld];
+  let ghosts = data.ghosts;
+  let sites = data.sites;
+  let bootLines = data.bootLines;
+
+  const worldMem = {
+    moon: makeEmptyWorldMem(),
+    mars: makeEmptyWorldMem()
+  };
+  worldMem[initialWorld].hasBooted = true;
+
   const sfx = makeAudio();
 
   const speechSupported = Boolean(
     typeof window !== 'undefined' &&
-    'speechSynthesis' in window &&
-    'SpeechSynthesisUtterance' in window
+      'speechSynthesis' in window &&
+      'SpeechSynthesisUtterance' in window
   );
 
   const state = {
+    world: initialWorld,
     phase: 'boot',
     step: 0,
     sel: null,
@@ -167,11 +193,10 @@ async function startApp() {
   const gmtValEl = document.getElementById('gmt-val');
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
+  const worldMoonBtnEl = document.getElementById('world-moon-btn');
+  const worldMarsBtnEl = document.getElementById('world-mars-btn');
   const muteBtnEl = document.getElementById('mute-btn');
   const aboutBtnEl = document.getElementById('about-btn');
-  if (aboutBtnEl) {
-    aboutBtnEl.textContent = 'ABOUT ·\nTEACHERS';
-  }
   const replayBtnEl = document.getElementById('replay-btn');
   replayBtnEl.textContent = 'REPLAY\nPOWER-ON';
 
@@ -204,9 +229,16 @@ async function startApp() {
     srStatusLiveEl.textContent = message;
   }
 
+  function isPhoneWidth() {
+    return window.innerWidth <= 599;
+  }
+
   function updateRoomScale() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    if (aboutBtnEl) {
+      aboutBtnEl.textContent = vw <= 599 ? 'INFO' : 'ABOUT ·\nTEACHERS';
+    }
     if (vw <= 599) {
       currentRoomScale = 1;
       roomEl.style.transform = '';
@@ -230,7 +262,7 @@ async function startApp() {
     if (!state.muted && sfx[name]) {
       try {
         sfx[name]();
-      } catch (e) { }
+      } catch (e) {}
     }
   }
 
@@ -238,7 +270,7 @@ async function startApp() {
     if (speechSupported) {
       try {
         window.speechSynthesis.cancel();
-      } catch (e) { }
+      } catch (e) {}
     }
     state.speaking = false;
   }
@@ -327,19 +359,21 @@ async function startApp() {
     }
   }
 
-  function stopLaserShow() {
+  function stopLaserShow(clearStatic = true) {
     if (laserRafId) {
       cancelAnimationFrame(laserRafId);
       laserRafId = null;
     }
     state.laserActive = false;
-    state.laserStaticDone = false;
+    if (clearStatic) {
+      state.laserStaticDone = false;
+    }
     state.laserElapsed = 0;
     laserLayerEl.hidden = true;
   }
 
   function updateLaserGeometry(progress, staticFullLine) {
-    if (!globeController || !mainScreenEl || !moonViewportEl) return;
+    if (!globeController || !mainScreenEl || !moonViewportEl || state.world !== 'moon') return;
     const sw = mainScreenEl.clientWidth || 728;
     const sh = mainScreenEl.clientHeight || 424;
     laserSvgEl.setAttribute('viewBox', '0 0 ' + sw + ' ' + sh);
@@ -348,6 +382,7 @@ async function startApp() {
     const vpTop = moonViewportEl.offsetTop;
 
     const a11 = sites.A11;
+    if (!a11) return;
     const pos = globeController.projectLatLon(a11.lat, a11.lon);
     const targetX = vpLeft + pos.x;
     const targetY = vpTop + pos.y;
@@ -419,10 +454,6 @@ async function startApp() {
     }, 8000);
   }
 
-  function isPhoneWidth() {
-    return window.innerWidth <= 599;
-  }
-
   function renderClocks() {
     const nd = new Date(state.now);
     const gmt = p2(nd.getUTCHours()) + ':' + p2(nd.getUTCMinutes()) + ':' + p2(nd.getUTCSeconds());
@@ -430,8 +461,8 @@ async function startApp() {
     gmtValEl.textContent = clocksOn ? gmt : '--:--:--';
 
     const g = ghosts.find((x) => x.id === state.sel) || null;
-    moonClockLabelEl.textContent =
-      'TIME ON THE MOON · ' + (g ? g.name.toUpperCase() : 'PICK A GHOST');
+    const prefix = state.world === 'mars' ? 'TIME ON MARS · ' : 'TIME ON THE MOON · ';
+    moonClockLabelEl.textContent = prefix + (g ? g.name.toUpperCase() : 'PICK A GHOST');
 
     if (!g) {
       moonClockValEl.textContent = isPhoneWidth()
@@ -441,6 +472,12 @@ async function startApp() {
       const c = since(g.landed, state.now);
       const timePart = isPhoneWidth() ? c.hm : c.hms;
       moonClockValEl.textContent = c.y + 'Y ' + c.m + 'M ' + c.d + 'D ' + timePart;
+    }
+
+    if (worldMoonBtnEl && worldMarsBtnEl) {
+      const isMars = state.world === 'mars';
+      worldMoonBtnEl.setAttribute('aria-pressed', isMars ? 'false' : 'true');
+      worldMarsBtnEl.setAttribute('aria-pressed', isMars ? 'true' : 'false');
     }
 
     muteBtnEl.textContent = state.muted ? 'SOUND OFF' : 'SOUND ON';
@@ -491,7 +528,7 @@ async function startApp() {
         markersController.updatePositions(globeController.projectLatLon, showPing);
       }
     }
-    if (state.laserStaticDone) {
+    if (state.world === 'moon' && state.laserStaticDone) {
       laserLayerEl.hidden = false;
       updateLaserGeometry(1, true);
     } else if (!state.laserActive) {
@@ -604,11 +641,10 @@ async function startApp() {
     stopAnswerTyping();
     state.typedAnswer = '';
 
-    // Special Laser Show for Laser Mirror (id === 'mirror')
-    if (g.id === 'mirror') {
-      // Return to full Moon view on desktop/tablet so the Earth->A11 laser beam is clearly visible
+    // Special Laser Show for Laser Mirror (id === 'mirror' on Moon)
+    if (state.world === 'moon' && g.id === 'mirror') {
       state.viewMode = 'moon';
-      if (globeController) {
+      if (globeController && sites.A11) {
         const site = sites.A11;
         globeController.rotateToSite(site.lat, site.lon);
       }
@@ -653,11 +689,15 @@ async function startApp() {
       return;
     }
 
-    // Standard radio call for all other 5 ghosts
+    // Standard radio call
     playSound('calling');
     state.call = 'calling';
     state.openQ = null;
-    announcePolite('Radioing the Moon. 1.3 seconds each way.');
+    announcePolite(
+      state.world === 'mars'
+        ? 'Radioing Mars. 3 to 22 minutes each way.'
+        : 'Radioing the Moon. 1.3 seconds each way.'
+    );
     updateAll();
 
     callTimer = setTimeout(() => {
@@ -723,18 +763,21 @@ async function startApp() {
     updateAll();
   }
 
-  function saveBadge(canvasEl) {
+  function saveBadge(canvasEl, worldKey) {
     if (!canvasEl) return;
     playSound('click');
     try {
       const dataUrl = canvasEl.toDataURL('image/png');
       const a = document.createElement('a');
       a.href = dataUrl;
-      a.download = 'ghost-rovers-junior-flight-controller.png';
+      a.download =
+        worldKey === 'mars'
+          ? 'ghost-rovers-junior-flight-controller-mars.png'
+          : 'ghost-rovers-junior-flight-controller.png';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    } catch (e) { }
+    } catch (e) {}
   }
 
   const panels = initPanels(data, {
@@ -789,6 +832,104 @@ async function startApp() {
       updateAll();
     }, 420);
   }
+
+  async function switchWorld(targetWorld, fromHashChange = false) {
+    const nextWorld = targetWorld === 'mars' ? 'mars' : 'moon';
+    if (nextWorld === state.world) return;
+
+    clearInterval(bootTimer);
+    clearTimeout(callTimer);
+    stopLaserShow(false);
+    stopSpeech();
+    stopAnswerTyping();
+    playSound('click');
+
+    // Save current world state
+    const curMem = worldMem[state.world];
+    curMem.sel = state.sel;
+    curMem.viewMode = state.viewMode;
+    curMem.call = state.call === 'calling' ? null : state.call;
+    curMem.openQ = state.openQ;
+    curMem.checked = Object.assign({}, state.checked);
+    curMem.missionCompleteDismissed = state.missionCompleteDismissed;
+    curMem.laserStaticDone = state.laserStaticDone;
+    curMem.globeRotation = globeController ? globeController.getRotation() : null;
+
+    // Load next world state
+    state.world = nextWorld;
+    data = worldDataMap[nextWorld];
+    ghosts = data.ghosts;
+    sites = data.sites;
+    bootLines = data.bootLines;
+
+    const nextMem = worldMem[nextWorld];
+    state.sel = nextMem.sel;
+    state.viewMode = nextMem.viewMode;
+    state.call = nextMem.call;
+    state.openQ = nextMem.openQ;
+    const g = ghosts.find((x) => x.id === state.sel);
+    state.typedAnswer =
+      g && state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : '';
+    state.checked = Object.assign({}, nextMem.checked);
+    state.missionCompleteDismissed = nextMem.missionCompleteDismissed;
+    state.laserStaticDone = nextMem.laserStaticDone;
+    state.phoneSheetOpen = Boolean(state.sel);
+    state.photoModalOpen = false;
+    state.aboutModalOpen = false;
+
+    if (!fromHashChange) {
+      const targetHash = nextWorld === 'mars' ? '#mars' : '';
+      if (targetHash) {
+        if (window.location.hash !== '#mars') {
+          history.replaceState(null, '', '#mars');
+        }
+      } else if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
+
+    panels.setWorldData(data);
+    if (markersController) {
+      markersController.setWorldData(sites, ghosts);
+    }
+    if (globeController) {
+      await globeController.setWorld(nextWorld, nextMem.globeRotation);
+    }
+
+    // Switching to Mars replays a short boot using bootLines from mars.json;
+    // Switching back to the Moon restores the Moon as it was.
+    if (nextWorld === 'mars' && !nextMem.hasBooted) {
+      nextMem.hasBooted = true;
+      state.phase = 'boot';
+      state.step = 0;
+      updateAll();
+      startBootSequence();
+    } else if (nextWorld === 'mars' && Object.keys(nextMem.checked).length === 0 && !nextMem.sel) {
+      state.phase = 'boot';
+      state.step = 0;
+      updateAll();
+      startBootSequence();
+    } else {
+      nextMem.hasBooted = true;
+      state.phase = 'main';
+      state.step = bootLines.length;
+      updateAll();
+    }
+  }
+
+  if (worldMoonBtnEl) {
+    worldMoonBtnEl.addEventListener('click', () => switchWorld('moon'));
+  }
+  if (worldMarsBtnEl) {
+    worldMarsBtnEl.addEventListener('click', () => switchWorld('mars'));
+  }
+
+  window.addEventListener('hashchange', () => {
+    const hashWorld = window.location.hash.toLowerCase() === '#mars' ? 'mars' : 'moon';
+    if (hashWorld !== state.world) {
+      switchWorld(hashWorld, true);
+    }
+  });
 
   beginBtnEl.addEventListener('click', () => {
     clearInterval(bootTimer);
@@ -901,6 +1042,10 @@ async function startApp() {
       openAboutModal();
       return;
     }
+    if (e.key === 'm' || e.key === 'M') {
+      switchWorld(state.world === 'mars' ? 'moon' : 'mars');
+      return;
+    }
     if (e.key >= '1' && e.key <= '6') {
       const idx = Number(e.key) - 1;
       if (ghosts[idx]) {
@@ -937,18 +1082,21 @@ async function startApp() {
         const isCornerMode = Boolean(!isPhoneWidth() && g && g.hasPhoto && state.viewMode === 'photo');
         markersController.updateSelectionAndLabels(g, showPing, isCornerMode);
         markersController.updatePositions(projectLatLon, showPing);
-        if (state.laserStaticDone) {
+        if (state.world === 'moon' && state.laserStaticDone) {
           updateLaserGeometry(1, true);
         }
       },
       {
+        initialWorld,
         getRoomScale: () => currentRoomScale,
         onFirstDrag: dismissDragHint
       }
     );
     updateAll();
   } catch (err) {
-    showErrorBanner('3D Moon Globe failed to initialize: ' + (err && err.message ? err.message : String(err)));
+    showErrorBanner(
+      '3D Globe failed to initialize: ' + (err && err.message ? err.message : String(err))
+    );
   }
 }
 

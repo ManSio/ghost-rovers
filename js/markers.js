@@ -1,6 +1,6 @@
-// js/markers.js: Build and update the 4 lunar landing site <button> overlays, corner-map amber dot, and ping rings
+// js/markers.js: Build and update landing site <button> overlays, corner-map amber dot, and ping rings
 
-export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
+export function initSiteMarkers(initialSitesMap, initialGhosts, onPickGhost) {
   const pinsLayer = document.getElementById('pins-layer');
   const pingLayer = document.getElementById('ping-layer');
   const cornerSiteDot = document.getElementById('corner-site-dot');
@@ -10,30 +10,49 @@ export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
     document.getElementById('ping-3')
   ];
 
-  const pinRecords = [];
+  let pinRecords = [];
   let activeSiteKey = null;
   let cornerModeActive = false;
 
-  Object.keys(sitesMap).forEach((siteKey) => {
-    const site = sitesMap[siteKey];
-    const siteGhosts = ghosts.filter((g) => g.site === siteKey);
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'site-pin';
-    btn.dataset.site = siteKey;
+  function buildPins(sitesMap, ghosts) {
+    while (pinsLayer.firstChild) {
+      pinsLayer.removeChild(pinsLayer.firstChild);
+    }
+    pinRecords = [];
 
-    btn.addEventListener('click', () => {
-      onPickGhost(siteKey, siteGhosts);
-    });
+    Object.keys(sitesMap).forEach((siteKey) => {
+      const site = sitesMap[siteKey];
+      const siteGhosts = ghosts.filter((g) => g.site === siteKey);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'site-pin';
+      btn.dataset.site = siteKey;
 
-    pinsLayer.appendChild(btn);
-    pinRecords.push({
-      key: siteKey,
-      site,
-      ghosts: siteGhosts,
-      btn
+      btn.addEventListener('click', () => {
+        onPickGhost(siteKey, siteGhosts);
+      });
+
+      pinsLayer.appendChild(btn);
+      pinRecords.push({
+        key: siteKey,
+        site,
+        ghosts: siteGhosts,
+        btn
+      });
     });
-  });
+  }
+
+  buildPins(initialSitesMap, initialGhosts);
+
+  function setWorldData(sitesMap, ghosts) {
+    activeSiteKey = null;
+    cornerModeActive = false;
+    if (cornerSiteDot) {
+      cornerSiteDot.hidden = true;
+    }
+    pingLayer.hidden = true;
+    buildPins(sitesMap, ghosts);
+  }
 
   function updateSelectionAndLabels(selectedGhost, showPing, isCornerMode = false) {
     activeSiteKey = selectedGhost ? selectedGhost.site : null;
@@ -97,6 +116,7 @@ export function initSiteMarkers(sitesMap, ghosts, onPickGhost) {
   }
 
   return {
+    setWorldData,
     updateSelectionAndLabels,
     updatePositions
   };
