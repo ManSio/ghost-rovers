@@ -596,7 +596,7 @@ async function startApp() {
     if (globeController) {
       globeController.faceEarth();
     }
-    announcePolite('Console reset. Pick a machine, then press CALL GHOST to radio it.');
+    announcePolite('Console reset. Pick a machine. Press CALL GHOST. See who answers.');
     updateAll();
   }
 

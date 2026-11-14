@@ -507,7 +507,7 @@ export function initPanels(data, callbacks) {
         plotSignalText.textContent = 'PICK A GHOST FIRST, THEN CALL.';
         plotSignalText.style.color = '#F2A08F';
       } else {
-        plotSignalText.textContent = 'Pick a machine, then press CALL GHOST to radio it. See who answers.';
+        plotSignalText.textContent = 'Pick a machine. Press CALL GHOST. See who answers.';
         plotSignalText.style.color = '#B7CDD1';
       }
     } else {

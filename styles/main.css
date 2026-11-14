@@ -632,12 +632,12 @@ a:hover {
 .hardware-plot {
   position: absolute;
   left: 436px;
-  top: 20px;
+  top: 18px;
   width: 250px;
-  bottom: 36px;
+  bottom: 44px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   font-family: var(--font-mono);
   color: #C9DDE0;
   z-index: 5;
@@ -751,11 +751,11 @@ a:hover {
 
 .plot-signal-box {
   margin-top: auto;
-  padding: 8px 10px;
+  padding: 6px 10px;
   background: rgba(5, 6, 5, 0.82);
   border: 1px solid rgba(201, 221, 224, 0.28);
-  font: 400 20px var(--font-vt);
-  line-height: 1.15;
+  font: 400 18px var(--font-vt);
+  line-height: 1.1;
   color: #C9DDE0;
 }
 
@@ -2018,9 +2018,9 @@ a:hover {
 
   .plot-signal-box {
     margin-top: 0;
-    padding: 8px 10px;
-    font-size: 20px;
-    min-height: 52px;
+    padding: 6px 10px;
+    font-size: 18px;
+    min-height: 44px;
     display: flex;
     align-items: center;
   }
