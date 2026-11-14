@@ -92,6 +92,7 @@ function makeAudio() {
   };
   return {
     click: () => tone(1400, 0, 0.04, 'square', 0.05),
+    typeBeep: () => tone(880, 0, 0.045, 'sine', 0.05),
     calling: () => noise(1.5, 0.06),
     ping: () => {
       tone(1320, 0, 0.5, 'sine', 0.18);
@@ -138,6 +139,9 @@ async function startApp() {
     phoneSheetOpen: false,
     photoModalOpen: false,
     photoTriggerEl: null,
+    aboutModalOpen: false,
+    typedAnswer: '',
+    typingAnswer: false,
     missionCompleteDismissed: false,
     speechSupported,
     speaking: false,
@@ -149,6 +153,7 @@ async function startApp() {
   let currentRoomScale = 1;
   let bootTimer = null;
   let callTimer = null;
+  let answerTypeTimer = null;
   let laserRafId = null;
   let dragHintTimer = null;
   let dragHintDismissed = false;
@@ -163,6 +168,7 @@ async function startApp() {
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
   const muteBtnEl = document.getElementById('mute-btn');
+  const aboutBtnEl = document.getElementById('about-btn');
   const replayBtnEl = document.getElementById('replay-btn');
   replayBtnEl.textContent = 'REPLAY\nPOWER-ON';
 
@@ -178,6 +184,8 @@ async function startApp() {
   const faceEarthBtnEl = document.getElementById('face-earth-btn');
   const dragHintEl = document.getElementById('drag-hint');
   const photoModalCloseEl = document.getElementById('photo-modal-close');
+  const aboutModalEl = document.getElementById('about-modal');
+  const aboutModalCloseEl = document.getElementById('about-modal-close');
   const srStatusLiveEl = document.getElementById('sr-status-live');
 
   // Laser Show DOM Elements
@@ -230,6 +238,55 @@ async function startApp() {
       } catch (e) { }
     }
     state.speaking = false;
+  }
+
+  function stopAnswerTyping() {
+    if (answerTypeTimer) {
+      clearInterval(answerTypeTimer);
+      answerTypeTimer = null;
+    }
+    state.typingAnswer = false;
+  }
+
+  function finishTypingAnswer() {
+    if (!state.typingAnswer) return;
+    stopAnswerTyping();
+    const g = ghosts.find((x) => x.id === state.sel);
+    const full = g && state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : '';
+    state.typedAnswer = full;
+    if (panels && panels.renderAnswerText) {
+      panels.renderAnswerText(full);
+    }
+  }
+
+  function startAnswerTyping(fullText) {
+    stopAnswerTyping();
+    if (!fullText) {
+      state.typedAnswer = '';
+      return;
+    }
+    playSound('typeBeep');
+    announcePolite('Answer: ' + fullText);
+    if (prefersReducedMotion()) {
+      state.typedAnswer = fullText;
+      state.typingAnswer = false;
+      return;
+    }
+    let idx = 1;
+    state.typedAnswer = fullText.slice(0, idx);
+    state.typingAnswer = true;
+    answerTypeTimer = setInterval(() => {
+      idx += 1;
+      if (idx >= fullText.length) {
+        state.typedAnswer = fullText;
+        stopAnswerTyping();
+      } else {
+        state.typedAnswer = fullText.slice(0, idx);
+      }
+      if (panels && panels.renderAnswerText) {
+        panels.renderAnswerText(state.typedAnswer);
+      }
+    }, 25);
   }
 
   function toggleSpeech() {
@@ -461,11 +518,31 @@ async function startApp() {
     }
   }
 
+  function openAboutModal() {
+    playSound('click');
+    state.aboutModalOpen = true;
+    updateAll();
+    if (aboutModalCloseEl) {
+      aboutModalCloseEl.focus();
+    }
+  }
+
+  function closeAboutModal() {
+    if (!state.aboutModalOpen) return;
+    playSound('click');
+    state.aboutModalOpen = false;
+    updateAll();
+    if (aboutBtnEl) {
+      aboutBtnEl.focus();
+    }
+  }
+
   function pickGhostById(id) {
     if (state.phase === 'boot') return;
     clearTimeout(callTimer);
     stopLaserShow();
     stopSpeech();
+    stopAnswerTyping();
     playSound('click');
 
     const g = ghosts.find((x) => x.id === id);
@@ -473,6 +550,7 @@ async function startApp() {
     state.viewMode = g && g.hasPhoto ? 'photo' : 'moon';
     state.call = null;
     state.openQ = null;
+    state.typedAnswer = '';
     state.phoneSheetOpen = true;
     state.photoModalOpen = false;
 
@@ -520,6 +598,8 @@ async function startApp() {
     clearTimeout(callTimer);
     stopLaserShow();
     stopSpeech();
+    stopAnswerTyping();
+    state.typedAnswer = '';
 
     // Special Laser Show for Laser Mirror (id === 'mirror')
     if (g.id === 'mirror') {
@@ -587,15 +667,18 @@ async function startApp() {
     clearTimeout(callTimer);
     stopLaserShow();
     stopSpeech();
+    stopAnswerTyping();
     playSound('click');
 
     state.sel = null;
     state.viewMode = 'moon';
     state.call = null;
     state.openQ = null;
+    state.typedAnswer = '';
     state.checked = {};
     state.phoneSheetOpen = false;
     state.photoModalOpen = false;
+    state.aboutModalOpen = false;
     state.missionCompleteDismissed = false;
 
     if (globeController) {
@@ -614,15 +697,26 @@ async function startApp() {
 
   function toggleQuestion(qIndex) {
     stopSpeech();
-    playSound('click');
-    state.openQ = state.openQ === qIndex ? null : qIndex;
+    const nextQ = state.openQ === qIndex ? null : qIndex;
+    state.openQ = nextQ;
+    if (nextQ !== null) {
+      const g = ghosts.find((x) => x.id === state.sel);
+      const full = g && g.qs[nextQ] ? g.qs[nextQ][1] : '';
+      startAnswerTyping(full);
+    } else {
+      playSound('click');
+      stopAnswerTyping();
+      state.typedAnswer = '';
+    }
     updateAll();
   }
 
   function clearQuestion() {
     stopSpeech();
+    stopAnswerTyping();
     playSound('click');
     state.openQ = null;
+    state.typedAnswer = '';
     updateAll();
   }
 
@@ -642,8 +736,10 @@ async function startApp() {
 
   const panels = initPanels(data, {
     onPickGhostId: pickGhostById,
+    onPickSite: pickSitePin,
     onToggleQuestion: toggleQuestion,
     onClearQuestion: clearQuestion,
+    onFinishTypingAnswer: finishTypingAnswer,
     onCallGhost: doCall,
     onResetConsole: resetConsole,
     onBackToMoon: backToMoon,
@@ -661,6 +757,7 @@ async function startApp() {
     },
     onOpenPhotoModal: openPhotoModal,
     onClosePhotoModal: closePhotoModal,
+    onCloseAboutModal: closeAboutModal,
     onCloseMissionComplete: () => {
       playSound('click');
       state.missionCompleteDismissed = true;
@@ -711,15 +808,18 @@ async function startApp() {
     clearTimeout(callTimer);
     stopLaserShow();
     stopSpeech();
+    stopAnswerTyping();
     state.phase = 'boot';
     state.step = 0;
     state.sel = null;
     state.viewMode = 'moon';
     state.call = null;
     state.openQ = null;
+    state.typedAnswer = '';
     state.checked = {};
     state.phoneSheetOpen = false;
     state.photoModalOpen = false;
+    state.aboutModalOpen = false;
     state.missionCompleteDismissed = false;
     if (globeController) {
       globeController.faceEarth();
@@ -733,6 +833,16 @@ async function startApp() {
     updateAll();
   });
 
+  if (aboutBtnEl) {
+    aboutBtnEl.addEventListener('click', () => {
+      if (state.aboutModalOpen) {
+        closeAboutModal();
+      } else {
+        openAboutModal();
+      }
+    });
+  }
+
   faceEarthBtnEl.addEventListener('click', () => {
     playSound('click');
     if (globeController) {
@@ -741,10 +851,39 @@ async function startApp() {
   });
 
   window.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && (state.aboutModalOpen || state.photoModalOpen)) {
+      const modalRoot = state.aboutModalOpen ? aboutModalEl : document.getElementById('photo-modal');
+      if (modalRoot) {
+        const focusables = Array.from(
+          modalRoot.querySelectorAll('button:not([hidden]), a[href]:not([hidden])')
+        );
+        if (focusables.length > 0) {
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+            return;
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+            return;
+          }
+        }
+      }
+    }
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.key === 'Escape') {
+      if (state.aboutModalOpen) {
+        closeAboutModal();
+        return;
+      }
       if (state.photoModalOpen) {
         closePhotoModal();
+        return;
+      }
+      if (state.typingAnswer) {
+        finishTypingAnswer();
         return;
       }
       if (state.phoneSheetOpen) {
@@ -754,7 +893,11 @@ async function startApp() {
         return;
       }
     }
-    if (state.phase === 'boot' || state.photoModalOpen) return;
+    if (state.phase === 'boot' || state.photoModalOpen || state.aboutModalOpen) return;
+    if (e.key === '?') {
+      openAboutModal();
+      return;
+    }
     if (e.key >= '1' && e.key <= '6') {
       const idx = Number(e.key) - 1;
       if (ghosts[idx]) {

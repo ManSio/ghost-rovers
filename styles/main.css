@@ -104,17 +104,21 @@ a:hover {
 }
 
 .clock-cell {
-  flex: 1;
+  flex: 0.9;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 14px;
+  padding: 0 12px;
   border-right: 1px solid #1E2220;
   min-width: 0;
 }
 
+.clock-cell:nth-child(3) {
+  flex: 1.25;
+}
+
 .clock-cell--moon {
-  flex: 1.7;
+  flex: 1.65;
   background: rgba(255, 233, 176, 0.04);
 }
 
@@ -137,7 +141,7 @@ a:hover {
 }
 
 .clock-btn {
-  min-width: 104px;
+  min-width: 88px;
   min-height: 44px;
   background: transparent;
   border: 0;
@@ -146,9 +150,14 @@ a:hover {
   font: 600 11px var(--font-mono);
   letter-spacing: 0.1em;
   cursor: pointer;
-  padding: 0 10px;
+  padding: 0 8px;
   text-align: center;
   line-height: 1.25;
+}
+
+.clock-btn:hover {
+  background: rgba(255, 233, 176, 0.08);
+  color: #FFFFFF;
 }
 
 .clock-btn--replay {
@@ -683,35 +692,55 @@ a:hover {
 .plot-legend-wrap {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
 }
 
 .plot-heading {
   margin: 0 0 2px;
-  font: 400 28px var(--font-vt);
+  font: 400 25px var(--font-vt);
   line-height: 1;
   color: #E6F2F4;
 }
 
 .legend-row {
+  width: 100%;
+  min-height: 44px;
   display: flex;
   gap: 10px;
-  align-items: baseline;
-  padding: 4px 0;
+  align-items: center;
+  padding: 4px 6px;
+  background: transparent;
+  border: 0;
   border-top: 1px solid rgba(201, 221, 224, 0.18);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.legend-row:hover {
+  background: rgba(201, 221, 224, 0.1);
+}
+
+.legend-row:focus-visible {
+  outline: 2px solid #FFE9B0;
+  outline-offset: -2px;
+  background: rgba(255, 233, 176, 0.12);
 }
 
 .legend-code {
   font: 400 22px var(--font-vt);
   min-width: 44px;
-  color: #E6F2F4;
+  color: #FFE9B0;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .legend-text {
-  font-size: 12px;
-  line-height: 1.28;
+  font-size: 11.5px;
+  line-height: 1.22;
+  color: #DCE9EC;
 }
 
 .plot-selected-wrap {
@@ -805,7 +834,7 @@ a:hover {
 
 .plot-photo-cap {
   font-size: 10px;
-  color: #8FA5A9;
+  color: #A8BEC2;
   padding-top: 3px;
 }
 
@@ -817,7 +846,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  color: #8FA5A9;
+  color: #A8BEC2;
   text-align: center;
   padding: 10px;
   white-space: pre-line;
@@ -1226,24 +1255,25 @@ a:hover {
   flex-shrink: 0;
 }
 
-/* Distinct Answer Box with Amber ANSWER: label and 44px clear button */
+/* Distinct Answer Box with 2px Bright Amber border, warmer tint, 16px text, and 44px clear button */
 .file-answer-box {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 4px 4px 4px 10px;
-  background: rgba(255, 233, 176, 0.09);
-  border: 1px solid #C9B871;
-  border-left: 3px solid #FFE9B0;
-  border-radius: 3px;
+  padding: 5px 5px 5px 10px;
+  background: rgba(255, 224, 140, 0.16);
+  border: 2px solid #FFE9B0;
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 233, 176, 0.18);
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .file-answer-content {
-  font-size: 12px;
-  line-height: 1.3;
-  color: #FFF6DC;
+  font-size: 16px;
+  line-height: 1.32;
+  color: #FFF8E4;
 }
 
 .file-answer-label {
@@ -1355,7 +1385,7 @@ a:hover {
   border-radius: 2px;
   background: #2B302D;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  color: #8C978F;
+  color: #9BA79F;
   font: 600 8px var(--font-mono);
   display: flex;
   align-items: center;
@@ -1405,7 +1435,15 @@ a:hover {
 .ghost-btn-code {
   font: 600 10px var(--font-mono);
   letter-spacing: 0.08em;
-  opacity: 0.85;
+  color: #C5CFC8;
+}
+
+.ghost-btn--answers .ghost-btn-code {
+  color: #CBEFD3;
+}
+
+.ghost-btn--selected .ghost-btn-code {
+  color: #1F2421;
 }
 
 .ghost-btn-name {
@@ -1594,6 +1632,149 @@ a:hover {
   object-fit: contain;
 }
 
+/* ABOUT Ghost Rovers Console Dialog */
+.about-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.about-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 3, 3, 0.88);
+}
+
+.about-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, 560px);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #101513;
+  border: 2px solid #C9B871;
+  border-radius: 6px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.92), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-mono);
+  color: #EDF3EE;
+}
+
+.about-modal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(201, 184, 113, 0.35);
+  padding-bottom: 8px;
+}
+
+.about-modal-title {
+  margin: 0;
+  font: 400 32px var(--font-vt);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #FFE9B0;
+}
+
+.about-modal-close {
+  min-width: 76px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: #2C312E;
+  border: 1px solid rgba(237, 243, 238, 0.65);
+  border-radius: 3px;
+  color: #EDF3EE;
+  font: 600 12px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.about-modal-close:hover {
+  background: #3A403C;
+  color: #FFFFFF;
+}
+
+.about-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-modal-p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #EDF3EE;
+}
+
+.about-modal-tagline {
+  margin: 0;
+  font: 600 13px var(--font-mono);
+  letter-spacing: 0.08em;
+  color: #9BEFB0;
+}
+
+.about-modal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.about-link-btn {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(201, 221, 224, 0.6);
+  background: #1B2422;
+  color: #EDF3EE;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.about-link-btn:hover {
+  background: #2C3835;
+  border-color: #FFE9B0;
+  color: #FFFFFF;
+}
+
+.about-teachers-box {
+  margin-top: 4px;
+  padding: 12px 14px;
+  background: rgba(255, 233, 176, 0.08);
+  border: 1px solid rgba(201, 184, 113, 0.55);
+  border-left: 3px solid #FFE9B0;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.about-teachers-p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #FFF6DC;
+}
+
+.about-teachers-label {
+  color: #FFE9B0;
+  letter-spacing: 0.06em;
+}
+
 /* ==========================================================================
    TABLET LANDSCAPE (1180 x 820, matches docs/design-screens/tablet-landscape.png)
    ========================================================================== */
@@ -1611,7 +1792,8 @@ a:hover {
   }
 
   .clock-btn {
-    min-width: 84px;
+    min-width: 74px;
+    padding: 0 6px;
     font-size: 10px;
   }
 
@@ -1808,7 +1990,7 @@ a:hover {
     top: 16px;
     height: 102px;
     display: grid;
-    grid-template-columns: 1fr 1.15fr auto auto;
+    grid-template-columns: 1fr 1.15fr auto auto auto;
     grid-template-rows: 1fr 1fr;
   }
 
@@ -2079,16 +2261,30 @@ a:hover {
   .clock-cell--moon {
     flex: 1;
     background: transparent;
+    padding: 0 8px;
+  }
+
+  .clock-label {
+    font-size: 9px;
+    letter-spacing: 0.08em;
   }
 
   .clock-val {
-    font-size: 25px;
+    font-size: 22px;
   }
 
   .clock-btn--mute {
-    min-width: 66px;
+    min-width: 64px;
+    padding: 0 6px;
+    border-right: 1px solid #1E2220;
+    font-size: 10px;
+  }
+
+  .clock-btn--about {
+    min-width: 52px;
+    padding: 0 6px;
     border-right: 0;
-    font-size: 11px;
+    font-size: 10px;
   }
 
   .side-screen-left,
@@ -2391,6 +2587,11 @@ a:hover {
   .phone-sheet-crt .file-body {
     font-size: 12px;
     line-height: 1.3;
+  }
+
+  .phone-sheet-crt .file-answer-content {
+    font-size: 15px;
+    line-height: 1.32;
   }
 
   .phone-sheet-crt .q-btn {

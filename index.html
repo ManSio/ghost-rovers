@@ -32,7 +32,8 @@
 <body>
   <div id="error-banner" class="error-banner" role="alert" hidden></div>
 
-  <div id="room" class="room">
+  <main id="room" class="room">
+    <h1 class="sr-only">Ghost Rovers: Lunar Hardware Check</h1>
     <div aria-hidden="true" class="room-glow"></div>
 
     <!-- Top Mission Clocks Strip -->
@@ -54,6 +55,7 @@
         <span class="clock-val">DEC 1972</span>
       </div>
       <button id="mute-btn" type="button" class="clock-btn clock-btn--mute" aria-pressed="false">SOUND ON</button>
+      <button id="about-btn" type="button" class="clock-btn clock-btn--about" aria-keyshortcuts="?">ABOUT</button>
       <button id="replay-btn" type="button" class="clock-btn clock-btn--replay"></button>
     </section>
 
@@ -227,7 +229,7 @@
           <div id="monitor-idle" class="monitor-idle">
             <p class="monitor-ready-title">CONSOLE READY.</p>
             <p class="monitor-ready-sub">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
-            <p class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C).</p>
+            <p class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C). Press ? for About.</p>
             <p id="monitor-warn" aria-live="polite" class="monitor-warn" hidden>&gt; PICK A GHOST FIRST, THEN CALL.</p>
           </div>
 
@@ -375,10 +377,43 @@
       </div>
     </div>
 
+    <!-- ABOUT Ghost Rovers Console Dialog -->
+    <div id="about-modal" class="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title" hidden>
+      <div id="about-modal-backdrop" class="about-modal-backdrop"></div>
+      <div class="about-modal-card">
+        <div class="about-modal-topbar">
+          <h2 id="about-modal-title" class="about-modal-title">ABOUT GHOST ROVERS</h2>
+          <button id="about-modal-close" type="button" class="about-modal-close" aria-label="Close About dialog">CLOSE</button>
+        </div>
+        <div class="about-modal-body">
+          <p class="about-modal-p">Every fact is checked against NASA’s records (NSSDCA). Photos and the Moon map are NASA’s.</p>
+          <p class="about-modal-p">Made by La Shara Cordero, team Clew Labs, for the NASA Space Apps Challenge 2026.</p>
+          <p class="about-modal-tagline">AI assisted. Human approved.</p>
+          <div class="about-modal-links">
+            <a href="https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/docs/FACT_CHECK.md" target="_blank" rel="noopener noreferrer" class="about-link-btn">
+              <span>FACT CHECK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a href="https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/AI_DISCLOSURE.md" target="_blank" rel="noopener noreferrer" class="about-link-btn">
+              <span>AI DISCLOSURE</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+            <a href="https://github.com/earlgreyhot1701D/ghost-rovers" target="_blank" rel="noopener noreferrer" class="about-link-btn">
+              <span>CODE</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </div>
+          <div class="about-teachers-box">
+            <p class="about-teachers-p"><strong class="about-teachers-label">FOR TEACHERS:</strong> Free, no login, no data collected. Pair it with the study notebook’s quiz, flashcards, and podcast.</p>
+            <a href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378" target="_blank" rel="noopener noreferrer" class="about-link-btn">
+              <span>STUDY NOTEBOOK</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Boot Room Dimmer & Skip Intro -->
     <div id="boot-dimmer" aria-hidden="true" class="boot-dimmer"></div>
     <button id="skip-intro-btn" type="button" class="skip-intro-btn">SKIP INTRO</button>
-  </div>
+  </main>
 
   <script type="module" src="js/main.js"></script>
 </body>

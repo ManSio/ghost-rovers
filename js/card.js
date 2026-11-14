@@ -195,8 +195,10 @@ export function initPanels(data, callbacks) {
   const { ghosts, sites } = data;
   const {
     onPickGhostId,
+    onPickSite,
     onToggleQuestion,
     onClearQuestion,
+    onFinishTypingAnswer,
     onCallGhost,
     onResetConsole,
     onBackToMoon,
@@ -205,17 +207,22 @@ export function initPanels(data, callbacks) {
     onOpenPhoneSheet,
     onOpenPhotoModal,
     onClosePhotoModal,
+    onCloseAboutModal,
     onCloseMissionComplete,
     onSaveBadge
   } = callbacks;
 
-  // 1. Build Static Legend on Main Screen (4 SITES · 6 MACHINES)
+  // 1. Build Clickable Legend Buttons on Main Screen (4 SITES · 6 MACHINES)
   const legendListEl = document.getElementById('site-legend-list');
   Object.keys(sites).forEach((siteKey) => {
     const site = sites[siteKey];
     const gs = ghosts.filter((x) => x.site === siteKey);
-    const row = document.createElement('div');
+    const row = document.createElement('button');
+    row.type = 'button';
     row.className = 'legend-row';
+    const namesJoined =
+      gs.length === 2 ? gs[0].name + ' and ' + gs[1].name : gs.map((x) => x.name).join(', ');
+    row.setAttribute('aria-label', site.legendCode + ', ' + site.name + ': ' + namesJoined + '.');
 
     const codeSpan = document.createElement('span');
     codeSpan.className = 'legend-code';
@@ -227,6 +234,9 @@ export function initPanels(data, callbacks) {
 
     row.appendChild(codeSpan);
     row.appendChild(textSpan);
+    row.addEventListener('click', () => {
+      if (onPickSite) onPickSite(siteKey, gs);
+    });
     legendListEl.appendChild(row);
   });
 
@@ -396,6 +406,17 @@ export function initPanels(data, callbacks) {
   photoModalCloseEl.addEventListener('click', onClosePhotoModal);
   photoModalBackdropEl.addEventListener('click', onClosePhotoModal);
 
+  // ABOUT Modal DOM
+  const aboutModalEl = document.getElementById('about-modal');
+  const aboutModalBackdropEl = document.getElementById('about-modal-backdrop');
+  const aboutModalCloseEl = document.getElementById('about-modal-close');
+  if (aboutModalCloseEl && onCloseAboutModal) {
+    aboutModalCloseEl.addEventListener('click', onCloseAboutModal);
+  }
+  if (aboutModalBackdropEl && onCloseAboutModal) {
+    aboutModalBackdropEl.addEventListener('click', onCloseAboutModal);
+  }
+
   // Mission Complete Panel DOM
   const missionCompletePanelEl = document.getElementById('mission-complete-panel');
   const closeCompleteBtn = document.getElementById('close-complete-btn');
@@ -458,6 +479,20 @@ export function initPanels(data, callbacks) {
   const phoneFileBody = document.getElementById('phone-file-body');
   const phoneFileAnswerBox = document.getElementById('phone-file-answer-box');
   const phoneFileAnswerText = document.getElementById('phone-file-answer-text');
+
+  fileAnswerBoxEl.addEventListener('click', (e) => {
+    if (e.target.closest('#file-answer-clear')) return;
+    if (onFinishTypingAnswer) onFinishTypingAnswer();
+  });
+  phoneFileAnswerBox.addEventListener('click', (e) => {
+    if (e.target.closest('#phone-file-answer-clear')) return;
+    if (onFinishTypingAnswer) onFinishTypingAnswer();
+  });
+
+  function renderAnswerText(text) {
+    fileAnswerTextEl.textContent = text;
+    phoneFileAnswerText.textContent = text;
+  }
   const phoneNasaLink = document.getElementById('phone-nasa-link');
   const phoneSheetSignalText = document.getElementById('phone-sheet-signal-text');
   const phoneSignalLamp = document.getElementById('phone-signal-lamp');
@@ -658,6 +693,8 @@ export function initPanels(data, callbacks) {
       const headerLine =
         'FILE ' + g.num + ' · ' + g.mission + ' · LANDED ' + g.landedTxt + ' · ' + g.siteName;
       const openAnswer = state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : null;
+      const shownAnswer =
+        openAnswer && typeof state.typedAnswer === 'string' ? state.typedAnswer : openAnswer;
 
       fileHeaderEl.textContent = headerLine;
       fileJobEl.textContent = g.job;
@@ -666,7 +703,7 @@ export function initPanels(data, callbacks) {
 
       if (openAnswer) {
         fileAnswerBoxEl.hidden = false;
-        fileAnswerTextEl.textContent = openAnswer;
+        fileAnswerTextEl.textContent = shownAnswer;
       } else {
         fileAnswerBoxEl.hidden = true;
         fileAnswerTextEl.textContent = '';
@@ -716,7 +753,7 @@ export function initPanels(data, callbacks) {
 
       if (openAnswer) {
         phoneFileAnswerBox.hidden = false;
-        phoneFileAnswerText.textContent = openAnswer;
+        phoneFileAnswerText.textContent = shownAnswer;
       } else {
         phoneFileAnswerBox.hidden = true;
         phoneFileAnswerText.textContent = '';
@@ -741,7 +778,7 @@ export function initPanels(data, callbacks) {
       compactOpenFileBtn.hidden = state.phoneSheetOpen;
     }
 
-    // 7. Update Photo Viewer Modal
+    // 7. Update Photo Viewer Modal & ABOUT Modal
     if (state.photoModalOpen && g && g.hasPhoto) {
       photoModalEl.hidden = false;
       photoModalCaptionEl.textContent = 'PHOTO: ' + g.photoId;
@@ -749,6 +786,10 @@ export function initPanels(data, callbacks) {
       photoModalImgEl.alt = g.photoAlt;
     } else {
       photoModalEl.hidden = true;
+    }
+
+    if (aboutModalEl) {
+      aboutModalEl.hidden = !state.aboutModalOpen;
     }
 
     // 8. Update Mission Complete Panel & Badge
@@ -781,5 +822,5 @@ export function initPanels(data, callbacks) {
     return { viewportChanged: wasCorner !== isPhotoTakeover };
   }
 
-  return { render, renderTakeoverClock };
+  return { render, renderTakeoverClock, renderAnswerText };
 }
