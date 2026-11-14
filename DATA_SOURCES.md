@@ -9,7 +9,7 @@ Every fact and image traces back to a NASA source. Status shows what is verified
 | NASA Space Science Data Coordinated Archive (NSSDCA), nssdc.gsfc.nasa.gov | Mission records for each machine: landing date, site, what it did, current status | Every fact on every story card is checked against this. Each ghost links to its own record | Done Nov 14, 2026. Moon records: 1969-059C, 1967-035A, 1969-099C, 1971-063C, 1972-096C (`docs/FACT_CHECK.md`). Mars records: 1975-075C, 1975-083C, 1996-068A, 2003-027A, 2003-032A, 2018-042A (`docs/FACT_CHECK_MARS.md`) |
 | NASA Goddard Scientific Visualization Studio, CGI Moon Kit (svs.gsfc.nasa.gov/4720), LRO color map lroc_color_2k.jpg | Global color map of the Moon from the Lunar Reconnaissance Orbiter | Used on the 3D Moon globe and reprojected into a near-side view by tools/render_moon.py; landing sites placed by latitude and longitude | In use |
 | NASA 3D Resources, Mars Image Texture (https://science.nasa.gov/3d-resources/mars/, https://assets.science.nasa.gov/content/dam/science/cds/3d/resources/image/mars/Mars.tif), Credit: NASA/Jet Propulsion Laboratory & Caltech (from Viking images processed at the USGS) | Global equirectangular color map of Mars (`assets/nasa/mars_2k.jpg`, 2048×1024) | Used on the 3D Mars globe; verified with Olympus Mons alignment check (18.65 N, 133.8 W); landing sites placed by latitude and longitude | In use |
-| NASA Image and Video Library (images.nasa.gov) | Hardware photos | Shown unmodified (resized) on story cards, credited by NASA ID | 6 of 6 Moon in use; 6 Mars candidates proposed |
+| NASA Image and Video Library (images.nasa.gov) | Hardware photos | Shown unmodified (resized; Spirit's fisheye self-portrait cropped to a square around the rover deck) on story cards, credited by NASA ID | 6 of 6 Moon and 6 of 6 Mars in use |
 
 ## Photos
 
@@ -21,6 +21,12 @@ Every fact and image traces back to a NASA source. Status shows what is verified
 | as12-47-6918 | https://images.nasa.gov/details/as12-47-6918 | Parts of the Apollo 12 ALSEP | Moonquake Station | In assets (`assets/nasa/as12-47-6918_800.jpg`) |
 | as15-88-11901 | https://images.nasa.gov/details/as15-88-11901 | Apollo 15 Lunar Roving Vehicle | Apollo 15 Rover | In assets (`assets/nasa/as15-88-11901_800.jpg`) |
 | as17-146-22367 | https://images.nasa.gov/details/as17-146-22367 | Apollo 17 Lunar Roving Vehicle parked at its final resting place at Taurus-Littrow | Apollo 17 Rover | In assets (`assets/nasa/as17-146-22367_800.jpg`) |
+| PIA00572 | https://images.nasa.gov/details/PIA00572 | Viking 1 lander deck in foreground and boulder "Big Joe" on Chryse Planitia | Viking 1 Lander | In assets (`assets/nasa/pia00572_800.jpg`) |
+| PIA00571 | https://images.nasa.gov/details/PIA00571 | Viking 2 lander foreground and water-ice frost on Utopia Planitia | Viking 2 Lander | In assets (`assets/nasa/pia00571_800.jpg`) |
+| PIA01122 | https://images.nasa.gov/details/PIA01122 | Sojourner rover beside "Yogi" rock in Ares Vallis, photographed by Mars Pathfinder | Sojourner Rover | In assets (`assets/nasa/pia01122_800.jpg`) |
+| PIA16442 | https://images.nasa.gov/details/PIA16442 | Spirit rover Pancam self-portrait in Gusev Crater (cropped to square around rover deck) | Spirit Rover | In assets (`assets/nasa/pia16442_800.jpg`) |
+| PIA18079 | https://images.nasa.gov/details/PIA18079 | Opportunity rover Pancam self-portrait after wind-cleaning event on Endeavour Crater rim | Opportunity Rover | In assets (`assets/nasa/pia18079_800.jpg`) |
+| PIA25287 | https://images.nasa.gov/details/PIA25287 | InSight lander's final selfie on Mars (Sol 1211), solar panels covered in dust | InSight Lander | In assets (`assets/nasa/pia25287_800.jpg`) |
 
 All photos were chosen to show hardware only, with no people in frame.
 

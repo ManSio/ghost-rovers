@@ -100,10 +100,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia00572_800.jpg",
+      "photoAlt": "Color photo taken by Viking 1 on Chryse Planitia showing the white lander deck in the foreground and the boulder Big Joe on the red Martian plain.",
+      "photoId": "PIA00572"
     },
     {
       "id": "viking2",
@@ -139,10 +139,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia00571_800.jpg",
+      "photoAlt": "Color photo taken by Viking 2 on Utopia Planitia showing part of the lander in the foreground and thin white water-ice frost coating the red rocks of Mars.",
+      "photoId": "PIA00571"
     },
     {
       "id": "sojourner",
@@ -178,10 +178,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia01122_800.jpg",
+      "photoAlt": "Color photo taken on Mars by the Mars Pathfinder lander showing the six-wheeled Sojourner rover and its solar panel top parked beside Yogi rock.",
+      "photoId": "PIA01122"
     },
     {
       "id": "spirit",
@@ -217,10 +217,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia16442_800.jpg",
+      "photoAlt": "Color self-portrait taken on Mars by Spirit's panoramic camera looking down at Spirit's dust-coated solar panel wings and rover deck in Gusev Crater.",
+      "photoId": "PIA16442"
     },
     {
       "id": "opportunity",
@@ -256,10 +256,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia18079_800.jpg",
+      "photoAlt": "Color self-portrait taken on Mars by Opportunity's panoramic camera looking down at the rover's solar arrays and deck after Martian winds cleaned off much of the dust.",
+      "photoId": "PIA18079"
     },
     {
       "id": "insight",
@@ -295,10 +295,10 @@
       ],
       "answers": false,
       "draft": false,
-      "hasPhoto": false,
-      "photo": "",
-      "photoAlt": "",
-      "photoId": ""
+      "hasPhoto": true,
+      "photo": "assets/nasa/pia25287_800.jpg",
+      "photoAlt": "InSight’s final selfie on Mars, its solar panels covered in dust.",
+      "photoId": "PIA25287"
     }
   ]
 }
