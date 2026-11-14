@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ghost Rovers: Mission Control 1969</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&amp;family=Archivo+Narrow:wght@500;700&amp;family=VT323&amp;family=Special+Elite&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#EDF3EE}a:hover{color:#FFFFFF}
+@keyframes crtOn{0%{transform:scaleX(0.02) scaleY(0.006);filter:brightness(5)}45%{transform:scaleX(1) scaleY(0.006);filter:brightness(3)}100%{transform:scale(1);filter:brightness(1)}}
+@keyframes ping{0%{transform:scale(0.4);opacity:0.95}100%{transform:scale(2.6);opacity:0}}
+@keyframes blink{50%{opacity:0.2}}
+.crt-on{animation:crtOn 0.7s cubic-bezier(0.22,1,0.36,1) both}
+.ping{animation:ping 1.6s ease-out infinite}
+.blink{animation:blink 0.8s steps(1) infinite}
+button:focus-visible,a:focus-visible{outline:3px solid #FFE27A;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){.crt-on,.ping,.blink{animation:none}}
+</style>
+</helmet>
+<div onKeyDown="{{onKey}}" style="width: 1280px; height: 800px; position: relative; overflow: hidden; background: #0E1110; color: #E8F0EA; font-family: 'Archivo Narrow', 'Arial Narrow', sans-serif">
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; height: 520px; background: radial-gradient(ellipse 60% 75% at 50% 55%, #1C2628 0%, #0E1110 72%)"></div>
+  <section aria-label="Mission clocks" style="z-index: 5; position: absolute; left: 40px; right: 40px; top: 14px; height: 56px; background: #050605; border: 1px solid #262B28; display: flex; align-items: stretch">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 14px; border-right: 1px solid #1E2220"><span style="font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: 0.14em; color: #B9C4BD">GMT · NOW</span><span style="font: 400 28px VT323, monospace; line-height: 1; color: #FFE9B0; text-shadow: 0 0 10px rgba(255,220,140,0.55); font-variant-numeric: tabular-nums">{{gmt}}</span></div>
+    <div style="flex: 1.7; display: flex; flex-direction: column; justify-content: center; padding: 0 14px; border-right: 1px solid #1E2220; background: rgba(255,233,176,0.04)"><span style="font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: 0.14em; color: #B9C4BD">TIME ON THE MOON · {{clockName}}</span><span style="font: 400 28px VT323, monospace; line-height: 1; color: #FFE9B0; text-shadow: 0 0 10px rgba(255,220,140,0.55); font-variant-numeric: tabular-nums">{{clockY}}Y {{clockM}}M {{clockD}}D {{clockHms}}</span></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 14px; border-right: 1px solid #1E2220"><span style="font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: 0.14em; color: #B9C4BD">LIGHT TIME EARTH TO MOON</span><span style="font: 400 28px VT323, monospace; line-height: 1; color: #FFE9B0; text-shadow: 0 0 10px rgba(255,220,140,0.55); font-variant-numeric: tabular-nums">1.3 SEC</span></div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 14px; border-right: 1px solid #1E2220"><span style="font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: 0.14em; color: #B9C4BD">LAST CREW LEFT</span><span style="font: 400 28px VT323, monospace; line-height: 1; color: #FFE9B0; text-shadow: 0 0 10px rgba(255,220,140,0.55); font-variant-numeric: tabular-nums">DEC 1972</span></div>
+    <button onClick="{{toggleMute}}" aria-pressed="{{mutePressed}}" style="min-width: 104px; background: transparent; border: 0; border-right: 1px solid #1E2220; color: #B9C4BD; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: 0.1em; cursor: pointer">{{muteLabel}}</button>
+    <button onClick="{{replay}}" style="min-width: 104px; background: transparent; border: 0; color: #B9C4BD; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: 0.1em; cursor: pointer">REPLAY<br>POWER-ON</button>
+  </section>
+  <section aria-label="Side screen: when each machine landed" style="position: absolute; left: 40px; top: 84px; transform: perspective(900px) rotateY(16deg); transform-origin: right center; border-radius: 6px; width: 220px; height: 424px; box-sizing: border-box; background: radial-gradient(ellipse at 50% 45%, #10191B 0%, #070A0A 80%); border: 2px solid #050605; padding: 14px 16px; opacity: 0.92">
+    <p style="margin: 0 0 12px; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: 0.12em; color: #C9DDE0">LANDED · BY YEAR</p>
+    <ol style="margin: 0 0 0 6px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; border-left: 1px solid rgba(201,221,224,0.35)">
+      <sc-for list="{{timeline}}" as="t" hint-placeholder-count="6">
+        <li style="position: relative; padding-left: 14px"><span aria-hidden="true" style="position: absolute; left: -5px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: {{t.dot}}; box-shadow: {{t.glow}}"></span><span style="display: block; font: 400 24px VT323, monospace; line-height: 1; color: {{t.color}}">{{t.year}}</span><span style="display: block; font: 600 12px 'IBM Plex Mono', monospace; color: {{t.color}}">{{t.label}}</span></li>
+      </sc-for>
+    </ol>
+  </section>
+  <section aria-label="Main wall screen: the Moon and its landing sites" style="z-index: 5; position: absolute; left: 276px; top: 84px; width: 728px; height: 424px; box-sizing: border-box; overflow: hidden; border-radius: 50% / 7%; background: radial-gradient(ellipse at 34% 50%, #182628 0%, #0A1012 58%, #060909 100%); border: 3px solid #050605; box-shadow: 0 0 80px rgba(150,200,210,0.2), inset 0 0 70px rgba(0,0,0,0.75), inset 0 2px 0 rgba(200,225,230,0.25)">
+    <sc-if value="{{showBoot}}" hint-placeholder-val="{{false}}">
+      <div class="crt-on" style="position: absolute; inset: 0; padding: 46px 70px; display: flex; flex-direction: column; gap: 6px; background: radial-gradient(ellipse at 50% 45%, #1C2A2C 0%, #0A1012 70%)">
+        <p style="margin: 0 0 8px; font: 400 64px VT323, monospace; line-height: 1; color: #F4F1E4; text-shadow: 0 0 14px rgba(244,241,228,0.6)">GHOST ROVERS</p>
+        <div aria-live="polite" style="display: flex; flex-direction: column; gap: 4px">
+          <sc-for list="{{bootLines}}" as="l" hint-placeholder-count="3">
+            <p style="margin: 0; font: 400 30px VT323, monospace; color: #DCE6DF; text-shadow: 0 0 8px rgba(220,230,223,0.4)">&gt; {{l.t}}</p>
+          </sc-for>
+          <sc-if value="{{bootBusy}}" hint-placeholder-val="{{true}}"><span class="blink" style="font: 400 30px VT323, monospace; color: #DCE6DF">_</span></sc-if>
+        </div>
+        <sc-if value="{{bootDone}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{begin}}" style="margin-top: 16px; align-self: flex-start; min-height: 60px; padding: 0 28px; background: #F4F1E4; color: #070908; border: 0; border-radius: 3px; font: 400 36px VT323, monospace; letter-spacing: 0.06em; cursor: pointer; box-shadow: 0 0 22px rgba(244,241,228,0.55)">BEGIN GHOST CHECK</button>
+        </sc-if>
+      </div>
+    </sc-if>
+    <sc-if value="{{inMain}}" hint-placeholder-val="{{true}}">
+    <div style="position: absolute; left: 20px; top: 10px; width: 400px; height: 400px">
+      <img src="/_blob/7f414fd576a1462e5117b66378c6e1ad" alt="The Moon's near side, from NASA's Lunar Reconnaissance Orbiter map" style="width: 400px; height: 400px; display: block; filter: grayscale(0.8) brightness(1.15) contrast(1.15) drop-shadow(0 0 22px rgba(200,225,230,0.3))">
+      <sc-if value="{{ping}}" hint-placeholder-val="{{false}}">
+        <div aria-hidden="true" class="ping" style="position: absolute; left: {{pingX}}px; top: {{pingY}}px; width: 80px; height: 80px; border-radius: 50%; border: 2px solid #9BEFB0"></div>
+        <div aria-hidden="true" class="ping" style="position: absolute; left: {{pingX}}px; top: {{pingY}}px; width: 80px; height: 80px; border-radius: 50%; border: 2px solid #9BEFB0; animation-delay: 0.5s"></div>
+        <div aria-hidden="true" class="ping" style="position: absolute; left: {{pingX}}px; top: {{pingY}}px; width: 80px; height: 80px; border-radius: 50%; border: 2px solid #9BEFB0; animation-delay: 1s"></div>
+      </sc-if>
+      <sc-for list="{{sites}}" as="s" hint-placeholder-count="4">
+        <button aria-label="{{s.label}}" onClick="{{s.pick}}" style="position: absolute; left: {{s.x}}px; top: {{s.y}}px; width: 44px; height: 44px; border: {{s.border}}; background: {{s.bg}}; box-shadow: {{s.shadow}}; border-radius: 0; cursor: pointer; padding: 0"></button>
+      </sc-for>
+    </div>
+    <div aria-live="polite" style="position: absolute; left: 436px; top: 24px; width: 250px; bottom: 26px; display: flex; flex-direction: column; gap: 8px; font-family: 'IBM Plex Mono', monospace; color: #C9DDE0">
+      <p style="margin: 0; font-size: 11px; letter-spacing: 0.14em">LUNAR SURFACE · HARDWARE PLOT</p>
+      <sc-if value="{{noSel}}" hint-placeholder-val="{{false}}">
+        <p style="margin: 0 0 4px; font: 400 28px VT323, monospace; line-height: 1; color: #E6F2F4">4 SITES · 6 MACHINES</p>
+        <sc-for list="{{siteLegend}}" as="l" hint-placeholder-count="4">
+          <div style="display: flex; gap: 10px; align-items: baseline; padding: 6px 0; border-top: 1px solid rgba(201,221,224,0.18)"><span style="font: 400 22px VT323, monospace; min-width: 44px; color: #E6F2F4">{{l.code}}</span><span style="font-size: 12px; line-height: 1.35">{{l.text}}</span></div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{hasSel}}" hint-placeholder-val="{{true}}">
+        <p style="margin: 0; font: 400 28px VT323, monospace; line-height: 1; color: #FFFFFF; text-transform: uppercase">{{g.name}}</p>
+        <sc-if value="{{gHasPhoto}}" hint-placeholder-val="{{true}}">
+          <figure style="margin: 0"><img src="{{g.photo}}" alt="{{g.photoAlt}}" style="width: 250px; height: 158px; object-fit: cover; display: block; filter: grayscale(0.6) contrast(1.05); border: 1px solid rgba(201,221,224,0.3)"><figcaption style="font-size: 10px; color: #8FA5A9; padding-top: 3px">PHOTO: {{g.photoId}}</figcaption></figure>
+        </sc-if>
+        <sc-if value="{{gNoPhoto}}" hint-placeholder-val="{{false}}">
+          <div style="width: 250px; height: 158px; box-sizing: border-box; border: 1px dashed rgba(201,221,224,0.35); display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8FA5A9; text-align: center; padding: 10px">PHOTO {{g.photoId}}<br>LOADING IN BUILD</div>
+        </sc-if>
+        <div style="margin-top: auto; padding: 10px 12px; background: rgba(5,6,5,0.75); border: 1px solid rgba(201,221,224,0.25); font: 400 24px VT323, monospace; line-height: 1.1">
+          <sc-if value="{{idle}}" hint-placeholder-val="{{true}}"><span style="color: #B7CDD1">SIGNAL CHECK: PRESS CALL GHOST</span></sc-if>
+          <sc-if value="{{calling}}" hint-placeholder-val="{{false}}"><span class="blink" style="color: #FFFFFF">CALLING...</span></sc-if>
+          <sc-if value="{{answered}}" hint-placeholder-val="{{false}}"><span style="color: {{replyColor}}">{{replyText}}</span></sc-if>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+    <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 75% 85% at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.55) 100%)"></div>
+    <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(201,221,224,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(201,221,224,0.05) 1px, transparent 1px); background-size: 32px 32px"></div>
+  </section>
+  <section aria-label="Status lights" style="position: absolute; left: 1020px; top: 84px; transform: perspective(900px) rotateY(-16deg); transform-origin: left center; border-radius: 6px; width: 220px; height: 424px; box-sizing: border-box; background: #0B0D0C; border: 2px solid #050605; padding: 14px; display: flex; flex-direction: column; gap: 10px; opacity: 0.95">
+    <p style="margin: 0; font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: 0.12em; color: #C9D3CC">GHOST LOG</p>
+    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{ghosts}}" as="r" hint-placeholder-count="6">
+        <li style="display: flex; gap: 10px; align-items: center"><span aria-hidden="true" style="width: 24px; height: 18px; flex-shrink: 0; border-radius: 2px; background: {{r.lamp}}; box-shadow: {{r.lampGlow}}; border: 1px solid #000"></span><span style="display: flex; flex-direction: column"><span style="font: 700 14px 'Archivo Narrow', sans-serif; text-transform: uppercase; color: #E8F0EA; line-height: 1.1">{{r.checkMark}}{{r.name}}</span><span style="font: 400 10px 'IBM Plex Mono', monospace; color: {{r.statusColor}}">{{r.statusText}}</span></span></li>
+      </sc-for>
+    </ul>
+    <p style="margin: auto 0 0; font: 400 24px VT323, monospace; color: #FFE9B0">{{checkedText}}</p>
+    <sc-if value="{{allDone}}" hint-placeholder-val="{{false}}">
+      <p style="margin: 0; padding: 8px; background: #2F4A36; font: 400 20px VT323, monospace; line-height: 1.1; color: #D7F5DE">GHOST CHECK COMPLETE. ONLY THE LASER MIRROR STILL ANSWERS, AND SCIENTISTS USE IT TODAY.</p>
+    </sc-if>
+  </section>
+  <div aria-hidden="true" style="position: absolute; left: -20px; right: -20px; top: 512px; height: 30px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; background: linear-gradient(180deg, #C3CFCF 0%, #8C988F 60%, #6E7A72 100%); box-shadow: 0 -6px 24px rgba(150,200,210,0.12)"></div>
+  <div style="position: absolute; left: 0; right: 0; top: 532px; bottom: 0; border-radius: 50% 50% 0 0 / 14px 14px 0 0; background: linear-gradient(180deg, #7D8981 0%, #6A766E 22px, #4E5852 24px, #56615A 60%, #4A544E 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25)">
+    <span aria-hidden="true" style="position: absolute; left: 14px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span><span aria-hidden="true" style="position: absolute; left: 1256px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span><span aria-hidden="true" style="position: absolute; left: 14px; top: 246px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span><span aria-hidden="true" style="position: absolute; left: 1256px; top: 246px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span><span aria-hidden="true" style="position: absolute; left: 690px; top: 10px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span><span aria-hidden="true" style="position: absolute; left: 690px; top: 246px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #B9C3BC, #59625C)"></span>
+    <div style="position: absolute; left: 520px; top: -22px; z-index: 3"><span style="display: inline-block; background: #121212; color: #F4F4F0; font: 700 13px 'Archivo Narrow', sans-serif; letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; text-shadow: 0 1px 0 rgba(0,0,0,0.9), 0 -1px 0 rgba(255,255,255,0.25); box-shadow: 0 1px 2px rgba(0,0,0,0.5); background: #9E2B25; transform: rotate(-0.8deg)">Ghost Rovers · Lunar hardware check</span></div>
+    <div style="position: absolute; left: 40px; top: 12px; width: 630px; height: 244px; box-sizing: border-box; background: #2A2F2C; border-radius: 16px; padding: 10px; box-shadow: inset 0 3px 10px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.18)">
+      <article aria-label="Console monitor" style="position: relative; width: 100%; height: 100%; box-sizing: border-box; background: radial-gradient(ellipse at 50% 42%, #18201C 0%, #070908 75%); border-radius: 22px / 30px; padding: 12px 20px; display: flex; flex-direction: column; gap: 5px; font-family: 'IBM Plex Mono', monospace; color: #EDF3EE; overflow: hidden; box-shadow: inset 0 0 40px rgba(0,0,0,0.9)">
+        <div aria-hidden="true" style="position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0px, rgba(0,0,0,0.25) 1px, transparent 1px, transparent 3px)"></div>
+        <sc-if value="{{noSel}}" hint-placeholder-val="{{false}}">
+          <p style="margin: 18px 0 0; font: 400 32px VT323, monospace; text-shadow: 0 0 8px rgba(237,243,238,0.5)">CONSOLE READY.</p>
+          <p style="margin: 0; font: 400 24px VT323, monospace; color: #C9D3CC">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
+          <p style="margin: 0; font-size: 14px; color: #B9C4BD">Or tap a square on the Moon. Then press CALL GHOST (or C).</p>
+          <sc-if value="{{noSelWarn}}" hint-placeholder-val="{{false}}"><p aria-live="polite" style="margin: 6px 0 0; font: 400 24px VT323, monospace; color: #F2A08F">&gt; PICK A GHOST FIRST, THEN CALL.</p></sc-if>
+        </sc-if>
+        <sc-if value="{{hasSel}}" hint-placeholder-val="{{true}}">
+          <p style="margin: 0; font-size: 11px; letter-spacing: 0.12em; color: #B9C4BD">FILE {{g.num}} · {{g.mission}} · LANDED {{g.landedTxt}} · {{g.siteName}}</p>
+          <p style="margin: 0; font-size: 13px; line-height: 1.35; color: #C9D6CE"><span style="color: #FFE9B0; letter-spacing: 0.1em">MISSION: </span>{{g.job}}</p>
+          <p style="margin: 0; font-size: 15px; line-height: 1.4; min-height: 42px">{{body}}</p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: auto">
+            <span style="font-size: 12px; color: #B9C4BD; letter-spacing: 0.1em">ASK:</span>
+            <sc-for list="{{qs}}" as="q" hint-placeholder-count="2">
+              <button onClick="{{q.toggle}}" aria-expanded="{{q.expanded}}" style="min-height: 44px; padding: 0 10px; border: 1px solid rgba(237,243,238,0.5); background: {{q.bg}}; color: {{q.fg}}; font: 400 13px 'IBM Plex Mono', monospace; cursor: pointer">{{q.q}}</button>
+            </sc-for>
+            <a href="https://nssdc.gsfc.nasa.gov/" style="font-size: 12px">NASA RECORD</a>
+          </div>
+        </sc-if>
+      </article>
+    </div>
+    <nav aria-label="Console: pick a ghost" style="position: absolute; left: 700px; top: 10px; width: 546px; box-sizing: border-box; padding: 8px 10px 10px; border-radius: 16px; background: rgba(20,24,22,0.28); box-shadow: inset 0 3px 10px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.18)">
+      <div aria-hidden="true" style="display: flex; gap: 8px; margin-bottom: 10px"><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #C9B871; box-shadow: 0 0 8px rgba(233,214,120,0.7); color: #1A1A12; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">PWR</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #C9B871; box-shadow: 0 0 8px rgba(233,214,120,0.7); color: #1A1A12; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">COMM</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">TLM</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">DSKY</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #C9B871; box-shadow: 0 0 8px rgba(233,214,120,0.7); color: #1A1A12; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">GET</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">S-BAND</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">ALT</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">RCS</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">GUID</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">UPLNK</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">RCDR</span><span aria-hidden="true" style="width: 36px; height: 18px; border-radius: 2px; background: #2B302D; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); color: #8C978F; font: 600 8px 'IBM Plex Mono', monospace; display: flex; align-items: center; justify-content: center">AUX</span></div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{ghosts}}" as="b" hint-placeholder-count="6">
+          <button onClick="{{b.pick}}" aria-pressed="{{b.pressed}}" aria-keyshortcuts="{{b.key}}" style="min-height: 56px; padding: 4px 10px; text-align: left; border-radius: 3px; border: 2px solid #1A1D1B; background: {{b.bg}}; color: {{b.fg}}; box-shadow: {{b.glow}}; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 1px"><span style="font: 600 10px 'IBM Plex Mono', monospace; letter-spacing: 0.08em; opacity: 0.85">[{{b.key}}] {{b.code}}</span><span style="font: 700 16px 'Archivo Narrow', sans-serif; text-transform: uppercase; line-height: 1.1">{{b.name}}</span></button>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 16px; align-items: center; margin-top: 12px">
+        <button onClick="{{call}}" aria-keyshortcuts="C" style="min-height: 54px; min-width: 230px; padding: 0 20px; border-radius: 4px; border: 3px solid #2A0E0C; background: #C8382D; color: #FFFFFF; font: 700 21px 'Archivo Narrow', sans-serif; letter-spacing: 0.08em; box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25), 0 2px 0 rgba(0,0,0,0.3); cursor: pointer">{{callLabel}} [C]</button>
+        <span style="display: flex; flex-direction: column; align-items: center; gap: 3px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: {{signalLamp}}; box-shadow: {{signalGlow}}; border: 2px solid #1A1D1B"></span><span style="font: 600 10px 'IBM Plex Mono', monospace; color: #F2F5F3">SIGNAL</span></span>
+        <span style="display: flex; flex-direction: column; align-items: center; gap: 3px"><span aria-hidden="true" style="width: 28px; height: 28px; border-radius: 50%; background: {{noSignalLamp}}; box-shadow: {{noSignalGlow}}; border: 2px solid #1A1D1B"></span><span style="font: 600 10px 'IBM Plex Mono', monospace; color: #F2F5F3">NO SIGNAL</span></span>
+      </div>
+    </nav>
+  </div>
+<sc-if value="{{showBoot}}" hint-placeholder-val="{{false}}">
+  <div aria-hidden="true" style="position: absolute; inset: 0; z-index: 4; background: rgba(2,3,3,0.86)"></div>
+  <button onClick="{{skip}}" style="position: absolute; right: 40px; bottom: 28px; z-index: 6; min-height: 44px; padding: 0 16px; background: transparent; border: 1px solid rgba(237,243,238,0.45); color: #C9D3CC; font: 600 13px 'IBM Plex Mono', monospace; letter-spacing: 0.1em; cursor: pointer">SKIP INTRO</button>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+
+const GHOSTS = [{"id": "mirror", "job": "Placed by the Apollo 11 crew as a target for lasers fired from Earth, to measure exactly how far away the Moon is.", "quiet": "NEVER", "num": "01", "code": "A11-LRRR", "name": "Laser Mirror", "mission": "Apollo 11", "site": "A11", "siteName": "Sea of Tranquility", "landed": "1969-07-20T20:17:00Z", "landedTxt": "1969-07-20", "answers": true, "reply": "SIGNAL RETURNED. LIGHT MADE THE ROUND TRIP IN 2.5 SECONDS.", "story": "I'm a tray of 100 tiny mirrors. Scientists on Earth still aim lasers at me, and I bounce the light right back.", "qs": [["How can a mirror still work?", "It needs no power at all. It just sits there and bounces light back, like a bike reflector."], ["What did scientists learn?", "The Moon is drifting away from Earth, about 3.8 cm every year. That's about how fast your fingernails grow."]], "photo": "", "photoAlt": "", "photoId": "NASA AS11-37-5551", "hasPhoto": false}, {"id": "eagle", "job": "Apollo 11's lander. It carried the first two people down to the Moon's surface in July 1969.", "quiet": "1969", "num": "02", "code": "A11-LM", "name": "Eagle's Launch Pad", "mission": "Apollo 11", "site": "A11", "siteName": "Sea of Tranquility", "landed": "1969-07-20T20:17:00Z", "landedTxt": "1969-07-20", "answers": false, "reply": "NO SIGNAL. RESTING SINCE 1969.", "story": "Half of me stayed behind. When the astronauts blasted off, my top half flew back to their ship. My legs are still standing in the dust.", "qs": [["Why leave it there?", "The bottom half was the launch pad. Leaving it behind made the trip home lighter."], ["Can anyone see it now?", "Yes! NASA's Lunar Reconnaissance Orbiter has photographed the landing site from above."]], "photo": "/_blob/cfa314943eff236cdb5276a900696c71", "photoAlt": "The Apollo 11 lunar module Eagle in lunar orbit, July 1969", "photoId": "NASA AS11-44-6581", "hasPhoto": true}, {"id": "surveyor", "job": "A robot lander sent to prove a spacecraft could land softly, and to dig into the soil before astronauts came.", "quiet": "1967", "num": "03", "code": "S-3", "name": "Surveyor 3", "mission": "Surveyor", "site": "A12", "siteName": "Ocean of Storms", "landed": "1967-04-20T00:04:00Z", "landedTxt": "1967-04-20", "answers": false, "reply": "NO SIGNAL. QUIET SINCE 1967.", "story": "I landed here alone. Two years later, two astronauts walked over to visit and took my camera home to Earth.", "qs": [["Why did astronauts visit?", "To see what years on the Moon do to a machine. They brought parts home to study."], ["Is it still there?", "Yes, minus the camera and a few parts the astronauts took home."]], "photo": "/_blob/5f214d27ded5d6ddcc9b745b019b9aec", "photoAlt": "Surveyor 3 on the Moon, photographed by the Apollo 12 crew", "photoId": "NASA AS12-48-7121", "hasPhoto": true}, {"id": "alsep", "job": "A set of science instruments left by Apollo 12 to measure moonquakes, magnetism, and the solar wind.", "quiet": "1977", "num": "04", "code": "A12-ALSEP", "name": "Moonquake Station", "mission": "Apollo 12", "site": "A12", "siteName": "Ocean of Storms", "landed": "1969-11-19T06:54:00Z", "landedTxt": "1969-11-19", "answers": false, "reply": "NO SIGNAL. SWITCHED OFF IN 1977.", "story": "I listened to the Moon. I felt moonquakes and space rocks hitting the ground, and I radioed it all home for years.", "qs": [["What's a moonquake?", "The Moon shakes too! Instruments like me felt moonquakes and meteorite hits."], ["Why was it turned off?", "In 1977 NASA switched the stations off to save money for new missions."]], "photo": "", "photoAlt": "", "photoId": "NASA AS12-47-6918", "hasPhoto": false}, {"id": "lrv15", "job": "The first Moon car, brought by Apollo 15 so astronauts could explore much farther from their lander.", "quiet": "1971", "num": "05", "code": "A15-LRV", "name": "Apollo 15 Rover", "mission": "Apollo 15", "site": "A15", "siteName": "Hadley-Apennine", "landed": "1971-07-30T22:16:00Z", "landedTxt": "1971-07-30", "answers": false, "reply": "NO SIGNAL. PARKED SINCE 1971.", "story": "I was the first car on the Moon. Two astronauts drove me over hills and craters, then parked me for good.", "qs": [["Could I drive it?", "Its batteries are dead, so it can't move now. Astronauts drove it about 28 km on the Moon."], ["Why bring a car?", "To explore farther than walking allowed, and to carry rocks and tools."]], "photo": "", "photoAlt": "", "photoId": "NASA AS15-88-11901", "hasPhoto": false}, {"id": "lrv17", "job": "Carried the last Apollo crew across the Taurus-Littrow valley to collect rocks and samples.", "quiet": "1972", "num": "06", "code": "A17-LRV", "name": "Apollo 17 Rover", "mission": "Apollo 17", "site": "A17", "siteName": "Taurus-Littrow", "landed": "1972-12-11T19:54:00Z", "landedTxt": "1972-12-11", "answers": false, "reply": "NO SIGNAL. PARKED SINCE 1972.", "story": "I was driven on the very last Apollo trip. After my astronauts left, I've been parked in this valley ever since.", "qs": [["How far did it go?", "About 36 km, the farthest any Apollo rover drove."], ["Who drove it last?", "The Apollo 17 crew, in December 1972. Nobody has driven on the Moon since."]], "photo": "", "photoAlt": "", "photoId": "NASA AS17-137-20979", "hasPhoto": false}];
+const SITES = {"A11": {"x": 280, "y": 198}, "A12": {"x": 121, "y": 211}, "A15": {"x": 211, "y": 112}, "A17": {"x": 296, "y": 131}};
+const BOOT = ["NASA MISSION CONTROL · HOUSTON","CONSOLE 7 POWERED ON","SCANNING THE MOON ... 4 SITES FOUND","HARDWARE ON SURFACE: 6 MACHINES","LAST CREW LEFT: DECEMBER 1972","READY FOR GHOST CHECK."];
+function p2(n){ return String(n).padStart(2,'0'); }
+function since(iso, nowMs){
+  const s = new Date(iso); const n = new Date(nowMs);
+  let y = n.getUTCFullYear()-s.getUTCFullYear(), m = n.getUTCMonth()-s.getUTCMonth(), d = n.getUTCDate()-s.getUTCDate();
+  if (d < 0) { m -= 1; d += new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), 0)).getUTCDate(); }
+  if (m < 0) { y -= 1; m += 12; }
+  const secs = Math.floor(((nowMs - s.getTime())/1000) % 86400);
+  return { y: p2(y), m: p2(m), d: p2(d), hms: p2(Math.floor(secs/3600))+':'+p2(Math.floor(secs/60)%60)+':'+p2(secs%60) };
+}
+// Synthesized console sounds (Web Audio, no files). Silent if muted or unsupported.
+function makeAudio(){
+  let ctx = null;
+  const get = () => { try { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); return ctx; } catch(e) { return null; } };
+  const tone = (freq, start, dur, type, vol) => { const c = get(); if (!c) return; const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.value = freq; g.gain.setValueAtTime(vol, c.currentTime + start); g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + start + dur); o.connect(g); g.connect(c.destination); o.start(c.currentTime + start); o.stop(c.currentTime + start + dur + 0.02); };
+  const noise = (dur, vol) => { const c = get(); if (!c) return; const b = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate); const d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * (0.5 + 0.5*Math.sin(i/900)); const s = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1800; s.buffer = b; g.gain.value = vol; s.connect(f); f.connect(g); g.connect(c.destination); s.start(); };
+  return {
+    click: () => tone(1400, 0, 0.04, 'square', 0.05),
+    calling: () => noise(1.5, 0.06),
+    ping: () => { tone(1320, 0, 0.5, 'sine', 0.18); tone(1320, 0.55, 0.5, 'sine', 0.12); tone(1320, 1.1, 0.5, 'sine', 0.07); },
+    nosignal: () => { tone(220, 0, 0.18, 'square', 0.05); tone(180, 0.24, 0.3, 'square', 0.05); },
+    done: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, i*0.12, 0.3, 'triangle', 0.08)); }
+  };
+}
+class Component extends DCLogic {
+  constructor(props){ super(props); this.state = { phase: 'boot', step: 0, sel: null, call: null, openQ: null, now: Date.now(), checked: {}, muted: false }; this.sfx = makeAudio(); }
+  componentDidMount(){
+    this.clock = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    let reduce = false; try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e) {}
+    if (reduce) { this.setState({ step: BOOT.length }); return; }
+    this.runBoot();
+  }
+  componentWillUnmount(){ clearInterval(this.clock); clearInterval(this.boot); clearTimeout(this.callT); }
+  runBoot(){ clearInterval(this.boot); this.boot = setInterval(() => { if (this.state.step >= BOOT.length) { clearInterval(this.boot); return; } this.setState({ step: this.state.step + 1 }); }, 420); }
+  play(name){ if (!this.state.muted && this.sfx[name]) { try { this.sfx[name](); } catch(e) {} } }
+  pick(id){ clearTimeout(this.callT); this.play('click'); this.setState({ sel: id, call: null, openQ: null }); }
+  doCall(){
+    const g = GHOSTS.find(x => x.id === this.state.sel);
+    if (!g) { this.play('nosignal'); this.setState({ call: 'nosel' }); return; }
+    clearTimeout(this.callT); this.play('calling'); this.setState({ call: 'calling', openQ: null });
+    this.callT = setTimeout(() => {
+      const checked = Object.assign({}, this.state.checked, { [g.id]: true });
+      const all = GHOSTS.every(x => checked[x.id]);
+      this.play(g.answers ? 'ping' : 'nosignal');
+      if (all && !GHOSTS.every(x => this.state.checked[x.id])) setTimeout(() => this.play('done'), 1700);
+      this.setState({ call: 'done', checked });
+    }, 1600);
+  }
+  renderVals(){
+    const st = this.state;
+    const g = GHOSTS.find(x => x.id === st.sel) || null;
+    const nChecked = GHOSTS.filter(x => st.checked[x.id]).length;
+    const ghosts = GHOSTS.map((x, i) => {
+      const on = x.id === st.sel; const done = !!st.checked[x.id];
+      return Object.assign({}, x, {
+        key: String(i + 1),
+        bg: on ? '#F6F2E2' : (x.answers ? '#2F4A36' : '#2C312E'),
+        fg: on ? '#151816' : (x.answers ? '#D7F5DE' : '#D5DDD7'),
+        glow: on ? '0 0 18px rgba(246,242,226,0.7), inset 0 -3px 0 rgba(0,0,0,0.15)' : (x.answers ? 'inset 0 0 14px rgba(140,230,160,0.5)' : 'inset 0 2px 0 rgba(255,255,255,0.06)'),
+        pressed: on ? 'true' : 'false',
+        lamp: on ? '#F6F2E2' : (done ? (x.answers ? '#7BE495' : '#E8735C') : '#3A403C'),
+        lampGlow: on ? '0 0 10px rgba(246,242,226,0.8)' : (done ? (x.answers ? '0 0 10px rgba(123,228,149,0.8)' : '0 0 8px rgba(232,115,92,0.7)') : 'none'),
+        statusText: done ? (x.answers ? 'CHECKED · ANSWERS' : 'CHECKED · QUIET SINCE ' + x.quiet) : 'NOT CHECKED YET',
+        statusColor: done ? (x.answers ? '#9BEFB0' : '#F2A08F') : '#A9B4AD',
+        checkMark: done ? '✓ ' : '',
+        pick: () => this.pick(x.id)
+      });
+    });
+    const siteList = Object.keys(SITES).map(k => {
+      const lit = g && g.site === k;
+      const names = GHOSTS.filter(x => x.site === k).map(x => x.name).join(' and ');
+      return { x: SITES[k].x - 22, y: SITES[k].y - 22, border: lit ? '3px solid #FFFFFF' : '2px solid rgba(232,240,234,0.85)', bg: lit ? 'rgba(255,255,255,0.22)' : 'rgba(6,9,9,0.25)', shadow: lit ? '0 0 16px rgba(255,255,255,0.7)' : 'none', label: names + (lit ? ', selected' : ''),
+        pick: () => this.pick(GHOSTS.find(x => x.site === k).id) };
+    });
+    const siteLegend = Object.keys(SITES).map(k => { const gs = GHOSTS.filter(x => x.site === k); return { code: k.replace('A','A-'), text: gs[0].siteName.toUpperCase() + ': ' + gs.map(x => x.name).join(', ') }; });
+    const timeline = GHOSTS.slice().sort((a,b) => a.landed < b.landed ? -1 : 1).map(x => { const on = x.id === st.sel; return { year: x.landed.slice(0,4), label: x.name.toUpperCase(), color: on ? '#FFFFFF' : '#B7CDD1', dot: on ? '#FFFFFF' : '#6F8A8F', glow: on ? '0 0 8px #FFFFFF' : 'none' }; });
+    const nd = new Date(st.now); const gmt = p2(nd.getUTCHours()) + ':' + p2(nd.getUTCMinutes()) + ':' + p2(nd.getUTCSeconds());
+    const clocksOn = st.phase !== 'boot' || st.step >= 3;
+    const c = g ? since(g.landed, st.now) : { y: '--', m: '--', d: '--', hms: '--:--:--' };
+    const qs = g ? g.qs.map((q, i) => ({ q: q[0], expanded: st.openQ === i ? 'true' : 'false', bg: st.openQ === i ? '#EDF3EE' : 'transparent', fg: st.openQ === i ? '#070908' : '#EDF3EE', toggle: () => { this.play('click'); this.setState({ openQ: st.openQ === i ? null : i }); } })) : [];
+    const answered = st.call === 'done';
+    const ping = answered && g && g.answers;
+    const allDone = nChecked === GHOSTS.length;
+    return {
+      showBoot: st.phase === 'boot', showMain: true, inMain: st.phase !== 'boot',
+      bootLines: BOOT.slice(0, st.step).map(t => ({ t })), bootDone: st.step >= BOOT.length, bootBusy: st.step < BOOT.length,
+      begin: () => { clearInterval(this.boot); this.play('click'); this.setState({ phase: 'main', step: BOOT.length }); },
+      skip: () => { clearInterval(this.boot); this.setState({ phase: 'main', step: BOOT.length }); },
+      replay: () => { this.setState({ phase: 'boot', step: 0, sel: null, call: null, openQ: null, checked: {} }); this.runBoot(); },
+      toggleMute: () => this.setState({ muted: !st.muted }), muteLabel: st.muted ? 'SOUND OFF' : 'SOUND ON', mutePressed: st.muted ? 'true' : 'false',
+      onKey: (e) => { const k = e.key; if (k >= '1' && k <= '6') { this.pick(GHOSTS[Number(k)-1].id); } else if (k === 'c' || k === 'C') { this.doCall(); } },
+      ghosts, sites: siteList, siteLegend, timeline, gmt: clocksOn ? gmt : '--:--:--',
+      hasSel: !!g, noSel: !g, noSelWarn: !g && st.call === 'nosel',
+      g: g || { num: '', mission: '', landedTxt: '', name: '', siteName: '', job: '', photo: '', photoAlt: '', photoId: '', hasPhoto: false },
+      gHasPhoto: !!(g && g.hasPhoto), gNoPhoto: !!(g && !g.hasPhoto),
+      body: g ? (st.openQ !== null ? g.qs[st.openQ][1] : g.story) : '', qs,
+      clockY: c.y, clockM: c.m, clockD: c.d, clockHms: c.hms, clockName: g ? g.name.toUpperCase() : 'PICK A GHOST',
+      calling: st.call === 'calling', answered, idle: !st.call || st.call === 'nosel',
+      replyText: g ? g.reply : '', replyColor: g && g.answers ? '#9BEFB0' : '#F2A08F',
+      signalLamp: ping ? '#7BE495' : '#2B302D', signalGlow: ping ? '0 0 14px rgba(123,228,149,0.9)' : 'none',
+      noSignalLamp: answered && g && !g.answers ? '#E8735C' : '#2B302D', noSignalGlow: answered && g && !g.answers ? '0 0 14px rgba(232,115,92,0.9)' : 'none',
+      callLabel: st.call === 'calling' ? 'CALLING...' : 'CALL GHOST', call: () => this.doCall(),
+      ping, pingX: SITES['A11'].x - 40, pingY: SITES['A11'].y - 40,
+      checkedText: p2(nChecked) + ' OF 06 CHECKED', allDone, notAllDone: !allDone
+    };
+  }
+}
+
+</script>
+</body>
+</html>

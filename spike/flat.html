@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghost Rovers Spike: Flat Moon Disk</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0b0d10;
+      color: #e8eaed;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+    .metrics {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .error-banner {
+      display: none;
+      background: #3d1418;
+      border: 2px solid #f85149;
+      color: #ffdcd7;
+      padding: 12px 16px;
+      border-radius: 6px;
+      max-width: 400px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .moon-stage {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+    }
+    .moon-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: block;
+      object-fit: cover;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .marker-btn {
+      position: absolute;
+      left: 69.91%;
+      top: 49.41%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .marker-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffb703;
+      border: 2px solid #0b0d10;
+      box-shadow: 0 0 0 2px #ffb703;
+      pointer-events: none;
+    }
+    .marker-btn:focus-visible {
+      outline: 3px solid #58a6ff;
+      outline-offset: 2px;
+    }
+    .card {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 400px;
+      background: #161b22;
+      border: 1px solid #ffb703;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card[hidden] {
+      display: none;
+    }
+    .card-text {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    .close-btn {
+      min-width: 44px;
+      min-height: 44px;
+      background: #21262d;
+      color: #e8eaed;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .close-btn:focus-visible {
+      outline: 3px solid #58a6ff;
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="metrics" role="status" aria-live="off">
+    <span id="load-readout">Load: measuring...</span>
+    <span id="fps-readout">FPS: --</span>
+  </div>
+
+  <div id="error-box" class="error-banner" role="alert"></div>
+
+  <div class="moon-stage">
+    <img
+      id="moon-img"
+      class="moon-img"
+      alt="Near side of the Moon"
+    >
+    <button
+      id="apollo11-marker"
+      class="marker-btn"
+      type="button"
+      aria-label="Apollo 11 landing site"
+      aria-expanded="false"
+      aria-controls="info-card"
+    >
+      <span class="marker-dot" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <section id="info-card" class="card" role="region" aria-label="Site details" hidden>
+    <p id="card-body" class="card-text"></p>
+    <button id="close-card" class="close-btn" type="button" aria-label="Close card">Close</button>
+  </section>
+
+  <script type="module">
+    const loadReadout = document.getElementById('load-readout');
+    const fpsReadout = document.getElementById('fps-readout');
+    const errorBox = document.getElementById('error-box');
+    const moonImg = document.getElementById('moon-img');
+    const markerBtn = document.getElementById('apollo11-marker');
+    const card = document.getElementById('info-card');
+    const cardBody = document.getElementById('card-body');
+    const closeBtn = document.getElementById('close-card');
+
+    const CARD_COPY = 'Laser Mirror. Landed July 20, 1969. Still answers when scientists shine a laser at it.';
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+
+    function openCard() {
+      cardBody.textContent = CARD_COPY;
+      card.hidden = false;
+      markerBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeCard() {
+      if (!card.hidden) {
+        card.hidden = true;
+        markerBtn.setAttribute('aria-expanded', 'false');
+        markerBtn.focus();
+      }
+    }
+
+    markerBtn.addEventListener('click', () => {
+      if (card.hidden) {
+        openCard();
+      } else {
+        closeCard();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeCard);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !card.hidden) {
+        closeCard();
+      }
+    });
+
+    async function loadMoon() {
+      try {
+        moonImg.src = '../assets/nasa/moon_nearside.webp';
+        await new Promise((resolve, reject) => {
+          if (moonImg.complete && moonImg.naturalWidth > 0) {
+            resolve();
+            return;
+          }
+          moonImg.addEventListener('load', resolve, { once: true });
+          moonImg.addEventListener('error', () => reject(new Error('Failed to load moon_nearside.webp')), { once: true });
+        });
+        const ms = Math.round(performance.now());
+        loadReadout.textContent = 'Load: ' + ms + ' ms';
+      } catch (err) {
+        loadReadout.textContent = 'Load: FAILED';
+        showError('Error loading Moon image: ' + (err && err.message ? err.message : String(err)));
+      }
+    }
+
+    loadMoon();
+
+    let frameCount = 0;
+    let lastTime = performance.now();
+    function tick(now) {
+      frameCount++;
+      const elapsed = now - lastTime;
+      if (elapsed >= 500) {
+        const fps = Math.round((frameCount * 1000) / elapsed);
+        fpsReadout.textContent = 'FPS: ' + fps;
+        frameCount = 0;
+        lastTime = now;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

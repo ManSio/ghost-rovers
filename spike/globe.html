@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghost Rovers Spike: 3D Moon Globe</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0b0d10;
+      color: #e8eaed;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+    }
+    .metrics {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .error-banner {
+      display: none;
+      background: #3d1418;
+      border: 2px solid #f85149;
+      color: #ffdcd7;
+      padding: 12px 16px;
+      border-radius: 6px;
+      max-width: 400px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .globe-stage {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      max-width: 100%;
+      aspect-ratio: 1 / 1;
+      touch-action: none;
+      user-select: none;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+      touch-action: none;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    .marker-btn {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      z-index: 2;
+    }
+    .marker-btn[hidden] {
+      display: none;
+    }
+    .marker-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffb703;
+      border: 2px solid #0b0d10;
+      box-shadow: 0 0 0 2px #ffb703;
+      pointer-events: none;
+    }
+    .marker-btn:focus-visible {
+      outline: 3px solid #58a6ff;
+      outline-offset: 2px;
+    }
+    .card {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 400px;
+      background: #161b22;
+      border: 1px solid #ffb703;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .card[hidden] {
+      display: none;
+    }
+    .card-text {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+    .close-btn {
+      min-width: 44px;
+      min-height: 44px;
+      background: #21262d;
+      color: #e8eaed;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .close-btn:focus-visible {
+      outline: 3px solid #58a6ff;
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="metrics" role="status" aria-live="off">
+    <span id="load-readout">Load: measuring...</span>
+    <span id="fps-readout">FPS: --</span>
+  </div>
+
+  <div id="error-box" class="error-banner" role="alert"></div>
+
+  <div id="globe-stage" class="globe-stage">
+    <button
+      id="apollo11-marker"
+      class="marker-btn"
+      type="button"
+      aria-label="Apollo 11 landing site (0.674 N, 23.473 E)"
+      aria-expanded="false"
+      aria-controls="info-card"
+      hidden
+    >
+      <span class="marker-dot" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <section id="info-card" class="card" role="region" aria-label="Site details" hidden>
+    <p id="card-body" class="card-text"></p>
+    <button id="close-card" class="close-btn" type="button" aria-label="Close card">Close</button>
+  </section>
+
+  <script type="module">
+    const loadReadout = document.getElementById('load-readout');
+    const fpsReadout = document.getElementById('fps-readout');
+    const errorBox = document.getElementById('error-box');
+    const stage = document.getElementById('globe-stage');
+    const markerBtn = document.getElementById('apollo11-marker');
+    const card = document.getElementById('info-card');
+    const cardBody = document.getElementById('card-body');
+    const closeBtn = document.getElementById('close-card');
+
+    const CARD_COPY = 'Laser Mirror. Landed July 20, 1969. Still answers when scientists shine a laser at it.';
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.style.display = 'block';
+    }
+
+    function openCard() {
+      cardBody.textContent = CARD_COPY;
+      card.hidden = false;
+      markerBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeCard() {
+      if (!card.hidden) {
+        card.hidden = true;
+        markerBtn.setAttribute('aria-expanded', 'false');
+        markerBtn.focus();
+      }
+    }
+
+    markerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (card.hidden) {
+        openCard();
+      } else {
+        closeCard();
+      }
+    });
+
+    closeBtn.addEventListener('click', closeCard);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !card.hidden) {
+        closeCard();
+      }
+    });
+
+    async function initGlobe() {
+      try {
+        const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.min.js');
+
+        const width = stage.clientWidth || 400;
+        const height = stage.clientHeight || 400;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+        camera.position.set(0, 0, 3.4);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(width, height);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        stage.insertBefore(renderer.domElement, markerBtn);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.35);
+        dirLight.position.set(-2.5, 1.8, 4.0);
+        scene.add(dirLight);
+
+        const globeGroup = new THREE.Group();
+        scene.add(globeGroup);
+
+        const texture = await new Promise((resolve, reject) => {
+          const loader = new THREE.TextureLoader();
+          loader.load(
+            '../assets/nasa/lroc_color_2k.jpg',
+            (tex) => resolve(tex),
+            undefined,
+            () => reject(new Error('Failed to load lroc_color_2k.jpg'))
+          );
+        });
+        texture.colorSpace = THREE.SRGBColorSpace;
+
+        const radius = 1;
+        const geometry = new THREE.SphereGeometry(radius, 64, 64);
+        const material = new THREE.MeshStandardMaterial({
+          map: texture,
+          roughness: 0.95,
+          metalness: 0.0
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        // Align u=0.5 (0 deg lon in NASA LRO map) toward +Z camera
+        sphere.rotation.y = -Math.PI / 2;
+        globeGroup.add(sphere);
+
+        // Apollo 11: lat 0.674 N, lon 23.473 E
+        const latRad = (0.674 * Math.PI) / 180;
+        const lonRad = (23.473 * Math.PI) / 180;
+        const markerLocalPos = new THREE.Vector3(
+          radius * Math.cos(latRad) * Math.sin(lonRad),
+          radius * Math.sin(latRad),
+          radius * Math.cos(latRad) * Math.cos(lonRad)
+        );
+
+        const worldPos = new THREE.Vector3();
+        const projectedPos = new THREE.Vector3();
+
+        function updateMarkerScreenPosition() {
+          worldPos.copy(markerLocalPos).applyMatrix4(globeGroup.matrixWorld);
+          // Hide marker when rotated to the far side of the Moon
+          if (worldPos.z < 0.05) {
+            markerBtn.hidden = true;
+            return;
+          }
+          projectedPos.copy(worldPos).project(camera);
+          const xPct = (projectedPos.x * 0.5 + 0.5) * 100;
+          const yPct = (-projectedPos.y * 0.5 + 0.5) * 100;
+          markerBtn.style.left = xPct + '%';
+          markerBtn.style.top = yPct + '%';
+          markerBtn.hidden = false;
+        }
+
+        let isDragging = false;
+        let prevX = 0;
+        let prevY = 0;
+        const rotSpeed = 0.007;
+
+        const canvas = renderer.domElement;
+        canvas.addEventListener('pointerdown', (e) => {
+          isDragging = true;
+          prevX = e.clientX;
+          prevY = e.clientY;
+          canvas.setPointerCapture(e.pointerId);
+        });
+
+        canvas.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const dx = e.clientX - prevX;
+          const dy = e.clientY - prevY;
+          prevX = e.clientX;
+          prevY = e.clientY;
+          globeGroup.rotation.y += dx * rotSpeed;
+          globeGroup.rotation.x = Math.max(
+            -Math.PI / 2,
+            Math.min(Math.PI / 2, globeGroup.rotation.x + dy * rotSpeed)
+          );
+        });
+
+        function endDrag(e) {
+          if (!isDragging) return;
+          isDragging = false;
+          if (e && e.pointerId !== undefined && canvas.hasPointerCapture(e.pointerId)) {
+            canvas.releasePointerCapture(e.pointerId);
+          }
+        }
+        canvas.addEventListener('pointerup', endDrag);
+        canvas.addEventListener('pointercancel', endDrag);
+
+        window.addEventListener('resize', () => {
+          const w = stage.clientWidth || 400;
+          const h = stage.clientHeight || 400;
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+          renderer.setSize(w, h);
+        });
+
+        // First render + load time measurement
+        renderer.render(scene, camera);
+        updateMarkerScreenPosition();
+        const loadMs = Math.round(performance.now());
+        loadReadout.textContent = 'Load: ' + loadMs + ' ms';
+
+        let frameCount = 0;
+        let lastTime = performance.now();
+        function animate(now) {
+          frameCount++;
+          const elapsed = now - lastTime;
+          if (elapsed >= 500) {
+            const fps = Math.round((frameCount * 1000) / elapsed);
+            fpsReadout.textContent = 'FPS: ' + fps;
+            frameCount = 0;
+            lastTime = now;
+          }
+          renderer.render(scene, camera);
+          updateMarkerScreenPosition();
+          requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+      } catch (err) {
+        loadReadout.textContent = 'Load: FAILED';
+        showError('Error loading 3D Moon globe: ' + (err && err.message ? err.message : String(err)));
+      }
+    }
+
+    initGlobe();
+  </script>
+</body>
+</html>

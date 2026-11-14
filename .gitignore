@@ -1,0 +1,17 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor and temp files
+*.swp
+*.swo
+*~
+*.tmp
+*.bak
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.py[cod]
