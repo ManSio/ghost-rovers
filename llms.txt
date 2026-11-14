@@ -1,16 +1,18 @@
 # Ghost Rovers
 
-> A free web app for kids ages 8 to 12. You sit at a 1969 Mission Control console and check on 6 machines NASA left on the Moon. Pick one, press CALL GHOST, and see who answers. Five stay silent. The Apollo 11 Laser Mirror still answers.
+> A free web app for kids ages 8 to 12. You sit at a 1969 Mission Control console and check on 12 machines NASA left on the Moon and Mars. Pick one, press CALL GHOST, and see who answers. On the Moon, only the Apollo 11 Laser Mirror still answers. On Mars, none answer yet.
 
 Built by La Shara Cordero (team Clew Labs) for the NASA Space Apps Challenge 2026, challenge "Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars."
 
 ## What's inside
 - 6 machines: Apollo 11 Laser Mirror, Eagle's launch pad (Apollo 11 descent stage), Surveyor 3, the Apollo 12 science station (ALSEP), the Apollo 15 rover, the Apollo 17 rover
 - Each has its original mission, a short story, 3 kid questions, a NASA photo, and a link to its NASA record
-- A spinning 3D Moon (NASA LRO map), live "time on the Moon" clocks, read-aloud, keyboard play
+- 6 Mars machines: Viking 1 and Viking 2 landers, Sojourner, Spirit, Opportunity, InSight (open with #mars or press M)
+- Spinning 3D Moon (NASA LRO map) and Mars (NASA Viking map), live time-on-the-surface clocks, read-aloud, keyboard play
 
 ## Data and facts
-- Every fact is checked against NASA's NSSDCA catalog: [Fact check](https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/docs/FACT_CHECK.md)
+- Every fact is checked against NASA's NSSDCA catalog: [Moon fact check](https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/docs/FACT_CHECK.md), [Mars fact check](https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/docs/FACT_CHECK_MARS.md)
+- Study notebook (quiz, flashcards, mind map, podcast): https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378
 - Sources and licenses: [DATA_SOURCES.md](https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/DATA_SOURCES.md)
 
 ## How it was made
@@ -19,4 +21,5 @@ Built by La Shara Cordero (team Clew Labs) for the NASA Space Apps Challenge 202
 
 ## Links
 - App: https://earlgreyhot1701d.github.io/ghost-rovers/
+- Mars: https://earlgreyhot1701d.github.io/ghost-rovers/#mars
 - Code: https://github.com/earlgreyhot1701D/ghost-rovers

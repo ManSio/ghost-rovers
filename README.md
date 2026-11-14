@@ -1,14 +1,14 @@
 <div align="center">
 
-<img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and a laser beam makes the round trip from Earth, then the Apollo 15 Rover photo fills the screen with a live on-the-Moon counter and stays silent" width="100%">
+<img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and a laser beam makes the round trip from Earth, the Apollo 15 Rover photo fills the screen with a live counter, then the console switches to Mars and InSight stays silent" width="100%">
 
 # Ghost Rovers
 
-**6 machines are still on the Moon. Only 1 still answers.**
+**12 machines are still on the Moon and Mars. Only 1 still answers.**
 
-A 1969 Mission Control console where kids ages 8 to 12 radio the hardware NASA left behind.
+A 1969 Mission Control console where kids ages 8 to 12 radio the hardware NASA left behind, on the Moon and on Mars.
 
-[**Play it live**](https://earlgreyhot1701d.github.io/ghost-rovers/) · [Study notebook](https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378) · [Fact check](docs/FACT_CHECK.md) · [SI disclosure](AI_DISCLOSURE.md)
+[**Play it live**](https://earlgreyhot1701d.github.io/ghost-rovers/) · [**Go to Mars**](https://earlgreyhot1701d.github.io/ghost-rovers/#mars) · [Study notebook](https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378) · [Fact check](docs/FACT_CHECK.md) · [SI disclosure](AI_DISCLOSURE.md)
 
 NASA Space Apps Challenge 2026 · **Abandoned but not Forgotten** · Team **Clew Labs** (La Shara Cordero)
 
@@ -35,15 +35,28 @@ Five stay quiet. One answers: the Apollo 11 Laser Mirror. Scientists on Earth st
 | Apollo 15 Rover | Jul 30, 1971 | Parked since 1971 |
 | Apollo 17 Rover | Dec 11, 1972 | Parked since 1972 |
 
+Then flip the console to **MARS** (or press M). Six more machines. This time, **none of them answer. Yet.**
+
+| The 6 Mars ghosts | Landed | Today |
+|---|---|---|
+| Viking 1 Lander | Jul 20, 1976 | Quiet since 1982 |
+| Viking 2 Lander | Sep 3, 1976 | Batteries failed 1980 |
+| Sojourner Rover | Jul 4, 1997 | Quiet since 1997 |
+| Spirit Rover | Jan 4, 2004 | Quiet since 2010 |
+| Opportunity Rover | Jan 25, 2004 | Quiet since 2018 |
+| InSight Lander | Nov 26, 2018 | Last heard December 2022 |
+
+Kids named some of them. A 12-year-old named Sojourner, and a third grader named Spirit and Opportunity.
+
 ## What a kid can do
 
-- **Spin the real Moon.** A 3D globe wrapped in NASA's Lunar Reconnaissance Orbiter map, with the 4 landing sites marked.
+- **Spin the real Moon and Mars.** 3D globes wrapped in NASA maps (the Lunar Reconnaissance Orbiter Moon map and the Viking Mars map), with every landing site marked.
 - **Call each ghost** and get its reply, with radio static and a 1969 console sound.
 - **Read its file:** the original mission, a short story in the machine's own voice, and 3 questions kids actually ask ("Could I drive it?" "What's it made of?").
 - **See the real photo** big, in a slide viewer, credited by NASA ID.
-- **Watch the clock.** A live counter shows how long each machine has been on the Moon, down to the second.
+- **Watch the clock.** A live counter shows how long each machine has been on the Moon or Mars, down to the second.
 - **Tap READ TO ME** to hear the file read aloud.
-- **Finish all 6** to earn a Junior Flight Controller badge, then keep going with a quiz, flashcards, and a mind map.
+- **Finish all 6** on each world to earn a Junior Flight Controller badge, then keep going with a quiz, flashcards, and a mind map for that world.
 
 ## Built on NASA data, checked by a human
 
@@ -51,10 +64,11 @@ Five stay quiet. One answers: the Apollo 11 Laser Mirror. Scientists on Earth st
 |---|---|
 | [NSSDCA catalog](https://nssdc.gsfc.nasa.gov/) | Every date, site, and fact. Each ghost links to its own record |
 | [NASA SVS CGI Moon Kit](https://svs.gsfc.nasa.gov/4720) | LRO color map for the 3D Moon |
-| [images.nasa.gov](https://images.nasa.gov/) | 6 hardware photos, resized only |
+| [NASA 3D Resources: Mars](https://science.nasa.gov/3d-resources/mars/) | Viking-based color map for the 3D Mars |
+| [images.nasa.gov](https://images.nasa.gov/) | 12 photos from the Moon and Mars, resized only |
 | [NASA JPL](https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/) | Laser ranging: still working, Moon drifts 3.8 cm a year |
 
-All 6 ghosts were checked line by line against NASA's records. The check caught overclaims and fixed them. Example: "the first car on the Moon" became "the first car astronauts drove on the Moon," because a Soviet robot rover got there first in 1970. Full log: [docs/FACT_CHECK.md](docs/FACT_CHECK.md).
+All 12 ghosts were checked line by line against NASA's records. The check caught overclaims and fixed them. Example: "the first car on the Moon" became "the first car astronauts drove on the Moon," because a Soviet robot rover got there first in 1970. Full logs: [Moon](docs/FACT_CHECK.md) · [Mars](docs/FACT_CHECK_MARS.md).
 
 ## How it works
 
@@ -69,7 +83,7 @@ Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server,
 | `js/globe.js` | 3D Moon, drag to spin, FACE EARTH |
 | `js/projection.js`, `js/markers.js` | Latitude and longitude to screen pins |
 | `js/card.js` | Ghost file, answers, photo viewer, badge |
-| `data/ghosts.json` | The 6 ghosts, every fact sourced |
+| `data/ghosts.json`, `data/mars.json` | The 12 ghosts, every fact sourced |
 | `tools/render_moon.py` | Builds the near-side Moon image from NASA's map |
 
 ## Accessibility
@@ -108,7 +122,6 @@ python3 -m http.server 8000
 
 - Mission Control voice clips, recorded by a human
 - Ghost names with personality
-- Mars: the rovers and landers that went quiet there
 - Spanish
 
 ## Credits
