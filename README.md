@@ -74,13 +74,13 @@ All 12 ghosts were checked line by line against NASA's records. The check caught
 
 <img src="docs/media/architecture.png" alt="System map: index.html and js modules in the browser read data/ghosts.json and NASA assets; NASA sources feed the data; hosted on GitHub Pages" width="100%">
 
-Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server, no login, and no data collected. One JSON file holds every fact. Three.js draws the Moon.
+Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server, no login, and no data collected. Two JSON files hold every fact, one per world. Three.js draws the Moon and Mars.
 
 | File | Job |
 |---|---|
 | `index.html` | The console: clocks, side screens, curved wall screen, desk |
 | `js/main.js` | State, boot sequence, keys, laser show, clocks, sound, read-aloud |
-| `js/globe.js` | 3D Moon, drag to spin, FACE EARTH |
+| `js/globe.js` | 3D Moon and Mars, drag to spin, FACE EARTH |
 | `js/projection.js`, `js/markers.js` | Latitude and longitude to screen pins |
 | `js/card.js` | Ghost file, answers, photo viewer, badge |
 | `data/ghosts.json`, `data/mars.json` | The 12 ghosts, every fact sourced |

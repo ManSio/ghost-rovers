@@ -1,4 +1,5 @@
 // js/markers.js: Build and update landing site <button> overlays, corner-map amber dot, and ping rings
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 export function initSiteMarkers(initialSitesMap, initialGhosts, onPickGhost) {
   const pinsLayer = document.getElementById('pins-layer');

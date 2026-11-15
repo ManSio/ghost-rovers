@@ -1,4 +1,5 @@
 // js/projection.js: Lunar lat/lon to 3D sphere and 2D viewport projection math
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 export function degToRad(deg) {
   return (deg * Math.PI) / 180;

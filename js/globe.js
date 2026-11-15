@@ -1,4 +1,5 @@
 // js/globe.js: Three.js 0.187.0 3D Moon and Mars globe with NASA textures, drag/target rotation, and room scale awareness
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 import { latLonToXYZ, getTargetRotationForSite, worldToViewportPx } from './projection.js';
 import { showErrorBanner } from './data.js';

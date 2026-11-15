@@ -1,4 +1,5 @@
 // js/main.js: Main application state, world switching (Moon/Mars), room scaling, boot sequence, clocks, audio, speech synthesis, laser show, badge download, and 3D globe integration
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 import { loadAllWorldData, showErrorBanner } from './data.js';
 import { createMoonGlobe } from './globe.js';

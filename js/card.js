@@ -1,4 +1,5 @@
 // js/card.js: Render side screens, hardware plot, photo takeover, console monitor, phone sheet, photo viewer, and mission complete badge using textContent only
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 function p2(n) {
   return String(n).padStart(2, '0');

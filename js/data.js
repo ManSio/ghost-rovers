@@ -1,4 +1,5 @@
 // js/data.js: Fetch and validate data/ghosts.json and data/mars.json with try/catch error state
+// SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 export function showErrorBanner(message) {
   const banner = document.getElementById('error-banner');
