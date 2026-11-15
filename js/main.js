@@ -225,17 +225,8 @@ async function startApp() {
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
   const langSelectEl = document.getElementById('lang-select');
-  if (langSelectEl) {
-    langSelectEl.value = lang;
-    langSelectEl.addEventListener('change', () => setLang(langSelectEl.value));
-  } else {
-    const legacyLink = document.getElementById('lang-link');
-    if (legacyLink) {
-      legacyLink.href = lang === 'ru' ? '?lang=en' : '?lang=ru';
-      const label = legacyLink.querySelector('span');
-      if (label) label.textContent = lang === 'ru' ? 'READ IN ENGLISH' : 'ЧИТАТЬ ПО-РУССКИ';
-    }
-  }
+  langSelectEl.value = lang;
+  langSelectEl.addEventListener('change', () => setLang(langSelectEl.value));
 
   const worldMoonBtnEl = document.getElementById('world-moon-btn');
   const worldMarsBtnEl = document.getElementById('world-mars-btn');
