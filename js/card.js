@@ -493,8 +493,8 @@ export function initPanels(initialData, callbacks) {
     }
     if (missionCompleteTitleEl) {
       missionCompleteTitleEl.textContent = isMars
-        ? 'MARS CHECK COMPLETE. None of them answer. Yet.'
-        : 'GHOST CHECK COMPLETE. You checked every machine NASA left on the Moon.';
+        ? t('missionTitleMars', 'MARS CHECK COMPLETE. None of them answer. Yet.')
+        : t('missionTitleMoon', 'GHOST CHECK COMPLETE. You checked every machine NASA left on the Moon.');
     }
 
     const links = dataObj.studyLinks || {};
@@ -951,7 +951,7 @@ export function initPanels(initialData, callbacks) {
       readBtn.hidden = !state.speechSupported;
       phoneReadBtn.hidden = !state.speechSupported;
       if (state.speechSupported) {
-        const readLabel = state.speaking ? 'STOP' : 'READ TO ME';
+        const readLabel = state.speaking ? t('stop', 'STOP') : t('readToMe', 'READ TO ME');
         readBtn.textContent = readLabel;
         readBtn.setAttribute('aria-pressed', state.speaking ? 'true' : 'false');
         phoneReadBtn.textContent = readLabel;

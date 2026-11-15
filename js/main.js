@@ -2,7 +2,7 @@
 // SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 import { loadGhostData, loadMarsData, showErrorBanner } from './data.js';
-import { currentLang, loadDict, localizeWorld, t } from './i18n.js';
+import { resolveLang, loadDict, localizeWorld, applyStatic, setLang, t } from './i18n.js';
 import { createMoonGlobe } from './globe.js';
 import { initSiteMarkers } from './markers.js';
 import { initPanels } from './card.js';
@@ -128,11 +128,12 @@ async function startApp() {
     return;
   }
 
-  // Optional Russian content: names, codes, clocks and console labels stay English.
-  const lang = currentLang();
-  if (lang === 'ru') {
+  // Optional translation: ?lang= wins, then the saved choice, then the browser language.
+  const lang = resolveLang();
+  if (lang !== 'en') {
     await loadDict(lang);
     moonData = localizeWorld(moonData);
+    applyStatic();
   }
 
   // Mars is a second world, not a dependency of the first: it loads in the background,
@@ -215,12 +216,17 @@ async function startApp() {
   const gmtValEl = document.getElementById('gmt-val');
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
-  const langLinkEl = document.getElementById('lang-link');
-  if (langLinkEl) {
-    const isRu = lang === 'ru';
-    langLinkEl.href = isRu ? '?lang=en' : '?lang=ru';
-    const label = langLinkEl.querySelector('span');
-    if (label) label.textContent = isRu ? 'READ IN ENGLISH' : 'ЧИТАТЬ ПО-РУССКИ';
+  const langSelectEl = document.getElementById('lang-select');
+  if (langSelectEl) {
+    langSelectEl.value = lang;
+    langSelectEl.addEventListener('change', () => setLang(langSelectEl.value));
+  } else {
+    const legacyLink = document.getElementById('lang-link');
+    if (legacyLink) {
+      legacyLink.href = lang === 'ru' ? '?lang=en' : '?lang=ru';
+      const label = legacyLink.querySelector('span');
+      if (label) label.textContent = lang === 'ru' ? 'READ IN ENGLISH' : 'ЧИТАТЬ ПО-РУССКИ';
+    }
   }
 
   const worldMoonBtnEl = document.getElementById('world-moon-btn');
@@ -844,6 +850,20 @@ async function startApp() {
       state.typedAnswer = '';
     }
     updateAll();
+
+    // On a phone the answer box sits above the question buttons; bring it into view so the
+    // reply is readable and the remaining questions stay reachable right below it.
+    if (nextQ !== null) {
+      const answerBox = isPhoneWidth()
+        ? document.getElementById('phone-file-answer-box')
+        : document.getElementById('file-answer-box');
+      if (answerBox && !answerBox.hidden) {
+        answerBox.scrollIntoView({
+          block: 'nearest',
+          behavior: prefersReducedMotion() ? 'auto' : 'smooth'
+        });
+      }
+    }
   }
 
   function clearQuestion() {
