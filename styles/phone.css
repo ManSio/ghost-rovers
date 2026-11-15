@@ -159,7 +159,7 @@
     align-items: center;
   }
 
-  /* GHOST LOG · 00 OF 06 CHECKED row */
+  /* GHOST LOG В· 00 OF 06 CHECKED row */
   .compact-summary-strip {
     display: flex;
     align-items: center;
@@ -466,60 +466,5 @@
 @media (prefers-reduced-motion: reduce) {
   .drag-hint {
     transition: none !important;
-  }
-}
-
-/* Short phones (browser chrome takes ~80px): the console is taller than the viewport.
-   Confine the panel to the desk, let only the ghost grid scroll, and keep CALL GHOST at the
-   bottom of the panel so it stays reachable and never covers the last row. */
-@media (max-width: 599px) and (max-height: 720px) {
-  .console-panel {
-    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ghost-btn-grid {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-
-  .call-row {
-    position: static;
-    flex: 0 0 auto;
-    margin-top: 6px;
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-    flex-wrap: nowrap;
-    gap: 5px;
-  }
-
-  /* One short line instead of two rows, so the ghost grid keeps more of the screen. */
-  .call-btn {
-    min-width: 0;
-    flex: 1 1 auto;
-    min-height: 38px;
-    font-size: 13px;
-    padding: 0 6px;
-    white-space: nowrap;
-  }
-
-  .round-lamp {
-    width: 20px;
-    height: 20px;
-  }
-
-  .lamp-caption {
-    font-size: 7.5px;
-  }
-
-  .reset-btn {
-    flex: 0 0 auto;
-    min-height: 34px;
-    padding: 0 5px;
-    font-size: 8.5px;
   }
 }
