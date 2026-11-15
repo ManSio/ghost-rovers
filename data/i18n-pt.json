@@ -25,7 +25,18 @@
     "missionTitleMars": "VERIFICAÇÃO DE MARTE CONCLUÍDA. Nenhuma responde. Ainda.",
     "keepExploring": "CONTINUE EXPLORANDO:",
     "missionNote": "Feito com ferramentas de estudo de IA a partir de fontes da NASA.",
-    "saveBadge": "SALVAR DISTINTIVO"
+    "saveBadge": "SALVAR DISTINTIVO",
+    "monitorTapMoon": "Ou toque num quadrado na Lua. Depois aperte CALL GHOST (ou C). M para Marte. ? para a ajuda.",
+    "monitorTapMars": "Ou toque num quadrado em Marte. Depois aperte CALL GHOST (ou C). M para a Lua. ? para a ajuda.",
+    "rotateTitle": "VIRE O TELEFONE NA VERTICAL",
+    "rotateText": "A console é alta. Vire o telefone para continuar jogando.",
+    "timelineTodayMoon": "HOJE · As seis continuam lá. Uma responde.",
+    "timelineTodayMars": "HOJE · As seis continuam lá. Nenhuma responde ainda.",
+    "logStatusNew": "AINDA NÃO VERIFICADO",
+    "logStatusAnswers": "VERIFICADO · RESPONDE",
+    "logStatusQuiet": "VERIFICADO · EM SILÊNCIO DESDE",
+    "closePhotoAria": "Fechar o visualizador de fotos",
+    "closeAboutAria": "Fechar a janela Sobre"
   },
   "ghosts": {
     "mirror": {
