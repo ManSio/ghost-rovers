@@ -88,5 +88,9 @@ export function localizeWorld(world) {
       reply: tr.reply || g.reply
     });
   });
-  return Object.assign({}, world, { ghosts });
+  // The closing line of the timeline is content, and the data file wins over the
+  // built-in fallback, so it has to be translated here rather than in the view.
+  const todayKey = world.world === 'mars' ? 'timelineTodayMars' : 'timelineTodayMoon';
+  const today = (dict.ui && dict.ui[todayKey]) || world.today;
+  return Object.assign({}, world, { ghosts, today });
 }
