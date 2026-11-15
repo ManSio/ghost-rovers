@@ -8,8 +8,8 @@ Checked Nov 14, 2026, 1:40 to 2:15 p.m. PST by Claude (SI), reading NASA's NSSDC
 |---|---|---|
 | Viking 1 Lander | NSSDCA 1975-075C | |
 | Viking 2 Lander | NSSDCA 1975-083C | NSSDCA Mars Fact Sheet (day length) |
-| Sojourner Rover | NSSDCA 1996-068A (Mars Pathfinder) | NSSDCA Pathfinder page nssdc.gsfc.nasa.gov/planetary/mesur.html (10.5 kg rover, six wheels, solar). JPL Robotics Sojourner page (rocker-bogie, solar). JPL news, Jul 14 1995 "NASA Names First Rover to Explore the Surface of Mars" (Valerie Ambroise, 12) |
-| Spirit Rover | NSSDCA 2003-027A | Naming by third grader Sofi Collis (U.S. State Dept ShareAmerica "Who names NASA's Mars rovers"). 90-day plan (NASA statements, Feb 2019 press conference coverage) |
+| Sojourner Rover | NSSDCA 1996-068A (Mars Pathfinder) | NSSDCA Pathfinder page nssdc.gsfc.nasa.gov/planetary/mesur.html (10.5 kg rover, six wheels, solar). JPL Robotics Sojourner page (rocker-bogie, solar). JPL news, Jul 14 1995 "NASA Names First Rover to Explore the Surface of Mars" (contest winner, age 12; name left out on purpose) |
+| Spirit Rover | NSSDCA 2003-027A | Naming by a third-grade contest winner (name left out on purpose) (U.S. State Dept ShareAmerica "Who names NASA's Mars rovers"). 90-day plan (NASA statements, Feb 2019 press conference coverage) |
 | Opportunity Rover | NSSDCA 2003-032A | 45 km, 90-day plan, silent in June 2018 dust storm, mission declared complete Feb 13 2019 (Eos/AGU Feb 13 2019; NASA press conference coverage) |
 | InSight Lander | NSSDCA 2018-042A | Lander location 4.502 N, 135.623 E (Golombek et al. 2020, Earth and Space Science 7, e2020EA001248). JPL press kit: site centered ~4.5 N, 135.9 E |
 | Clock: light time | NSSDCA Mars Fact Sheet: Earth distance 54.6 to 401.4 million km. Divided by the speed of light = 3.0 to 22.3 minutes, shown as "3 TO 22 MIN" | |

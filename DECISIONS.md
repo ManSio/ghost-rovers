@@ -45,3 +45,5 @@
 - 2026-11-14 18:02 PST: Demo video published on YouTube (Unlisted): https://youtu.be/a_sWWLi5-Xw. Linked from the README header GIF, the README link row, and llms.txt.
 
 - 2026-11-14 19:30 PST: Added the Mars "still answering" row (Option 2). After the 6 Mars ghosts, the badge panel links to Curiosity and Perseverance, the 2 working rovers. They are links, not ghosts, because they are not discarded. Built by Claude as a new one-job file (js/still-answering.js + styles/still-answering.css) so main.js and card.js stay untouched. Mars TODAY line now reads "These 6 are quiet. 2 newer rovers still answer." Badge shrinks only while the row shows so the panel fits at 1280, 820 and 390 px. axe: 0 violations with the panel open. Wording rule: never say no machine on Mars answers.
+
+- 2026-11-14 20:20 PST: Took the rover contest winners' names out of the app and docs. Both were kids when they won (Sojourner, age 12; Spirit and Opportunity, third grade), and the brief says no minor's name. The cards keep the story ("A 12-year-old girl won a contest"). Sources in docs/FACT_CHECK_MARS.md still point to the JPL and ShareAmerica pages, which carry the names.
