@@ -2,6 +2,7 @@
 // SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
 import { loadGhostData, loadMarsData, showErrorBanner } from './data.js';
+import { currentLang, loadDict, localizeWorld, t } from './i18n.js';
 import { createMoonGlobe } from './globe.js';
 import { initSiteMarkers } from './markers.js';
 import { initPanels } from './card.js';
@@ -127,13 +128,21 @@ async function startApp() {
     return;
   }
 
+  // Optional Russian content: names, codes, clocks and console labels stay English.
+  const lang = currentLang();
+  if (lang === 'ru') {
+    await loadDict(lang);
+    moonData = localizeWorld(moonData);
+  }
+
   // Mars is a second world, not a dependency of the first: it loads in the background,
   // so a slow or missing Mars file never delays the Moon console.
   const worldDataMap = { moon: moonData, mars: null };
   const marsReady = loadMarsData()
     .then((data) => {
-      worldDataMap.mars = data;
-      return data;
+      const localized = lang === 'ru' ? localizeWorld(data) : data;
+      worldDataMap.mars = localized;
+      return localized;
     })
     .catch(() => {
       showErrorBanner('MARS CONSOLE UNAVAILABLE: Mars data did not load. The Moon console still works.');
@@ -206,6 +215,14 @@ async function startApp() {
   const gmtValEl = document.getElementById('gmt-val');
   const moonClockLabelEl = document.getElementById('moon-clock-label');
   const moonClockValEl = document.getElementById('moon-clock-val');
+  const langLinkEl = document.getElementById('lang-link');
+  if (langLinkEl) {
+    const isRu = lang === 'ru';
+    langLinkEl.href = isRu ? '?lang=en' : '?lang=ru';
+    const label = langLinkEl.querySelector('span');
+    if (label) label.textContent = isRu ? 'READ IN ENGLISH' : 'ЧИТАТЬ ПО-РУССКИ';
+  }
+
   const worldMoonBtnEl = document.getElementById('world-moon-btn');
   const worldMarsBtnEl = document.getElementById('world-mars-btn');
 

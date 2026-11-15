@@ -1,6 +1,8 @@
 // js/card.js: Render side screens, hardware plot, photo takeover, console monitor, phone sheet, photo viewer, and mission complete badge using textContent only
 // SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
+import { t } from './i18n.js';
+
 function p2(n) {
   return String(n).padStart(2, '0');
 }
@@ -844,10 +846,10 @@ export function initPanels(initialData, callbacks) {
       plotSelectedWrap.hidden = true;
       plotSignalText.className = '';
       if (state.call === 'nosel') {
-        plotSignalText.textContent = 'PICK A GHOST FIRST, THEN CALL.';
+        plotSignalText.textContent = t('pickFirst', 'PICK A GHOST FIRST, THEN CALL.');
         plotSignalText.style.color = '#F2A08F';
       } else {
-        plotSignalText.textContent = 'Pick a machine. Press CALL GHOST. See who answers.';
+        plotSignalText.textContent = t('idlePrompt', 'Pick a machine. Press CALL GHOST. See who answers.');
         plotSignalText.style.color = '#B7CDD1';
       }
     } else {
@@ -888,8 +890,8 @@ export function initPanels(initialData, callbacks) {
           plotSignalText.className = '';
         } else {
           plotSignalText.textContent = isMars
-            ? 'Radioing Mars… 3 to 22 minutes each way.'
-            : 'Radioing the Moon… 1.3 seconds each way.';
+            ? t('radioMars', 'Radioing Mars… 3 to 22 minutes each way.')
+            : t('radioMoon', 'Radioing the Moon… 1.3 seconds each way.');
           plotSignalText.style.color = '#FFFFFF';
           plotSignalText.className = 'blink';
         }
@@ -898,7 +900,7 @@ export function initPanels(initialData, callbacks) {
         plotSignalText.style.color = g.answers ? '#9BEFB0' : '#F2A08F';
         plotSignalText.className = '';
       } else {
-        plotSignalText.textContent = 'SIGNAL CHECK: PRESS CALL GHOST';
+        plotSignalText.textContent = t('signalCheck', 'SIGNAL CHECK: PRESS CALL GHOST');
         plotSignalText.style.color = '#B7CDD1';
         plotSignalText.className = '';
       }
