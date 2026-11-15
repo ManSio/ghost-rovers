@@ -25,7 +25,18 @@
     "missionTitleMars": "VÉRIFICATION DE MARS TERMINÉE. Aucune ne répond. Pas encore.",
     "keepExploring": "CONTINUE :",
     "missionNote": "Réalisé avec des outils d'étude IA à partir des sources de la NASA.",
-    "saveBadge": "ENREGISTRER LE BADGE"
+    "saveBadge": "ENREGISTRER LE BADGE",
+    "monitorTapMoon": "Ou touche un carré sur la Lune. Puis appuie sur CALL GHOST (ou C). M pour Mars. ? pour l'aide.",
+    "monitorTapMars": "Ou touche un carré sur Mars. Puis appuie sur CALL GHOST (ou C). M pour la Lune. ? pour l'aide.",
+    "rotateTitle": "REMPORTE LE TÉLÉPHONE",
+    "rotateText": "La console est haute. Remets le téléphone à la verticale pour continuer.",
+    "timelineTodayMoon": "AUJOURD'HUI · Les six sont toujours là. Une répond.",
+    "timelineTodayMars": "AUJOURD'HUI · Les six sont toujours là. Aucune ne répond encore.",
+    "logStatusNew": "PAS ENCORE VÉRIFIÉ",
+    "logStatusAnswers": "VÉRIFIÉ · RÉPOND",
+    "logStatusQuiet": "VÉRIFIÉ · SILENCIEUX DEPUIS",
+    "closePhotoAria": "Fermer la visionneuse de photos",
+    "closeAboutAria": "Fermer la fenêtre À propos"
   },
   "ghosts": {
     "mirror": {
