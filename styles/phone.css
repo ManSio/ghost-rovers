@@ -32,10 +32,10 @@
   }
 
   .clock-strip {
-    left: 12px;
-    right: 12px;
-    top: 10px;
-    height: 48px;
+    left: 10px;
+    right: 10px;
+    top: 8px;
+    height: 44px;
   }
 
   .clock-cell:nth-child(1),
@@ -47,24 +47,25 @@
 
   .clock-cell--moon {
     flex: 1;
+    min-width: 0;
     background: transparent;
-    padding: 0 8px;
+    padding: 0 6px;
   }
 
   .clock-label {
-    font-size: 9px;
-    letter-spacing: 0.08em;
+    font-size: 8px;
+    letter-spacing: 0.05em;
   }
 
   .clock-val {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .clock-btn--mute {
-    min-width: 58px;
-    padding: 0 4px;
+    min-width: 46px;
+    padding: 0 3px;
     border-right: 1px solid #1E2220;
-    font-size: 9.5px;
+    font-size: 8.5px;
   }
 
   .clock-btn--about {
@@ -488,9 +489,37 @@
   .call-row {
     position: static;
     flex: 0 0 auto;
-    margin-top: 8px;
+    margin-top: 6px;
     background: transparent;
     box-shadow: none;
     padding: 0;
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+
+  /* One short line instead of two rows, so the ghost grid keeps more of the screen. */
+  .call-btn {
+    min-width: 0;
+    flex: 1 1 auto;
+    min-height: 38px;
+    font-size: 13px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+
+  .round-lamp {
+    width: 20px;
+    height: 20px;
+  }
+
+  .lamp-caption {
+    font-size: 7.5px;
+  }
+
+  .reset-btn {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 0 5px;
+    font-size: 8.5px;
   }
 }

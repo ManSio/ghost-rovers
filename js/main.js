@@ -516,7 +516,11 @@ async function startApp() {
     gmtValEl.textContent = clocksOn ? gmt : '--:--:--';
 
     const g = ghosts.find((x) => x.id === state.sel) || null;
-    const prefix = state.world === 'mars' ? 'TIME ON MARS · ' : 'TIME ON THE MOON · ';
+    // On phones the strip has one cell and three buttons: the long "TIME ON THE MOON ·"
+    // prefix pushed the live counter under the MOON button.
+    const prefix = isPhoneWidth()
+      ? state.world === 'mars' ? 'MARS · ' : 'MOON · '
+      : state.world === 'mars' ? 'TIME ON MARS · ' : 'TIME ON THE MOON · ';
     moonClockLabelEl.textContent = prefix + (g ? g.name.toUpperCase() : 'PICK A GHOST');
 
     if (!g) {
