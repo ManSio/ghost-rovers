@@ -25,7 +25,18 @@
     "missionTitleMars": "MARS-PRÜFUNG FERTIG. Keine antwortet. Noch nicht.",
     "keepExploring": "WEITER ENTDECKEN:",
     "missionNote": "Mit KI-Lernwerkzeugen aus NASA-Quellen erstellt.",
-    "saveBadge": "ABZEICHEN SPEICHERN"
+    "saveBadge": "ABZEICHEN SPEICHERN",
+    "monitorTapMoon": "Oder tippe auf ein Feld auf dem Mond. Dann CALL GHOST (oder C). M für Mars. ? für die Hilfe.",
+    "monitorTapMars": "Oder tippe auf ein Feld auf dem Mars. Dann CALL GHOST (oder C). M für den Mond. ? für die Hilfe.",
+    "rotateTitle": "DREH DAS TELEFON HOCHKANT",
+    "rotateText": "Die Konsole ist hoch gebaut. Dreh das Telefon, um weiterzuspielen.",
+    "timelineTodayMoon": "HEUTE · Alle sechs sind noch da. Eine antwortet.",
+    "timelineTodayMars": "HEUTE · Alle sechs sind noch da. Noch antwortet keine.",
+    "logStatusNew": "NOCH NICHT GEPRÜFT",
+    "logStatusAnswers": "GEPRÜFT · ANTWORTET",
+    "logStatusQuiet": "GEPRÜFT · STILL SEIT",
+    "closePhotoAria": "Fotoansicht schließen",
+    "closeAboutAria": "Über-Fenster schließen"
   },
   "ghosts": {
     "mirror": {
