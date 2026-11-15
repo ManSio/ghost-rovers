@@ -112,13 +112,8 @@ function makeAudio() {
 
 function makeEmptyWorldMem() {
   return {
-    sel: null,
-    viewMode: 'moon',
-    call: null,
-    openQ: null,
     checked: {},
     missionCompleteDismissed: false,
-    laserStaticDone: false,
     hasBooted: false,
     globeRotation: null
   };
@@ -924,15 +919,11 @@ async function startApp() {
     stopAnswerTyping();
     playSound('click');
 
-    // Save current world state
+    // Save current world state. The selected ghost is deliberately NOT carried over:
+    // arriving on a world always starts at its console, not inside the last file.
     const curMem = worldMem[state.world];
-    curMem.sel = state.sel;
-    curMem.viewMode = state.viewMode;
-    curMem.call = state.call === 'calling' ? null : state.call;
-    curMem.openQ = state.openQ;
     curMem.checked = Object.assign({}, state.checked);
     curMem.missionCompleteDismissed = state.missionCompleteDismissed;
-    curMem.laserStaticDone = state.laserStaticDone;
     curMem.globeRotation = globeController ? globeController.getRotation() : null;
 
     // Load next world state
@@ -943,17 +934,15 @@ async function startApp() {
     bootLines = data.bootLines;
 
     const nextMem = worldMem[nextWorld];
-    state.sel = nextMem.sel;
-    state.viewMode = nextMem.viewMode;
-    state.call = nextMem.call;
-    state.openQ = nextMem.openQ;
-    const g = ghosts.find((x) => x.id === state.sel);
-    state.typedAnswer =
-      g && state.openQ !== null && g.qs[state.openQ] ? g.qs[state.openQ][1] : '';
+    state.sel = null;
+    state.viewMode = 'moon';
+    state.call = null;
+    state.openQ = null;
+    state.typedAnswer = '';
     state.checked = Object.assign({}, nextMem.checked);
     state.missionCompleteDismissed = nextMem.missionCompleteDismissed;
-    state.laserStaticDone = nextMem.laserStaticDone;
-    state.phoneSheetOpen = Boolean(state.sel);
+    state.laserStaticDone = false;
+    state.phoneSheetOpen = false;
     state.photoModalOpen = false;
     state.aboutModalOpen = false;
 
@@ -973,7 +962,7 @@ async function startApp() {
       markersController.setWorldData(sites, ghosts);
     }
     if (globeController) {
-      await globeController.setWorld(nextWorld, nextMem.globeRotation);
+      await globeController.setWorld(nextWorld, null);
     }
 
     // Switching to Mars replays a short boot using bootLines from mars.json;
@@ -984,7 +973,7 @@ async function startApp() {
       state.step = 0;
       updateAll();
       startBootSequence();
-    } else if (nextWorld === 'mars' && Object.keys(nextMem.checked).length === 0 && !nextMem.sel) {
+    } else if (nextWorld === 'mars' && Object.keys(nextMem.checked).length === 0) {
       state.phase = 'boot';
       state.step = 0;
       updateAll();
