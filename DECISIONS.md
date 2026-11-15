@@ -43,3 +43,5 @@
 - 2026-11-14 17:25 PST: Demo video approved by Shara (26.9 s, narrated with Kokoro-82M, Quindar-style radio tones). Saved to docs/media/ghost-rovers-demo.mp4. Recorded from commit 051432e. Closing card shows built teacher resources, not v2 items.
 
 - 2026-11-14 18:02 PST: Demo video published on YouTube (Unlisted): https://youtu.be/a_sWWLi5-Xw. Linked from the README header GIF, the README link row, and llms.txt.
+
+- 2026-11-14 19:30 PST: Added the Mars "still answering" row (Option 2). After the 6 Mars ghosts, the badge panel links to Curiosity and Perseverance, the 2 working rovers. They are links, not ghosts, because they are not discarded. Built by Claude as a new one-job file (js/still-answering.js + styles/still-answering.css) so main.js and card.js stay untouched. Mars TODAY line now reads "These 6 are quiet. 2 newer rovers still answer." Badge shrinks only while the row shows so the panel fits at 1280, 820 and 390 px. axe: 0 violations with the panel open. Wording rule: never say no machine on Mars answers.

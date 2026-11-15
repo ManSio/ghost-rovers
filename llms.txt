@@ -1,6 +1,6 @@
 # Ghost Rovers
 
-> A free web app for kids ages 8 to 12. You sit at a 1969 Mission Control console and check on 12 machines NASA left on the Moon and Mars. Pick one, press CALL GHOST, and see who answers. On the Moon, only the Apollo 11 Laser Mirror still answers. On Mars, none answer yet.
+> A free web app for kids ages 8 to 12. You sit at a 1969 Mission Control console and check on 12 machines NASA left on the Moon and Mars. Pick one, press CALL GHOST, and see who answers. On the Moon, only the Apollo 11 Laser Mirror still answers. On Mars, none of the 6 answer; finish the Mars check and the console links to Curiosity and Perseverance, the 2 rovers that still answer Earth today.
 
 Built by La Shara Cordero (team Clew Labs) for the NASA Space Apps Challenge 2026, challenge "Abandoned but not Forgotten: Storytelling about NASA's Discarded Equipment on the Moon and Mars."
 

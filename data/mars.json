@@ -14,13 +14,21 @@
     "lastCrewLabel": "PEOPLE ON MARS",
     "lastCrew": "NONE YET"
   },
-  "today": "TODAY · All 6 are still there. None answer yet.",
+  "today": "TODAY · These 6 are quiet. 2 newer rovers still answer.",
   "studyLinks": {
     "quiz": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/8aadc4fb-082f-4480-8e58-87a441b310e6",
     "flashcards": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/a4b7a31a-a118-41e8-8546-850d7beb838e",
     "mindMap": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/12879205-9943-4eb8-892d-d3e87302e118",
     "notebook": "https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378",
     "podcast": null
+  },
+  "stillAnswering": {
+    "label": "STILL ANSWERING:",
+    "note": "These 6 went quiet. Curiosity and Perseverance still talk to Earth today.",
+    "rovers": [
+      { "name": "CURIOSITY", "note": "Gale Crater, landed August 6, 2012", "url": "https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/" },
+      { "name": "PERSEVERANCE", "note": "Jezero Crater, landed February 18, 2021", "url": "https://science.nasa.gov/mission/mars-2020-perseverance/" }
+    ]
   },
   "sites": {
     "V1": {

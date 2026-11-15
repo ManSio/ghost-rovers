@@ -54,6 +54,7 @@ All photos were chosen to show hardware only, with no people in frame.
 
 | Resource | Use | License |
 |---|---|---|
+| NASA JPL Curiosity mission page and NASA Science Perseverance mission page | Mars still-answering links (https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/, https://science.nasa.gov/mission/mars-2020-perseverance/) | Linked, not copied |
 | Google Fonts: IBM Plex Mono, Archivo Narrow, VT323, Special Elite | Type | SIL Open Font License |
 | Python, NumPy, Pillow | Moon render script | Open source |
 

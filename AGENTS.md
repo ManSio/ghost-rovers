@@ -5,7 +5,7 @@ Same rules as CLAUDE.md. Read it and the PRD before writing code.
 - Build only the block you are given. Propose a plan first and wait for approval.
 - DO NOT refactor or touch code outside the block.
 - Stack: plain HTML, CSS, vanilla JS (ES modules), data/ghosts.json (Moon) and data/mars.json (Mars). No framework, no build step. GitHub Pages.
-- Files: index.html, styles/tokens.css, styles/base.css, styles/screen.css, styles/plot.css, styles/console.css, styles/modals.css, styles/tablet-landscape.css, styles/tablet-portrait.css, styles/phone.css, js/main.js, js/globe.js, js/data.js, js/projection.js, js/markers.js, js/card.js, data/ghosts.json, data/mars.json, assets/.
+- Files: index.html, styles/tokens.css, styles/base.css, styles/screen.css, styles/plot.css, styles/console.css, styles/modals.css, styles/tablet-landscape.css, styles/tablet-portrait.css, styles/phone.css, js/main.js, js/globe.js, js/data.js, js/projection.js, js/markers.js, js/card.js, js/still-answering.js, styles/still-answering.css, data/ghosts.json, data/mars.json, assets/.
 - One file, one job. No file over 500 lines. If a change would push a file past 500 lines, or give it a second job, stop and propose a split before writing the code.
 - Known exceptions, to be split in v2: js/main.js (one startApp() function) and js/card.js (one initPanels() function). Do not add new features to them. New features go in a new file with one job. Bug fixes inside them are allowed.
 - textContent only. No innerHTML, no eval. try/catch on fetch with an error state.

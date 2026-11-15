@@ -1,0 +1,69 @@
+/* styles/still-answering.css: Mars-only "still answering" row in the mission complete panel */
+/* SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+.still-answering {
+  width: 100%;
+  padding-top: 4px;
+  border-top: 1px solid rgba(123, 228, 149, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.still-answering[hidden] {
+  display: none;
+}
+
+.still-answering-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.still-answering-label {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.08em;
+  color: #9BEFB0;
+}
+
+.still-answering-btn {
+  border-color: rgba(123, 228, 149, 0.6);
+}
+
+.still-answering-note {
+  margin: 0;
+  font: 400 11px var(--font-mono);
+  color: #B9C4BD;
+  text-align: center;
+}
+
+/* Make room for the extra row: a smaller badge, only while the Mars row is showing */
+.mission-complete-card:has(.still-answering:not([hidden])) .badge-canvas {
+  max-width: 290px;
+}
+
+@media (max-width: 599px) {
+  .still-answering {
+    padding-top: 3px;
+    gap: 2px;
+  }
+
+  .still-answering-label {
+    font-size: 10px;
+  }
+
+  .still-answering-btn {
+    padding: 0 7px;
+    font-size: 10px;
+  }
+
+  .still-answering-note {
+    display: none;
+  }
+
+  .mission-complete-card:has(.still-answering:not([hidden])) .badge-canvas {
+    max-width: 170px;
+  }
+}

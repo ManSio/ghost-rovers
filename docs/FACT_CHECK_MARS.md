@@ -14,6 +14,17 @@ Checked Nov 14, 2026, 1:40 to 2:15 p.m. PST by Claude (SI), reading NASA's NSSDC
 | InSight Lander | NSSDCA 2018-042A | Lander location 4.502 N, 135.623 E (Golombek et al. 2020, Earth and Space Science 7, e2020EA001248). JPL press kit: site centered ~4.5 N, 135.9 E |
 | Clock: light time | NSSDCA Mars Fact Sheet: Earth distance 54.6 to 401.4 million km. Divided by the speed of light = 3.0 to 22.3 minutes, shown as "3 TO 22 MIN" | |
 
+## Still answering on Mars (added Nov 14, 2026, 7:30 p.m. PST)
+
+Not ghosts: these 2 rovers are working missions, so they are links, not callable machines. Checked by Claude (SI).
+
+| Rover | Landed | Site | Status | Source |
+|---|---|---|---|---|
+| Curiosity | Aug 6, 2012 (UTC); evening of Aug 5 PDT | Gale Crater | Still operational | JPL mission page https://www.jpl.nasa.gov/missions/mars-science-laboratory-curiosity-rover-msl/ ; NASA Perseverance blog, Oct 12, 2026 ("still operational and moving across the surface") |
+| Perseverance | Feb 18, 2021 | Jezero Crater | Active mission | NASA mission page https://science.nasa.gov/mission/mars-2020-perseverance/ ("Active Mission"); NASA blog Oct 12, 2026: broke Opportunity's off-world driving record on Oct 11, 2026 |
+
+Wording rule: the app says "These 6 are quiet. 2 newer rovers still answer." It never says "no machine on Mars answers."
+
 ## Key facts per ghost
 
 | Ghost | Landed (UTC) | Site | Lat, Lon (E positive) | Went quiet |

@@ -48,6 +48,8 @@ Then flip the console to **MARS** (or press M). Six more machines. This time, **
 
 Kids named some of them. A 12-year-old named Sojourner, and a third grader named Spirit and Opportunity.
 
+These 6 are quiet for good, but Mars is not silent. Finish the Mars check and the console points you to the 2 rovers that **still answer** Earth today: Curiosity (Gale Crater, since 2012) and Perseverance (Jezero Crater, since 2021).
+
 ## What a kid can do
 
 - **Spin the real Moon and Mars.** 3D globes wrapped in NASA maps (the Lunar Reconnaissance Orbiter Moon map and the Viking Mars map), with every landing site marked.
@@ -56,7 +58,7 @@ Kids named some of them. A 12-year-old named Sojourner, and a third grader named
 - **See the real photo** big, in a slide viewer, credited by NASA ID.
 - **Watch the clock.** A live counter shows how long each machine has been on the Moon or Mars, down to the second.
 - **Tap READ TO ME** to hear the file read aloud.
-- **Finish all 6** on each world to earn a Junior Flight Controller badge, then keep going with a quiz, flashcards, and a mind map for that world.
+- **Finish all 6** on each world to earn a Junior Flight Controller badge, then keep going with a quiz, flashcards, and a mind map for that world. On Mars, the badge panel also links to Curiosity and Perseverance, the 2 rovers still answering.
 
 ## Built on NASA data, checked by a human
 
@@ -79,11 +81,12 @@ Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server,
 | File | Job |
 |---|---|
 | `index.html` | The console: clocks, side screens, curved wall screen, desk |
-| `styles/*.css` | Design tokens plus 8 layout files, one job each (base, screen, plot, console, modals, tablet-landscape, tablet-portrait, phone) |
+| `styles/*.css` | Design tokens plus 8 layout files, one job each (base, screen, plot, console, modals, tablet-landscape, tablet-portrait, phone), and `still-answering.css` for the Mars still-answering row |
 | `js/main.js` | State, boot sequence, keys, laser show, clocks, sound, read-aloud |
 | `js/globe.js` | 3D Moon and Mars, drag to spin, FACE EARTH |
 | `js/projection.js`, `js/markers.js` | Latitude and longitude to screen pins |
 | `js/card.js` | Ghost file, answers, photo viewer, badge |
+| `js/still-answering.js` | Mars only: links to the 2 working rovers that still answer |
 | `data/ghosts.json`, `data/mars.json` | The 12 ghosts, every fact sourced |
 | `tools/render_moon.py` | Builds the near-side Moon image from NASA's map |
 
