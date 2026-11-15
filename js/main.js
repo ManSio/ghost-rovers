@@ -134,6 +134,8 @@ async function startApp() {
     await loadDict(lang);
     moonData = localizeWorld(moonData);
     applyStatic();
+    // Screen readers switch voice on this attribute, so keep it truthful.
+    document.documentElement.lang = lang;
   }
 
   // Mars is a second world, not a dependency of the first: it loads in the background,

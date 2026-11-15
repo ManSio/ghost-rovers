@@ -187,11 +187,11 @@
             </div>
             <canvas id="badge-canvas" class="badge-canvas" width="440" height="200" role="img" aria-label="Junior Flight Controller Ghost Rovers badge"></canvas>
             <div class="mission-complete-actions">
-              <button id="save-badge-btn" type="button" class="save-badge-btn">SAVE BADGE</button>
+              <button id="save-badge-btn" type="button" class="save-badge-btn" data-i18n="saveBadge">SAVE BADGE</button>
             </div>
             <div class="mission-complete-study">
               <div class="mission-complete-study-row">
-                <span class="mission-complete-study-label">KEEP EXPLORING:</span>
+                <span class="mission-complete-study-label" data-i18n="keepExploring">KEEP EXPLORING:</span>
                 <a id="study-quiz-link" href="https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378/artifact/16590fae-9e4f-4a0a-ba03-4c358ff32eb4" target="_blank" rel="noopener noreferrer" class="study-tool-btn">
                   <span>QUIZ</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
                 </a>
@@ -202,7 +202,7 @@
                   <span>MIND MAP</span><span aria-hidden="true"> ↗</span><span class="sr-only"> (opens in a new tab)</span>
                 </a>
               </div>
-              <p class="mission-complete-study-note">Made with AI study tools from NASA sources.</p>
+              <p class="mission-complete-study-note" data-i18n="missionNote">Made with AI study tools from NASA sources.</p>
             </div>
             <div id="still-answering" class="still-answering" hidden></div>
           </div>
@@ -249,10 +249,10 @@
       <div class="console-monitor-bezel">
         <article aria-label="Console monitor" class="console-monitor">
           <div id="monitor-idle" class="monitor-idle">
-            <p class="monitor-ready-title">CONSOLE READY.</p>
-            <p class="monitor-ready-sub">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.<span class="blink">_</span></p>
+            <p class="monitor-ready-title" data-i18n="monitorReady">CONSOLE READY.</p>
+            <p class="monitor-ready-sub"><span data-i18n="monitorHint">PRESS A LIT BUTTON OR KEYS 1 TO 6 TO PICK A GHOST.</span><span class="blink">_</span></p>
             <p id="monitor-ready-hint" class="monitor-ready-hint">Or tap a square on the Moon. Then press CALL GHOST (or C). Press M for Mars. Press ? for About.</p>
-            <p id="monitor-warn" aria-live="polite" class="monitor-warn" hidden>&gt; PICK A GHOST FIRST, THEN CALL.</p>
+            <p id="monitor-warn" aria-live="polite" class="monitor-warn" data-i18n="pickFirst" hidden>&gt; PICK A GHOST FIRST, THEN CALL.</p>
           </div>
 
           <div id="monitor-file" class="monitor-file" hidden>
