@@ -25,7 +25,18 @@
     "missionTitleMars": "CONTROLLO DI MARTE COMPLETATO. Nessuna risponde. Non ancora.",
     "keepExploring": "CONTINUA A ESPLORARE:",
     "missionNote": "Realizzato con strumenti di studio IA da fonti NASA.",
-    "saveBadge": "SALVA IL DISTINTIVO"
+    "saveBadge": "SALVA IL DISTINTIVO",
+    "monitorTapMoon": "Oppure tocca un quadrato sulla Luna. Poi premi CALL GHOST (o C). M per Marte. ? per la guida.",
+    "monitorTapMars": "Oppure tocca un quadrato su Marte. Poi premi CALL GHOST (o C). M per la Luna. ? per la guida.",
+    "rotateTitle": "GIRA IL TELEFONO IN VERTICALE",
+    "rotateText": "La console è alta. Gira il telefono per continuare.",
+    "timelineTodayMoon": "OGGI · Ci sono ancora tutte e sei. Una risponde.",
+    "timelineTodayMars": "OGGI · Ci sono ancora tutte e sei. Nessuna risponde, per ora.",
+    "logStatusNew": "NON ANCORA CONTROLLATO",
+    "logStatusAnswers": "CONTROLLATO · RISPONDE",
+    "logStatusQuiet": "CONTROLLATO · IN SILENZIO DAL",
+    "closePhotoAria": "Chiudi il visualizzatore foto",
+    "closeAboutAria": "Chiudi la finestra Informazioni"
   },
   "ghosts": {
     "mirror": {
