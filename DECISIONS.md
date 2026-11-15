@@ -39,3 +39,5 @@
 - 2026-11-14 15:55 PST: Moon boot line 5 changed from "LAST CREW LEFT: DECEMBER 1972" to "6 MORE ON MARS. PRESS M." so kids learn Mars exists on the opening screen. Swapped instead of added so the boot screen keeps the same height on small laptops; DEC 1972 still shows in the top clock bar.
 
 - 2026-11-14 16:35 PST: Added the 500-line, one-job file rule to AGENTS.md (it was only in CLAUDE.md, so Antigravity never saw it). js/main.js and js/card.js are listed as known exceptions, to be split in v2 after submission. AGENTS.md file list updated for mars.json and the 8-file CSS split (responsive.css split into tablet-landscape, tablet-portrait, phone so every CSS file stays under 500 lines).
+
+- 2026-11-14 17:25 PST: Demo video approved by Shara (26.9 s, narrated with Kokoro-82M, Quindar-style radio tones). Saved to docs/media/ghost-rovers-demo.mp4. Recorded from commit 051432e. Closing card shows built teacher resources, not v2 items.
