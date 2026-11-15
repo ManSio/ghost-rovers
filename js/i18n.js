@@ -3,15 +3,16 @@
 
 export const LANGS = [
   { id: 'en', label: 'ENGLISH' },
-  { id: 'ru', label: 'РУССКИЙ' }
+  { id: 'ru', label: 'РУССКИЙ' },
+  { id: 'es', label: 'ESPAÑOL' }
 ];
 
 let dict = null;
 
 function normalize(value) {
   const v = String(value || 'en').toLowerCase();
-  if (v.startsWith('ru')) return 'ru';
-  return 'en';
+  const hit = LANGS.find((l) => l.id !== 'en' && v.startsWith(l.id));
+  return hit ? hit.id : 'en';
 }
 
 // Order: explicit ?lang= → the language the visitor picked before → the browser's own.
