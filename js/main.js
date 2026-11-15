@@ -1,7 +1,7 @@
 // js/main.js: Main application state, world switching (Moon/Mars), room scaling, boot sequence, clocks, audio, speech synthesis, laser show, badge download, and 3D globe integration
 // SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md.
 
-import { loadAllWorldData, showErrorBanner } from './data.js';
+import { loadGhostData, loadMarsData, showErrorBanner } from './data.js';
 import { createMoonGlobe } from './globe.js';
 import { initSiteMarkers } from './markers.js';
 import { initPanels } from './card.js';
@@ -125,14 +125,29 @@ function makeEmptyWorldMem() {
 }
 
 async function startApp() {
-  let worldDataMap;
+  let moonData;
   try {
-    worldDataMap = await loadAllWorldData();
+    moonData = await loadGhostData();
   } catch (err) {
     return;
   }
 
-  const initialWorld = window.location.hash.toLowerCase() === '#mars' ? 'mars' : 'moon';
+  // Mars is a second world, not a dependency of the first: it loads in the background,
+  // so a slow or missing Mars file never delays the Moon console.
+  const worldDataMap = { moon: moonData, mars: null };
+  const marsReady = loadMarsData()
+    .then((data) => {
+      worldDataMap.mars = data;
+      return data;
+    })
+    .catch(() => {
+      showErrorBanner('MARS CONSOLE UNAVAILABLE: Mars data did not load. The Moon console still works.');
+      return null;
+    });
+
+  const wantsMars = window.location.hash.toLowerCase() === '#mars';
+  if (wantsMars) await marsReady;
+  const initialWorld = wantsMars && worldDataMap.mars ? 'mars' : 'moon';
   let data = worldDataMap[initialWorld];
   let ghosts = data.ghosts;
   let sites = data.sites;
@@ -186,6 +201,8 @@ async function startApp() {
   let dragHintDismissed = false;
   let globeController = null;
   let markersController = null;
+  let missionPanelFocused = false;
+  let missionPanelReturnFocus = null;
 
   // DOM Elements
   const roomEl = document.getElementById('room');
@@ -196,6 +213,21 @@ async function startApp() {
   const moonClockValEl = document.getElementById('moon-clock-val');
   const worldMoonBtnEl = document.getElementById('world-moon-btn');
   const worldMarsBtnEl = document.getElementById('world-mars-btn');
+
+  if (worldMarsBtnEl) {
+    const applyMarsState = (available) => {
+      worldMarsBtnEl.disabled = !available;
+      if (available) {
+        worldMarsBtnEl.removeAttribute('aria-disabled');
+        worldMarsBtnEl.title = '';
+      } else {
+        worldMarsBtnEl.setAttribute('aria-disabled', 'true');
+        worldMarsBtnEl.title = 'Mars data is unavailable right now';
+      }
+    };
+    applyMarsState(Boolean(worldDataMap.mars));
+    marsReady.then((data) => applyMarsState(Boolean(data)));
+  }
   const muteBtnEl = document.getElementById('mute-btn');
   const aboutBtnEl = document.getElementById('about-btn');
   const replayBtnEl = document.getElementById('replay-btn');
@@ -238,7 +270,15 @@ async function startApp() {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     if (aboutBtnEl) {
-      aboutBtnEl.textContent = vw <= 599 ? 'INFO' : 'ABOUT ·\nTEACHERS';
+      const compact = vw <= 599;
+      aboutBtnEl.textContent = compact ? 'INFO' : 'ABOUT ·\nTEACHERS';
+      // WCAG 2.5.3 (Label in Name): the accessible name must contain the visible text.
+      aboutBtnEl.setAttribute(
+        'aria-label',
+        compact
+          ? 'INFO: about Ghost Rovers, teachers and resources'
+          : 'ABOUT · TEACHERS: about Ghost Rovers and teacher resources'
+      );
     }
     if (vw <= 599) {
       currentRoomScale = 1;
@@ -381,13 +421,15 @@ async function startApp() {
 
     // offsetLeft/offsetTop ignore CSS transforms (phone and tablet-portrait centre the globe
     // with translateX(-50%)), so measure real boxes and convert them into the SVG viewBox space.
-    const mainRect = mainScreenEl.getBoundingClientRect();
-    const sx = mainScreenEl.clientWidth / (mainRect.width || 1);
-    const sy = mainScreenEl.clientHeight / (mainRect.height || 1);
+    // Boxes are measured against the SVG itself: its viewBox is the surface we draw on,
+    // so borders or padding on .main-screen cannot shift the target.
+    const svgRect = laserSvgEl.getBoundingClientRect();
+    const sx = sw / (svgRect.width || 1);
+    const sy = sh / (svgRect.height || 1);
     const boxInSvg = (el, defLeft, defTop) => {
       if (!el) return { left: defLeft, top: defTop };
       const r = el.getBoundingClientRect();
-      return { left: (r.left - mainRect.left) * sx, top: (r.top - mainRect.top) * sy };
+      return { left: (r.left - svgRect.left) * sx, top: (r.top - svgRect.top) * sy };
     };
     const vpBox = boxInSvg(moonViewportEl, 0, 0);
     const vpLeft = vpBox.left;
@@ -529,6 +571,17 @@ async function startApp() {
     renderBoot();
     renderClocks();
     const res = panels.render(state);
+    // The 6/6 panel is a modal dialog: move focus into it once, and release it when it closes.
+    if (res.missionComplete && !missionPanelFocused) {
+      missionPanelFocused = true;
+      const panel = document.getElementById('mission-complete-panel');
+      if (panel) {
+        missionPanelReturnFocus = document.activeElement;
+        panel.focus();
+      }
+    } else if (!res.missionComplete) {
+      missionPanelFocused = false;
+    }
     if (globeController && (res.viewportChanged || state.phase === 'main')) {
       globeController.resize();
     }
@@ -547,6 +600,14 @@ async function startApp() {
     } else if (!state.laserActive) {
       laserLayerEl.hidden = true;
     }
+  }
+
+  function dismissMissionPanel() {
+    state.missionCompleteDismissed = true;
+    updateAll();
+    const back = missionPanelReturnFocus;
+    missionPanelReturnFocus = null;
+    if (back && typeof back.focus === 'function' && document.contains(back)) back.focus();
   }
 
   function openPhotoModal(triggerEl) {
@@ -657,6 +718,8 @@ async function startApp() {
     // Special Laser Show for Laser Mirror (id === 'mirror' on Moon)
     if (state.world === 'moon' && g.id === 'mirror') {
       state.viewMode = 'moon';
+      // On phones the file sheet covers the wall screen, so the beam would be invisible.
+      if (isPhoneWidth()) state.phoneSheetOpen = false;
       if (globeController && sites.A11) {
         const site = sites.A11;
         globeController.rotateToSite(site.lat, site.lon);
@@ -819,8 +882,7 @@ async function startApp() {
     onCloseAboutModal: closeAboutModal,
     onCloseMissionComplete: () => {
       playSound('click');
-      state.missionCompleteDismissed = true;
-      updateAll();
+      dismissMissionPanel();
     },
     onSaveBadge: saveBadge
   });
@@ -849,6 +911,7 @@ async function startApp() {
   async function switchWorld(targetWorld, fromHashChange = false) {
     const nextWorld = targetWorld === 'mars' ? 'mars' : 'moon';
     if (nextWorld === state.world) return;
+    if (!worldDataMap[nextWorld]) return;
 
     clearInterval(bootTimer);
     clearTimeout(callTimer);
@@ -1008,8 +1071,14 @@ async function startApp() {
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab' && (state.aboutModalOpen || state.photoModalOpen)) {
-      const modalRoot = state.aboutModalOpen ? aboutModalEl : document.getElementById('photo-modal');
+    const missionPanelEl = document.getElementById('mission-complete-panel');
+    const missionPanelOpen = Boolean(missionPanelEl && !missionPanelEl.hidden);
+    if (e.key === 'Tab' && (state.aboutModalOpen || state.photoModalOpen || missionPanelOpen)) {
+      const modalRoot = state.aboutModalOpen
+        ? aboutModalEl
+        : state.photoModalOpen
+          ? document.getElementById('photo-modal')
+          : missionPanelEl;
       if (modalRoot) {
         const focusables = Array.from(
           modalRoot.querySelectorAll('button:not([hidden]), a[href]:not([hidden])')
@@ -1031,6 +1100,10 @@ async function startApp() {
     }
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     if (e.key === 'Escape') {
+      if (missionPanelOpen) {
+        dismissMissionPanel();
+        return;
+      }
       if (state.aboutModalOpen) {
         closeAboutModal();
         return;
@@ -1050,7 +1123,7 @@ async function startApp() {
         return;
       }
     }
-    if (state.phase === 'boot' || state.photoModalOpen || state.aboutModalOpen) return;
+    if (state.phase === 'boot' || state.photoModalOpen || state.aboutModalOpen || missionPanelOpen) return;
     if (e.key === '?') {
       openAboutModal();
       return;

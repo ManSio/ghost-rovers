@@ -30,16 +30,7 @@ export async function loadGhostData() {
   }
 }
 
-export async function loadAllWorldData() {
-  try {
-    const [moon, mars] = await Promise.all([
-      fetchWorldJson('data/ghosts.json'),
-      fetchWorldJson('data/mars.json')
-    ]);
-    return { moon, mars };
-  } catch (err) {
-    const msg = 'CONSOLE DATA FAULT: ' + (err && err.message ? err.message : String(err));
-    showErrorBanner(msg);
-    throw err;
-  }
+// Mars is optional: the Moon console must keep working when this file is missing.
+export async function loadMarsData() {
+  return fetchWorldJson('data/mars.json');
 }

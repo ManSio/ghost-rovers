@@ -1010,6 +1010,7 @@ export function initPanels(initialData, callbacks) {
 
     return {
       ping,
+      missionComplete: Boolean(allDone && !state.missionCompleteDismissed),
       viewportChanged: wasCorner !== isPhotoTakeover
     };
   }
