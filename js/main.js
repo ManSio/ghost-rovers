@@ -121,6 +121,11 @@ function makeEmptyWorldMem() {
 }
 
 async function startApp() {
+  // Optional translation: ?lang= wins, then the saved choice, then the browser language.
+  // Start the dictionary and the data together, so translating never adds a round trip.
+  const lang = resolveLang();
+  const dictReady = lang === 'en' ? Promise.resolve(null) : loadDict(lang);
+
   let moonData;
   try {
     moonData = await loadGhostData();
@@ -128,14 +133,15 @@ async function startApp() {
     return;
   }
 
-  // Optional translation: ?lang= wins, then the saved choice, then the browser language.
-  const lang = resolveLang();
   if (lang !== 'en') {
-    await loadDict(lang);
-    moonData = localizeWorld(moonData);
-    applyStatic();
-    // Screen readers switch voice on this attribute, so keep it truthful.
-    document.documentElement.lang = lang;
+    const dict = await dictReady;
+    // Only claim the language when the dictionary actually loaded: otherwise the page shows
+    // English and must announce English to screen readers.
+    if (dict) {
+      moonData = localizeWorld(moonData);
+      applyStatic();
+      document.documentElement.lang = lang;
+    }
   }
 
   // Mars is a second world, not a dependency of the first: it loads in the background,
