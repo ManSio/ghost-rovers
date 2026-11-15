@@ -41,3 +41,5 @@
 - 2026-11-14 16:35 PST: Added the 500-line, one-job file rule to AGENTS.md (it was only in CLAUDE.md, so Antigravity never saw it). js/main.js and js/card.js are listed as known exceptions, to be split in v2 after submission. AGENTS.md file list updated for mars.json and the 8-file CSS split (responsive.css split into tablet-landscape, tablet-portrait, phone so every CSS file stays under 500 lines).
 
 - 2026-11-14 17:25 PST: Demo video approved by Shara (26.9 s, narrated with Kokoro-82M, Quindar-style radio tones). Saved to docs/media/ghost-rovers-demo.mp4. Recorded from commit 051432e. Closing card shows built teacher resources, not v2 items.
+
+- 2026-11-14 18:02 PST: Demo video published on YouTube (Unlisted): https://youtu.be/a_sWWLi5-Xw. Linked from the README header GIF, the README link row, and llms.txt.

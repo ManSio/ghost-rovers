@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and a laser beam makes the round trip from Earth, the Apollo 15 Rover photo fills the screen with a live counter, then the console switches to Mars and InSight stays silent" width="100%">
+<a href="https://youtu.be/a_sWWLi5-Xw"><img src="docs/media/demo.gif" alt="Demo: the console powers on, the Laser Mirror is called and a laser beam makes the round trip from Earth, the Apollo 15 Rover photo fills the screen with a live counter, then the console switches to Mars and InSight stays silent" width="100%"></a>
 
 # Ghost Rovers
 
@@ -8,7 +8,7 @@
 
 A 1969 Mission Control console where kids ages 8 to 12 radio the hardware NASA left behind, on the Moon and on Mars.
 
-[**Play it live**](https://earlgreyhot1701d.github.io/ghost-rovers/) · [**Go to Mars**](https://earlgreyhot1701d.github.io/ghost-rovers/#mars) · [Study notebook](https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378) · [Fact check](docs/FACT_CHECK.md) · [SI disclosure](AI_DISCLOSURE.md)
+[**Play it live**](https://earlgreyhot1701d.github.io/ghost-rovers/) · [**Watch the 27-second demo**](https://youtu.be/a_sWWLi5-Xw) · [Slides (PDF)](docs/media/ghost-rovers-slides.pdf) · [**Go to Mars**](https://earlgreyhot1701d.github.io/ghost-rovers/#mars) · [Study notebook](https://notebook.google.com/notebook/c43a9882-26f7-4223-a46c-3f5c332dd378) · [Fact check](docs/FACT_CHECK.md) · [SI disclosure](AI_DISCLOSURE.md)
 
 NASA Space Apps Challenge 2026 · **Abandoned but not Forgotten** · Team **Clew Labs** (La Shara Cordero)
 

@@ -23,3 +23,7 @@ Built by La Shara Cordero (team Clew Labs) for the NASA Space Apps Challenge 202
 - App: https://earlgreyhot1701d.github.io/ghost-rovers/
 - Mars: https://earlgreyhot1701d.github.io/ghost-rovers/#mars
 - Code: https://github.com/earlgreyhot1701D/ghost-rovers
+
+## Demo video
+- 27-second demo (YouTube): https://youtu.be/a_sWWLi5-Xw
+- 7 demo slides (PDF): https://github.com/earlgreyhot1701D/ghost-rovers/blob/main/docs/media/ghost-rovers-slides.pdf
