@@ -149,7 +149,8 @@ async function startApp() {
   const worldDataMap = { moon: moonData, mars: null };
   const marsReady = loadMarsData()
     .then((data) => {
-      const localized = lang === 'ru' ? localizeWorld(data) : data;
+      // localizeWorld() is a no-op when no dictionary is loaded, so English stays untouched.
+      const localized = localizeWorld(data);
       worldDataMap.mars = localized;
       return localized;
     })
