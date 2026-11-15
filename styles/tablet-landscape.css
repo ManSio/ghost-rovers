@@ -1,0 +1,200 @@
+/* styles/tablet-landscape.css: Tablet landscape layout (1180px) */
+/* SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+/* ==========================================================================
+   TABLET LANDSCAPE (1180 x 820, matches docs/design-screens/tablet-landscape.png)
+   ========================================================================== */
+@media (max-width: 1219px) and (min-width: 960px) {
+  .room {
+    width: 1180px;
+    height: 820px;
+  }
+
+  .clock-strip {
+    left: 24px;
+    right: 24px;
+    top: 12px;
+    height: 54px;
+  }
+
+  .clock-btn {
+    min-width: 68px;
+    padding: 0 5px;
+    font-size: 10px;
+  }
+
+  .world-btn {
+    min-width: 50px;
+    padding: 0 6px;
+  }
+
+  .side-screen-left {
+    left: 24px;
+    top: 78px;
+    width: 162px;
+    height: 494px;
+    padding: 12px 10px;
+    transform: perspective(900px) rotateY(14deg);
+  }
+
+  .timeline-list {
+    margin-left: 0;
+    border-left: none;
+    gap: 6px;
+  }
+
+  .timeline-item {
+    padding-left: 0;
+  }
+
+  .timeline-dot {
+    display: none;
+  }
+
+  .timeline-today {
+    padding-left: 4px;
+  }
+
+  .main-screen {
+    left: 202px;
+    top: 78px;
+    width: 776px;
+    height: 494px;
+  }
+
+  .takeover-photo-wrap {
+    left: 22px;
+    top: 34px;
+    width: 420px;
+    height: 420px;
+  }
+
+  .moon-viewport {
+    left: 42px;
+    top: 42px;
+    width: 404px;
+    height: 404px;
+  }
+
+  .laser-earth-node {
+    left: 18px;
+    top: 28px;
+  }
+
+  .moon-viewport--corner {
+    left: 294px;
+    top: 306px;
+    width: 140px;
+    height: 140px;
+  }
+
+  .hardware-plot {
+    left: 468px;
+    top: 32px;
+    width: 266px;
+    bottom: 42px;
+  }
+
+  .plot-photo-img,
+  .plot-photo-placeholder {
+    width: 260px;
+    height: 154px;
+  }
+
+  .side-screen-right {
+    left: 994px;
+    top: 78px;
+    width: 162px;
+    height: 494px;
+    padding: 12px;
+    transform: perspective(900px) rotateY(-14deg);
+  }
+
+  .log-lamp {
+    width: 8px;
+    height: 8px;
+    border: none;
+  }
+
+  .log-name {
+    font: 600 11px var(--font-mono);
+  }
+
+  .console-lip {
+    top: 586px;
+  }
+
+  .console-desk {
+    top: 600px;
+  }
+
+  .rivet {
+    display: none;
+  }
+
+  .dymo-wrap {
+    left: 50%;
+    top: -22px;
+    transform: translateX(-50%);
+  }
+
+  .dymo-tape {
+    transform: none;
+  }
+
+  .console-monitor-bezel {
+    left: 16px;
+    top: 12px;
+    width: 584px;
+    height: 196px;
+  }
+
+  .console-monitor {
+    padding: 5px 12px 0;
+  }
+
+  .file-body {
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .file-actions {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .q-btn {
+    min-height: 44px;
+    font-size: 11px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+
+  .nasa-link {
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .console-panel {
+    left: 616px;
+    top: 12px;
+    width: 548px;
+    padding: 10px;
+  }
+
+  /* tablet-landscape.png omits the 12 tiny indicator lamps so buttons fit cleanly */
+  .indicator-strip {
+    display: none;
+  }
+
+  .ghost-btn {
+    min-height: 54px;
+  }
+
+  .call-row {
+    margin-top: 10px;
+  }
+
+  .call-btn {
+    min-height: 48px;
+  }
+}
