@@ -1,0 +1,252 @@
+/* styles/modals.css: Boot room dimmer, skip intro button, phone ghost file sheet, 1969 slide viewer modal, and About/Teachers dialog */
+/* SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+/* Boot Room Dimmer & Skip Intro */
+.boot-dimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(2, 3, 3, 0.86);
+}
+
+.skip-intro-btn {
+  position: absolute;
+  right: 40px;
+  bottom: 28px;
+  z-index: 7;
+  min-height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  border: 1px solid rgba(237, 243, 238, 0.45);
+  color: #C9D3CC;
+  font: 600 13px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+/* Phone Ghost File Sheet (hidden on desktop/tablet) */
+.phone-sheet {
+  display: none;
+}
+
+/* 1969 Slide Viewer Modal */
+.photo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.photo-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 3, 3, 0.92);
+}
+
+.photo-modal-frame {
+  position: relative;
+  z-index: 1;
+  background: #161A18;
+  border: 2px solid #3A423E;
+  border-radius: 8px;
+  padding: 12px 16px 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  max-width: min(94vw, 900px);
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.photo-modal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.photo-modal-caption {
+  font: 600 13px var(--font-mono);
+  letter-spacing: 0.12em;
+  color: #FFE9B0;
+}
+
+.photo-modal-close {
+  min-width: 76px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: #2C312E;
+  border: 1px solid rgba(237, 243, 238, 0.65);
+  color: #EDF3EE;
+  font: 600 12px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.photo-modal-close:hover {
+  background: #3A403C;
+  color: #FFFFFF;
+}
+
+.photo-modal-stage {
+  background: #050605;
+  border: 1px solid rgba(201, 221, 224, 0.3);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photo-modal-img {
+  max-width: min(86vw, 840px);
+  max-height: 74vh;
+  width: auto;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* ABOUT Ghost Rovers Console Dialog */
+.about-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.about-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 3, 3, 0.88);
+}
+
+.about-modal-card {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, 560px);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #101513;
+  border: 2px solid #C9B871;
+  border-radius: 6px;
+  padding: 16px 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.92), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-mono);
+  color: #EDF3EE;
+}
+
+.about-modal-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(201, 184, 113, 0.35);
+  padding-bottom: 8px;
+}
+
+.about-modal-title {
+  margin: 0;
+  font: 400 32px var(--font-vt);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  color: #FFE9B0;
+}
+
+.about-modal-close {
+  min-width: 76px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: #2C312E;
+  border: 1px solid rgba(237, 243, 238, 0.65);
+  border-radius: 3px;
+  color: #EDF3EE;
+  font: 600 12px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+
+.about-modal-close:hover {
+  background: #3A403C;
+  color: #FFFFFF;
+}
+
+.about-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-modal-p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #EDF3EE;
+}
+
+.about-modal-tagline {
+  margin: 0;
+  font: 600 13px var(--font-mono);
+  letter-spacing: 0.08em;
+  color: #9BEFB0;
+}
+
+.about-modal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.about-link-btn {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(201, 221, 224, 0.6);
+  background: #1B2422;
+  color: #EDF3EE;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.about-link-btn:hover {
+  background: #2C3835;
+  border-color: #FFE9B0;
+  color: #FFFFFF;
+}
+
+.about-teachers-box {
+  padding: 12px 14px;
+  background: rgba(255, 233, 176, 0.08);
+  border: 1px solid rgba(201, 184, 113, 0.55);
+  border-left: 3px solid #FFE9B0;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.about-teachers-p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #FFF6DC;
+}
+
+.about-teachers-label {
+  color: #FFE9B0;
+  letter-spacing: 0.06em;
+}

@@ -1,0 +1,290 @@
+/* styles/base.css: Base resets, accessibility utilities, room frame, mission clocks strip, and left timeline screen */
+/* SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--bg-room);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a {
+  color: var(--text-crt);
+}
+
+a:hover {
+  color: #FFFFFF;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Error Banner */
+.error-banner {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #3D1418;
+  border: 2px solid #F85149;
+  color: #FFDCD7;
+  font: 600 13px var(--font-mono);
+  padding: 10px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+/* ==========================================================================
+   DEFAULT DESKTOP LAYOUT (1280 x 800, prototype exact values)
+   ========================================================================== */
+
+.room {
+  width: 1280px;
+  height: 800px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  overflow: hidden;
+  background: #0E1110;
+  color: #E8F0EA;
+  font-family: var(--font-sans);
+  transform-origin: center center;
+}
+
+.room-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 520px;
+  background: radial-gradient(ellipse 60% 75% at 50% 55%, #1C2628 0%, #0E1110 72%);
+  pointer-events: none;
+}
+
+/* Mission Clocks Strip */
+.clock-strip {
+  z-index: 5;
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 14px;
+  height: 56px;
+  background: #050605;
+  border: 1px solid #262B28;
+  display: flex;
+  align-items: stretch;
+}
+
+.clock-cell {
+  flex: 0.9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 12px;
+  border-right: 1px solid #1E2220;
+  min-width: 0;
+}
+
+.clock-cell:nth-child(3) {
+  flex: 1.25;
+}
+
+.clock-cell--moon {
+  flex: 1.65;
+  background: rgba(255, 233, 176, 0.04);
+}
+
+.clock-label {
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.14em;
+  color: #B9C4BD;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clock-val {
+  font: 400 28px var(--font-vt);
+  line-height: 1;
+  color: #FFE9B0;
+  text-shadow: 0 0 10px rgba(255, 220, 140, 0.55);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.clock-btn {
+  min-width: 88px;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid #1E2220;
+  color: #B9C4BD;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  padding: 0 8px;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.clock-btn:hover {
+  background: rgba(255, 233, 176, 0.08);
+  color: #FFFFFF;
+}
+
+.clock-btn--about,
+.clock-btn--replay {
+  white-space: pre-line;
+}
+
+.clock-btn--replay {
+  border-right: 0;
+}
+
+.world-toggle {
+  display: flex;
+  align-items: stretch;
+  border-right: 1px solid #1E2220;
+}
+
+.world-btn {
+  min-width: 56px;
+  min-height: 44px;
+  padding: 0 8px;
+  border-right: 1px solid #1E2220;
+}
+
+.world-btn:last-child {
+  border-right: 0;
+}
+
+.world-btn[aria-pressed="true"] {
+  background: rgba(255, 233, 176, 0.14);
+  color: #FFE9B0;
+  box-shadow: inset 0 -2px 0 #FFE9B0;
+}
+
+/* Left Angled Screen: LANDED BY YEAR */
+.side-screen-left {
+  position: absolute;
+  left: 40px;
+  top: 84px;
+  transform: perspective(900px) rotateY(16deg);
+  transform-origin: right center;
+  border-radius: 6px;
+  width: 220px;
+  height: 424px;
+  background: radial-gradient(ellipse at 50% 45%, #10191B 0%, #070A0A 80%);
+  border: 2px solid #050605;
+  padding: 12px 12px;
+  opacity: 0.92;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-heading {
+  margin: 0 0 6px;
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.12em;
+  color: #C9DDE0;
+}
+
+.timeline-list {
+  margin: 0 0 0 6px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-left: 1px solid rgba(201, 221, 224, 0.35);
+  flex: 1;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 10px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -5px;
+  top: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.timeline-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 3px 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: inherit;
+}
+
+.timeline-btn:hover {
+  background: rgba(201, 221, 224, 0.08);
+  border-color: rgba(201, 221, 224, 0.25);
+}
+
+.timeline-btn--selected {
+  background: rgba(246, 242, 226, 0.12);
+  border-color: rgba(246, 242, 226, 0.55);
+}
+
+.timeline-year {
+  display: block;
+  font: 400 22px var(--font-vt);
+  line-height: 1;
+}
+
+.timeline-label {
+  display: block;
+  font: 600 11px var(--font-mono);
+  line-height: 1.2;
+}
+
+.timeline-today {
+  margin-top: auto;
+  padding: 6px 4px 0 10px;
+  border-top: 1px solid rgba(201, 221, 224, 0.22);
+  font: 600 10px var(--font-mono);
+  line-height: 1.3;
+  color: #FFE9B0;
+}

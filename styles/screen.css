@@ -1,0 +1,416 @@
+/* styles/screen.css: Center curved main wall screen, boot screen, photo takeover, 3D globe viewport, pins, and laser show */
+/* SI-assisted code (Claude, Antigravity), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+/* Center Curved Main Wall Screen */
+.main-screen {
+  z-index: 5;
+  position: absolute;
+  left: 276px;
+  top: 84px;
+  width: 728px;
+  height: 424px;
+  overflow: hidden;
+  border-radius: 50% / 7%;
+  background: radial-gradient(ellipse at 34% 50%, #182628 0%, #0A1012 58%, #060909 100%);
+  border: 3px solid #050605;
+  box-shadow:
+    0 0 80px rgba(150, 200, 210, 0.2),
+    inset 0 0 70px rgba(0, 0, 0, 0.75),
+    inset 0 2px 0 rgba(200, 225, 230, 0.25);
+}
+
+.screen-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(ellipse 75% 85% at 50% 50%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.screen-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background-image:
+    linear-gradient(rgba(201, 221, 224, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 221, 224, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Boot Screen Inside Main Screen */
+.boot-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  padding: 46px 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: radial-gradient(ellipse at 50% 45%, #1C2A2C 0%, #0A1012 70%);
+}
+
+.boot-title {
+  margin: 0 0 8px;
+  font: 400 64px var(--font-vt);
+  line-height: 1;
+  color: #F4F1E4;
+  text-shadow: 0 0 14px rgba(244, 241, 228, 0.6);
+}
+
+.boot-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.boot-line {
+  margin: 0;
+  font: 400 30px var(--font-vt);
+  color: #DCE6DF;
+  text-shadow: 0 0 8px rgba(220, 230, 223, 0.4);
+}
+
+.boot-cursor {
+  font: 400 30px var(--font-vt);
+  color: #DCE6DF;
+}
+
+.boot-begin-btn {
+  margin-top: 16px;
+  align-self: flex-start;
+  min-height: 60px;
+  padding: 0 28px;
+  background: #F4F1E4;
+  color: #070908;
+  border: 0;
+  border-radius: 3px;
+  font: 400 36px var(--font-vt);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(244, 241, 228, 0.55);
+}
+
+/* Main Screen Content: Moon Globe, Photo Takeover & Hardware Plot */
+.main-content {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+/* Photo Takeover on Left Area of Main Screen (Desktop & Tablet) */
+.takeover-photo-wrap {
+  position: absolute;
+  left: 20px;
+  top: 16px;
+  width: 400px;
+  height: 392px;
+  z-index: 3;
+  background: #070A0B;
+  border: 2px solid rgba(201, 221, 224, 0.35);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.takeover-photo-btn {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: #050707;
+  cursor: pointer;
+  display: block;
+}
+
+.takeover-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.55) contrast(1.06);
+}
+
+.takeover-photo-badge {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 3px 8px;
+  background: rgba(5, 6, 5, 0.85);
+  border: 1px solid rgba(201, 221, 224, 0.35);
+  color: #FFE9B0;
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.back-to-moon-btn {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 6;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 3px;
+  border: 2px solid #1A1D1B;
+  background: #2C312E;
+  color: #EDF3EE;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.85), inset 0 2px 0 rgba(255, 255, 255, 0.08);
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.back-to-moon-btn:hover {
+  background: #3A403C;
+  color: #FFFFFF;
+}
+
+.moon-viewport {
+  position: absolute;
+  left: 42px;
+  top: 18px;
+  width: 384px;
+  height: 384px;
+  touch-action: none;
+  user-select: none;
+  z-index: 4;
+}
+
+/* Corner Map Mode when Photo Takeover is active on Desktop/Tablet */
+.moon-viewport--corner {
+  left: 274px;
+  top: 262px;
+  width: 138px;
+  height: 138px;
+  z-index: 6;
+  background: radial-gradient(circle, rgba(10, 16, 18, 0.92) 60%, rgba(5, 6, 5, 0.96) 100%);
+  border: 2px solid rgba(201, 221, 224, 0.45);
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.85);
+}
+
+.moon-canvas-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 50%;
+  filter: grayscale(0.8) brightness(1.06) contrast(1.12) drop-shadow(0 0 22px rgba(200, 225, 230, 0.3));
+}
+
+.moon-canvas-wrap--mars {
+  filter: brightness(1.04) contrast(1.08) drop-shadow(0 0 22px rgba(232, 130, 86, 0.34));
+}
+
+.moon-viewport--corner .moon-canvas-wrap {
+  filter: grayscale(0.8) brightness(1.06) contrast(1.12);
+}
+
+.moon-viewport--corner .moon-canvas-wrap--mars {
+  filter: brightness(1.04) contrast(1.08);
+}
+
+.moon-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.moon-canvas-wrap canvas:active {
+  cursor: grabbing;
+}
+
+.ping-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ping-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #9BEFB0;
+}
+
+.ping-ring--2 {
+  animation-delay: 0.5s;
+}
+
+.ping-ring--3 {
+  animation-delay: 1s;
+}
+
+.pins-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.site-pin {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  border: 2px solid rgba(232, 240, 234, 0.85);
+  background: rgba(6, 9, 9, 0.25);
+  box-shadow: none;
+}
+
+.site-pin--lit {
+  border: 3px solid #FFFFFF;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.7);
+}
+
+/* DRAG TO SPIN hint on full-size globe */
+.drag-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 4px 10px;
+  background: rgba(5, 6, 5, 0.82);
+  border: 1px solid rgba(201, 221, 224, 0.4);
+  border-radius: 3px;
+  color: #E6F2F4;
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.12em;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.drag-hint--hidden {
+  opacity: 0;
+}
+
+.moon-viewport--corner .pins-layer,
+.moon-viewport--corner .drag-hint,
+.moon-viewport--corner .face-earth-btn {
+  display: none !important;
+}
+
+.corner-site-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #FFE9B0;
+  border: 1.5px solid #FFFFFF;
+  box-shadow: 0 0 10px #FFE9B0, 0 0 18px rgba(255, 220, 120, 0.9);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.corner-map-btn {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 6;
+}
+
+.corner-map-btn:hover {
+  box-shadow: inset 0 0 0 2px #FFE9B0;
+}
+
+/* FACE EARTH button on main screen (bottom-left of Moon viewport) */
+.face-earth-btn {
+  position: absolute;
+  left: -6px;
+  bottom: 4px;
+  z-index: 6;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 3px;
+  border: 2px solid #1A1D1B;
+  background: #2C312E;
+  color: #D5DDD7;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.06);
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.face-earth-btn:hover {
+  background: #363C38;
+  color: #FFFFFF;
+}
+
+/* Laser Show Overlay (Laser Mirror) */
+.laser-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.laser-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.laser-beam-glow {
+  stroke: rgba(123, 228, 149, 0.42);
+  stroke-width: 7px;
+  stroke-linecap: round;
+}
+
+.laser-beam-line {
+  stroke: #9BEFB0;
+  stroke-width: 2.2px;
+  stroke-linecap: round;
+}
+
+.laser-pulse-dot {
+  fill: #FFFFFF;
+  stroke: #7BE495;
+  stroke-width: 2px;
+}
+
+.laser-earth-node {
+  position: absolute;
+  left: 16px;
+  top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.laser-earth-dot {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #7BE495 0%, #2E8BC0 68%, #144B6E 100%);
+  border: 1.5px solid rgba(230, 242, 244, 0.85);
+  box-shadow: 0 0 10px rgba(123, 228, 149, 0.85);
+}
+
+.laser-earth-label {
+  font: 600 11px var(--font-mono);
+  letter-spacing: 0.1em;
+  color: #E6F2F4;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+}

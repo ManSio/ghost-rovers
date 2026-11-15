@@ -79,6 +79,7 @@ Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server,
 | File | Job |
 |---|---|
 | `index.html` | The console: clocks, side screens, curved wall screen, desk |
+| `styles/*.css` | Design tokens plus 6 layout files, one job each (base, screen, plot, console, modals, responsive) |
 | `js/main.js` | State, boot sequence, keys, laser show, clocks, sound, read-aloud |
 | `js/globe.js` | 3D Moon and Mars, drag to spin, FACE EARTH |
 | `js/projection.js`, `js/markers.js` | Latitude and longitude to screen pins |
