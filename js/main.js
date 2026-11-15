@@ -379,8 +379,19 @@ async function startApp() {
     const sh = mainScreenEl.clientHeight || 424;
     laserSvgEl.setAttribute('viewBox', '0 0 ' + sw + ' ' + sh);
 
-    const vpLeft = moonViewportEl.offsetLeft;
-    const vpTop = moonViewportEl.offsetTop;
+    // offsetLeft/offsetTop ignore CSS transforms (phone and tablet-portrait centre the globe
+    // with translateX(-50%)), so measure real boxes and convert them into the SVG viewBox space.
+    const mainRect = mainScreenEl.getBoundingClientRect();
+    const sx = mainScreenEl.clientWidth / (mainRect.width || 1);
+    const sy = mainScreenEl.clientHeight / (mainRect.height || 1);
+    const boxInSvg = (el, defLeft, defTop) => {
+      if (!el) return { left: defLeft, top: defTop };
+      const r = el.getBoundingClientRect();
+      return { left: (r.left - mainRect.left) * sx, top: (r.top - mainRect.top) * sy };
+    };
+    const vpBox = boxInSvg(moonViewportEl, 0, 0);
+    const vpLeft = vpBox.left;
+    const vpTop = vpBox.top;
 
     const a11 = sites.A11;
     if (!a11) return;
@@ -388,8 +399,9 @@ async function startApp() {
     const targetX = vpLeft + pos.x;
     const targetY = vpTop + pos.y;
 
-    const nodeLeft = laserEarthNodeEl ? laserEarthNodeEl.offsetLeft || 16 : 16;
-    const nodeTop = laserEarthNodeEl ? laserEarthNodeEl.offsetTop || 24 : 24;
+    const nodeBox = boxInSvg(laserEarthNodeEl, 16, 24);
+    const nodeLeft = nodeBox.left;
+    const nodeTop = nodeBox.top;
     const earthX = nodeLeft + 9;
     const earthY = nodeTop + 9;
 
