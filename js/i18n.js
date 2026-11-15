@@ -62,11 +62,17 @@ export function t(key, fallback) {
 }
 
 // Elements marked data-i18n get their text replaced, so static labels translate too.
+// data-i18n-aria does the same for aria-label, so a translated button keeps an
+// accessible name that contains its visible text (WCAG 2.5.3).
 export function applyStatic() {
   if (!dict || !dict.ui) return;
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const value = dict.ui[el.getAttribute('data-i18n')];
     if (typeof value === 'string' && value) el.textContent = value;
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+    const value = dict.ui[el.getAttribute('data-i18n-aria')];
+    if (typeof value === 'string' && value) el.setAttribute('aria-label', value);
   });
 }
 

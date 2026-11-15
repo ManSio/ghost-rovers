@@ -351,8 +351,8 @@ export function initPanels(initialData, callbacks) {
     todayLi.textContent =
       dataObj.today ||
       (isMars
-        ? 'TODAY · All 6 are still there. None answer yet.'
-        : 'TODAY · All 6 are still there. 1 still answers.');
+        ? t('timelineTodayMars', 'TODAY · All 6 are still there. None answer yet.')
+        : t('timelineTodayMoon', 'TODAY · All 6 are still there. 1 still answers.'));
     timelineListEl.appendChild(todayLi);
 
     // 3. Rebuild Right Side Screen Ghost Log (GHOST LOG)
@@ -488,8 +488,8 @@ export function initPanels(initialData, callbacks) {
     }
     if (monitorReadyHintEl) {
       monitorReadyHintEl.textContent = isMars
-        ? 'Or tap a square on Mars. Then press CALL GHOST (or C). Press M for Moon. Press ? for About.'
-        : 'Or tap a square on the Moon. Then press CALL GHOST (or C). Press M for Mars. Press ? for About.';
+        ? t('monitorTapMars', 'Or tap a square on Mars. Then press CALL GHOST (or C). Press M for Moon. Press ? for About.')
+        : t('monitorTapMoon', 'Or tap a square on the Moon. Then press CALL GHOST (or C). Press M for Mars. Press ? for About.');
     }
     if (missionCompleteTitleEl) {
       missionCompleteTitleEl.textContent = isMars
@@ -803,9 +803,9 @@ export function initPanels(initialData, callbacks) {
       item.nameSpan.textContent = (done ? '✓ ' : '') + x.name;
       item.statusSpan.textContent = done
         ? x.answers
-          ? 'CHECKED · ANSWERS'
-          : 'CHECKED · QUIET SINCE ' + x.quiet
-        : 'NOT CHECKED YET';
+          ? t('logStatusAnswers', 'CHECKED · ANSWERS')
+          : t('logStatusQuiet', 'CHECKED · QUIET SINCE') + ' ' + x.quiet
+        : t('logStatusNew', 'NOT CHECKED YET');
       item.statusSpan.style.color = done ? (x.answers ? '#9BEFB0' : '#F2A08F') : '#A9B4AD';
     });
 
