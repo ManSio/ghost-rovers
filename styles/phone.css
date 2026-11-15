@@ -123,8 +123,10 @@
     left: 50%;
     top: 6px;
     transform: translateX(-50%);
-    width: 276px;
-    height: 276px;
+    /* Fluid instead of a fixed 276px: the Moon keeps a similar share of the screen
+       from a 320px phone to a 430px one, and still leaves room for the signal box. */
+    width: clamp(240px, 74vw, 300px);
+    height: clamp(240px, 74vw, 300px);
   }
 
   /* Keep FACE EARTH tucked at bottom-left of Moon viewport, above status box */

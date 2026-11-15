@@ -263,6 +263,8 @@ export function initPanels(initialData, callbacks) {
   let logItems = [];
   let ghostButtons = [];
   let badgeDrawnWorld = null;
+  let lastRenderedGhostId = null;
+  let pendingScrollReset = false;
 
   function buildWorldDOM(dataObj) {
     currentData = dataObj;
@@ -723,6 +725,15 @@ export function initPanels(initialData, callbacks) {
   function render(state) {
     const isMars = currentWorld === 'mars';
     const g = ghosts.find((x) => x.id === state.sel) || null;
+
+    // A different ghost starts at the top of its file. The reset has to run after the sheet is
+    // visible: while it is display:none the browser ignores scrollTop and restores the old one.
+    if (g && g.id !== lastRenderedGhostId) {
+      lastRenderedGhostId = g.id;
+      pendingScrollReset = true;
+    } else if (!g) {
+      lastRenderedGhostId = null;
+    }
     const nChecked = ghosts.filter((x) => state.checked[x.id]).length;
     const allDone = nChecked === ghosts.length;
     const answered = state.call === 'done';
@@ -1007,6 +1018,15 @@ export function initPanels(initialData, callbacks) {
     phoneSignalLamp.style.boxShadow = sigLit ? '0 0 12px #7BE495' : 'none';
     phoneNoSignalLamp.style.background = noSigLit ? '#E8735C' : '#302624';
     phoneNoSignalLamp.style.boxShadow = noSigLit ? '0 0 12px #E8735C' : 'none';
+
+    if (pendingScrollReset) {
+      pendingScrollReset = false;
+      if (phoneSheetEl) phoneSheetEl.scrollTop = 0;
+      const sheetCrt = document.querySelector('.phone-sheet-crt');
+      if (sheetCrt) sheetCrt.scrollTop = 0;
+      const monitorScroll = document.querySelector('.monitor-file-scroll');
+      if (monitorScroll) monitorScroll.scrollTop = 0;
+    }
 
     return {
       ping,

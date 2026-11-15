@@ -92,6 +92,25 @@
     font-size: 12px;
   }
 
+  /* The ASK block took three full rows (~176px) on a 360px sheet. Compact rows let the
+     questions share a line with READ TO ME and keep the story in view. */
+  .phone-sheet-crt .file-actions {
+    gap: 4px;
+    padding-top: 2px;
+  }
+
+  .phone-sheet-crt .ask-label {
+    font-size: 9.5px;
+  }
+
+  .phone-sheet-crt .q-btn,
+  .phone-sheet-crt .read-btn {
+    min-height: 38px;
+    padding: 2px 7px;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
   .lamp-caption {
     font-size: 9px;
   }
