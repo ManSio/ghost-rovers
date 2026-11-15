@@ -4,7 +4,8 @@
 export const LANGS = [
   { id: 'en', label: 'ENGLISH' },
   { id: 'ru', label: 'РУССКИЙ' },
-  { id: 'es', label: 'ESPAÑOL' }
+  { id: 'es', label: 'ESPAÑOL' },
+  { id: 'fr', label: 'FRANÇAIS' }
 ];
 
 let dict = null;
