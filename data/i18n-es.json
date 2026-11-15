@@ -25,7 +25,18 @@
     "missionTitleMars": "COMPROBACIÓN DE MARTE TERMINADA. Ninguna responde. Todavía.",
     "keepExploring": "SIGUE EXPLORANDO:",
     "missionNote": "Hecho con herramientas de estudio de IA a partir de fuentes de la NASA.",
-    "saveBadge": "GUARDAR INSIGNIA"
+    "saveBadge": "GUARDAR INSIGNIA",
+    "monitorTapMoon": "O toca un cuadro en la Luna. Luego pulsa CALL GHOST (o C). M para Marte. ? para la ayuda.",
+    "monitorTapMars": "O toca un cuadro en Marte. Luego pulsa CALL GHOST (o C). M para la Luna. ? para la ayuda.",
+    "rotateTitle": "GIRA EL TELÉFONO EN VERTICAL",
+    "rotateText": "La consola es alta. Gira el teléfono para seguir jugando.",
+    "timelineTodayMoon": "HOY · Las seis siguen ahí. Una responde.",
+    "timelineTodayMars": "HOY · Las seis siguen ahí. Ninguna responde todavía.",
+    "logStatusNew": "AÚN SIN REVISAR",
+    "logStatusAnswers": "REVISADO · RESPONDE",
+    "logStatusQuiet": "REVISADO · EN SILENCIO DESDE",
+    "closePhotoAria": "Cerrar el visor de fotos",
+    "closeAboutAria": "Cerrar la ventana Acerca de"
   },
   "ghosts": {
     "mirror": {
