@@ -265,6 +265,8 @@ export function initPanels(initialData, callbacks) {
   let badgeDrawnWorld = null;
   let lastRenderedGhostId = null;
   let pendingScrollReset = false;
+  let lastSheetOpen = false;
+  let sheetCloseTimer = null;
 
   function buildWorldDOM(dataObj) {
     currentData = dataObj;
@@ -649,6 +651,26 @@ export function initPanels(initialData, callbacks) {
 
   // Phone Sheet DOM References
   const phoneSheetEl = document.getElementById('phone-sheet');
+
+  // The [hidden] attribute cannot animate out, so closing is a class + a timer.
+  function setSheetVisible(show) {
+    if (!phoneSheetEl) return;
+    if (show) {
+      clearTimeout(sheetCloseTimer);
+      sheetCloseTimer = null;
+      phoneSheetEl.classList.remove('phone-sheet--closing');
+      phoneSheetEl.hidden = false;
+      return;
+    }
+    if (!phoneSheetEl.hidden && !phoneSheetEl.classList.contains('phone-sheet--closing')) {
+      phoneSheetEl.classList.add('phone-sheet--closing');
+      sheetCloseTimer = setTimeout(() => {
+        phoneSheetEl.hidden = true;
+        phoneSheetEl.classList.remove('phone-sheet--closing');
+        sheetCloseTimer = null;
+      }, 300);
+    }
+  }
   const phoneSheetPhoto = document.getElementById('phone-sheet-photo');
   const phoneSheetPlaceholder = document.getElementById('phone-sheet-placeholder');
   const phoneSheetName = document.getElementById('phone-sheet-name');
@@ -734,6 +756,12 @@ export function initPanels(initialData, callbacks) {
     } else if (!g) {
       lastRenderedGhostId = null;
     }
+
+    // Opening the file always starts at the top, even for the same ghost.
+    if (state.phoneSheetOpen && !lastSheetOpen) {
+      pendingScrollReset = true;
+    }
+    lastSheetOpen = Boolean(state.phoneSheetOpen);
     const nChecked = ghosts.filter((x) => state.checked[x.id]).length;
     const allDone = nChecked === ghosts.length;
     const answered = state.call === 'done';
@@ -881,7 +909,7 @@ export function initPanels(initialData, callbacks) {
       monitorIdleEl.hidden = false;
       monitorFileEl.hidden = true;
       monitorWarnEl.hidden = state.call !== 'nosel';
-      phoneSheetEl.hidden = true;
+      setSheetVisible(false);
       compactOpenFileBtn.hidden = true;
     } else {
       monitorIdleEl.hidden = true;
@@ -973,7 +1001,7 @@ export function initPanels(initialData, callbacks) {
       phoneSheetSignalText.style.color = plotSignalText.style.color;
       phoneSheetSignalText.className = plotSignalText.className;
 
-      phoneSheetEl.hidden = !state.phoneSheetOpen;
+      setSheetVisible(Boolean(state.phoneSheetOpen));
       compactOpenFileBtn.hidden = state.phoneSheetOpen;
     }
 
@@ -1021,11 +1049,12 @@ export function initPanels(initialData, callbacks) {
 
     if (pendingScrollReset) {
       pendingScrollReset = false;
-      if (phoneSheetEl) phoneSheetEl.scrollTop = 0;
+      const instant = { top: 0, behavior: 'instant' };
+      if (phoneSheetEl) phoneSheetEl.scrollTo(instant);
       const sheetCrt = document.querySelector('.phone-sheet-crt');
-      if (sheetCrt) sheetCrt.scrollTop = 0;
+      if (sheetCrt) sheetCrt.scrollTo(instant);
       const monitorScroll = document.querySelector('.monitor-file-scroll');
-      if (monitorScroll) monitorScroll.scrollTop = 0;
+      if (monitorScroll) monitorScroll.scrollTo(instant);
     }
 
     return {

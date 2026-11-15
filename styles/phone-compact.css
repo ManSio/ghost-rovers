@@ -92,6 +92,12 @@
     font-size: 12px;
   }
 
+  /* iOS-style motion: smooth scrolling inside the file, no animation when the user
+     asked the system for reduced motion. */
+  .phone-sheet-crt {
+    scroll-behavior: smooth;
+  }
+
   /* The ASK block took three full rows (~176px) on a 360px sheet. Compact rows let the
      questions share a line with READ TO ME and keep the story in view. */
   .phone-sheet-crt .file-actions {
