@@ -29,7 +29,15 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
     camera.position.set(0, 0, 3);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // The whole console is scaled with a CSS transform, so layout pixels are not screen
+    // pixels: on a 4K monitor a 384px canvas is shown at ~1037px and would look soft.
+    // Account for the room scale, with a ceiling so integrated GPUs stay comfortable.
+    function applyPixelRatio() {
+      const roomScale = options.getRoomScale ? options.getRoomScale() : 1;
+      const ratio = Math.min((window.devicePixelRatio || 1) * Math.max(1, roomScale), 2.5);
+      renderer.setPixelRatio(ratio);
+    }
+    applyPixelRatio();
     renderer.setSize(width, height);
     containerEl.appendChild(renderer.domElement);
 
@@ -182,6 +190,7 @@ export async function createMoonGlobe(containerEl, onFrameUpdate, options = {}) 
     function resize() {
       const w = containerEl.clientWidth || 400;
       const h = containerEl.clientHeight || 400;
+      applyPixelRatio();
       renderer.setSize(w, h);
     }
 

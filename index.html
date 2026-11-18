@@ -36,10 +36,18 @@
   <link rel="stylesheet" href="styles/tablet-landscape.css">
   <link rel="stylesheet" href="styles/tablet-portrait.css">
   <link rel="stylesheet" href="styles/phone.css">
+  <link rel="stylesheet" href="styles/phone-compact.css">
   <link rel="stylesheet" href="styles/still-answering.css">
+  <link rel="stylesheet" href="styles/rotate-hint.css">
 </head>
 <body>
   <div id="error-banner" class="error-banner" role="alert" hidden></div>
+
+  <!-- Shown only on phones held sideways: the console is a portrait layout. -->
+  <div id="rotate-hint" class="rotate-hint">
+    <p class="rotate-hint-title">TURN YOUR PHONE UPRIGHT</p>
+    <p class="rotate-hint-text">Mission Control is built tall. Rotate the phone to keep playing.</p>
+  </div>
 
   <main id="room" class="room">
     <h1 id="page-h1" class="sr-only">Ghost Rovers: Lunar Hardware Check</h1>
@@ -171,7 +179,7 @@
         <div id="sr-status-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
         <!-- Mission Complete Panel (6 of 6 Checked) -->
-        <div id="mission-complete-panel" class="mission-complete-panel" role="dialog" aria-labelledby="mission-complete-title" hidden>
+        <div id="mission-complete-panel" class="mission-complete-panel" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="mission-complete-title" hidden>
           <div class="mission-complete-card">
             <div class="mission-complete-top">
               <p id="mission-complete-title" class="mission-complete-title">GHOST CHECK COMPLETE. You checked every machine NASA left on the Moon.</p>

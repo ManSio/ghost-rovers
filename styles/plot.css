@@ -147,7 +147,8 @@
 }
 
 .plot-takeover-ymd {
-  font: 400 23px var(--font-vt);
+  /* 23px overflowed the 224px plate by 6px with "57 YRS · 03 MOS · 26 DAYS". */
+  font: 400 22px var(--font-vt);
   line-height: 1.05;
   color: #FFE9B0;
   text-shadow: 0 0 10px rgba(255, 220, 140, 0.45);

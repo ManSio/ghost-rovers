@@ -21,7 +21,8 @@
     width: 100%;
     max-width: 430px;
     height: 100dvh;
-    min-height: 760px;
+    min-height: 0;
+    overflow: visible;
     margin: 0 auto;
     transform: none !important;
   }
@@ -31,10 +32,10 @@
   }
 
   .clock-strip {
-    left: 12px;
-    right: 12px;
-    top: 10px;
-    height: 48px;
+    left: 10px;
+    right: 10px;
+    top: 8px;
+    height: 44px;
   }
 
   .clock-cell:nth-child(1),
@@ -46,24 +47,25 @@
 
   .clock-cell--moon {
     flex: 1;
+    min-width: 0;
     background: transparent;
-    padding: 0 8px;
+    padding: 0 6px;
   }
 
   .clock-label {
-    font-size: 9px;
-    letter-spacing: 0.08em;
+    font-size: 8px;
+    letter-spacing: 0.05em;
   }
 
   .clock-val {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .clock-btn--mute {
-    min-width: 58px;
-    padding: 0 4px;
+    min-width: 46px;
+    padding: 0 3px;
     border-right: 1px solid #1E2220;
-    font-size: 9.5px;
+    font-size: 8.5px;
   }
 
   .clock-btn--about {
@@ -121,8 +123,10 @@
     left: 50%;
     top: 6px;
     transform: translateX(-50%);
-    width: 276px;
-    height: 276px;
+    /* Fluid instead of a fixed 276px: the Moon keeps a similar share of the screen
+       from a 320px phone to a 430px one, and still leaves room for the signal box. */
+    width: clamp(240px, 74vw, 300px);
+    height: clamp(240px, 74vw, 300px);
   }
 
   /* Keep FACE EARTH tucked at bottom-left of Moon viewport, above status box */
@@ -157,7 +161,7 @@
     align-items: center;
   }
 
-  /* GHOST LOG · 00 OF 06 CHECKED row */
+  /* GHOST LOG В· 00 OF 06 CHECKED row */
   .compact-summary-strip {
     display: flex;
     align-items: center;
@@ -247,7 +251,9 @@
     position: absolute;
     left: 0;
     right: 0;
-    top: 76px;
+    /* 56px instead of 76: the sheet starts just under the clock strip, so the file gets
+       ~20px more height while the strip stays readable.  Not full screen on purpose. */
+    top: 56px;
     bottom: 0;
     z-index: 20;
     border-radius: 22px 22px 0 0;
@@ -255,6 +261,28 @@
     box-shadow: 0 -300px 0 300px rgba(2, 3, 3, 0.78), 0 -16px 40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     padding: 8px 10px 10px;
     overflow-y: auto;
+    /* iOS-style sheet: slides up on open, down on close (falls back to no animation
+       in browsers without @starting-style / allow-discrete). */
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1), opacity 200ms ease;
+    transition-behavior: allow-discrete;
+  }
+
+  .phone-sheet[hidden] {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  .phone-sheet--closing {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @starting-style {
+    .phone-sheet:not([hidden]) {
+      transform: translateY(100%);
+      opacity: 0;
+    }
   }
 
   .phone-sheet-handle {
@@ -410,6 +438,13 @@
     margin-top: 5px;
     flex-shrink: 0;
     flex-wrap: wrap;
+    /* Keep CALL GHOST reachable while the file scrolls: on short phones the sheet is
+       ~600px tall, so the primary action used to sit below the fold. */
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    padding: 6px 0 calc(2px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(74, 84, 78, 0) 0%, #4A544E 22%, #4A544E 100%);
   }
 
   .mission-complete-panel {
@@ -457,5 +492,9 @@
 @media (prefers-reduced-motion: reduce) {
   .drag-hint {
     transition: none !important;
+  }
+
+  .phone-sheet {
+    transition: none;
   }
 }

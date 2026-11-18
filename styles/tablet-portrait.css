@@ -36,6 +36,15 @@
     border-bottom: 1px solid #1E2220;
   }
 
+  /* At 820px the counter overflows its cell by ~6px in both languages. */
+  .clock-cell--moon .clock-val {
+    font-size: 25px;
+  }
+
+  .clock-cell--moon .clock-label {
+    font-size: 9.5px;
+  }
+
   .clock-cell:nth-child(3) {
     grid-column: 1 / 2;
     grid-row: 2 / 3;

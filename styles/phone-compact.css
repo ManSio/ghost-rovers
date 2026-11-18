@@ -1,0 +1,143 @@
+/* styles/phone-compact.css: phones shorter than 760px (browser chrome) and their type scale */
+/* SI-assisted code (Claude), reviewed by La Shara Cordero. See AI_DISCLOSURE.md. */
+
+/* The console is taller than the viewport on a real phone. Confine the panel to the desk,
+   let only the ghost grid scroll, and keep CALL GHOST at the bottom of the panel so it
+   stays reachable and never covers the last row. */
+@media (max-width: 599px) and (max-height: 720px) {
+  .console-panel {
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ghost-btn-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .call-row {
+    position: static;
+    flex: 0 0 auto;
+    margin-top: 6px;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    flex-wrap: nowrap;
+    gap: 5px;
+  }
+
+  /* One short line instead of two rows, so the ghost grid keeps more of the screen. */
+  .call-btn {
+    min-width: 0;
+    flex: 1 1 auto;
+    min-height: 38px;
+    font-size: 13px;
+    padding: 0 6px;
+    white-space: nowrap;
+  }
+
+  .round-lamp {
+    width: 20px;
+    height: 20px;
+  }
+
+  .reset-btn {
+    flex: 0 0 auto;
+    min-height: 34px;
+    padding: 0 5px;
+  }
+}
+
+/* Phone type scale. Platform minimums: body >= 14px (Material body-large 16,
+   Apple 17pt body), labels >= 11px, never below 12px for anything a child must read.
+   At 360px the old scale mixed both extremes: a 28px ghost name and an 18px signal
+   line ate the wall screen, while the story sat at 13px and the ASK buttons at 10.5px. */
+@media (max-width: 599px) {
+  .boot-title {
+    font-size: 34px;
+  }
+
+  .boot-line,
+  .boot-cursor {
+    font-size: 18px;
+  }
+
+  .plot-ghost-name {
+    font-size: 22px;
+  }
+
+  .phone-sheet-name {
+    font-size: 22px;
+  }
+
+  .plot-signal-box {
+    font-size: 15px;
+  }
+
+  .file-body,
+  .phone-sheet-crt .file-body {
+    font-size: 14px;
+  }
+
+  .file-answer-text {
+    font-size: 15px;
+  }
+
+  .q-btn,
+  .read-btn,
+  .phone-sheet-crt .q-btn {
+    font-size: 12px;
+  }
+
+  /* iOS-style motion: smooth scrolling inside the file, no animation when the user
+     asked the system for reduced motion. */
+  .phone-sheet-crt {
+    scroll-behavior: smooth;
+  }
+
+  /* The ASK block took three full rows (~176px) on a 360px sheet. Compact rows let the
+     questions share a line with READ TO ME and keep the story in view. */
+  .phone-sheet-crt .file-actions {
+    gap: 4px;
+    padding-top: 2px;
+  }
+
+  .phone-sheet-crt .ask-label {
+    font-size: 9.5px;
+  }
+
+  .phone-sheet-crt .q-btn,
+  .phone-sheet-crt .read-btn {
+    min-height: 38px;
+    padding: 2px 7px;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .lamp-caption {
+    font-size: 9px;
+  }
+
+  .reset-btn {
+    font-size: 9.5px;
+  }
+
+  .clock-label {
+    font-size: 8.5px;
+  }
+
+  .phone-sheet-photoid {
+    font-size: 10.5px;
+  }
+
+  .ghost-btn-code {
+    font-size: 10.5px;
+  }
+
+  .nasa-link {
+    font-size: 11.5px;
+  }
+}
