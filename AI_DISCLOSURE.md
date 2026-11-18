@@ -38,7 +38,7 @@ The guide says SI "should not be used to come up with your idea of how to solve 
 | Content | Made by | Disclosure |
 |---|---|---|
 | Code (HTML, CSS, JS, Python) | Written with Claude, later Antigravity | Noted here, in README, and in a header line in every code and data file. |
-| Audit fixes (branch `audit/fixes`, Nov 2026) | Written by Claude (SI) at @ManSio's request, after testing the deployed app on a phone and at eight desktop widths | Not merged until Shara reviews it. One commit per change, each with the measurement that proves it; no copy was rewritten and nothing was redesigned |
+| Audit fixes (branch `audit/fixes`, Nov 2026) | Written by Claude (SI) at @ManSio's request, after testing the deployed app on a phone and at eight desktop widths | Reviewed by Shara and merged Nov 17, 2026. One commit per change, each with the measurement that proves it; no copy was rewritten and nothing was redesigned |
 | Kid stories and Q&A text | Drafted by Claude in a kid's voice | Marked draft until fact-checked against NSSDCA; final text reviewed by Shara |
 | Moon image | Rendered by a script (tools/render_moon.py) from NASA's LRO color map. Not a generative AI image | NASA data, reprojected only. Credited to NASA/GSFC SVS |
 | NASA photos | Real NASA photos, resized only. Some get a CSS tint (grayscale or sepia) in the design | Credited with NASA ID numbers |

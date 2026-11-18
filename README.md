@@ -81,7 +81,7 @@ Plain HTML, CSS, and vanilla JavaScript. No framework, no build step, no server,
 | File | Job |
 |---|---|
 | `index.html` | The console: clocks, side screens, curved wall screen, desk |
-| `styles/*.css` | Design tokens plus 8 layout files, one job each (base, screen, plot, console, modals, tablet-landscape, tablet-portrait, phone), and `still-answering.css` for the Mars still-answering row |
+| `styles/*.css` | Design tokens plus 10 layout files, one job each (base, screen, plot, console, modals, tablet-landscape, tablet-portrait, phone, phone-compact, rotate-hint), and `still-answering.css` for the Mars still-answering row |
 | `js/main.js` | State, boot sequence, keys, laser show, clocks, sound, read-aloud |
 | `js/globe.js` | 3D Moon and Mars, drag to spin, FACE EARTH |
 | `js/projection.js`, `js/markers.js` | Latitude and longitude to screen pins |
@@ -126,10 +126,11 @@ python3 -m http.server 8000
 
 - Mission Control voice clips, recorded by a human
 - Ghost names with personality
-- Spanish
+- More languages (PR #4, waiting on native-speaker reads)
+- How each machine talks: radio, laser, or relay (issue #3)
 
 ## Credits
 
-Built by **La Shara Cordero**, team Clew Labs. Images and data: NASA. Fonts: Google Fonts (SIL Open Font License). 3D: Three.js (MIT).
+Built by **La Shara Cordero**, team Clew Labs. Phone, accessibility and display fixes by ManSio (PR #1). Images and data: NASA. Fonts: Google Fonts (SIL Open Font License). 3D: Three.js (MIT).
 
 *AI assisted. Human approved.*
